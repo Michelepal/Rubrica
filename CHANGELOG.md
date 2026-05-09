@@ -17,6 +17,12 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.2] - 2026-05-09
+
+### Corretto
+
+- Corretta configurazione CORS backend per consentire al frontend Angular in sviluppo (`localhost:4200`) di chiamare le API su `localhost:8080`.
+
 ## [0.3.1] - 2026-05-09
 
 ### Corretto

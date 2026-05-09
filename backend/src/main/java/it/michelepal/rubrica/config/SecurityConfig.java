@@ -1,6 +1,7 @@
 package it.michelepal.rubrica.config;
 
 import it.michelepal.rubrica.security.JwtAuthenticationFilter;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,11 +23,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final List<String> allowedOrigins;
+    private final String allowedOrigins;
 
     public SecurityConfig(
         JwtAuthenticationFilter jwtAuthenticationFilter,
-        @Value("${app.cors.allowed-origins:}") List<String> allowedOrigins
+        @Value("${app.cors.allowed-origins:}") String allowedOrigins
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.allowedOrigins = allowedOrigins;
@@ -63,12 +64,16 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(allowedOrigins);
+        String originsValue = allowedOrigins == null ? "" : allowedOrigins;
+        List<String> origins = Arrays.stream(originsValue.split(","))
+            .map(String::trim)
+            .filter(origin -> !origin.isBlank())
+            .toList();
+        configuration.setAllowedOrigins(origins);
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 }
-

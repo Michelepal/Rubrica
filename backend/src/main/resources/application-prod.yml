@@ -20,5 +20,4 @@ logging:
 
 app:
   cors:
-    allowed-origins: []
-
+    allowed-origins: ""
