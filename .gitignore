@@ -1,0 +1,41 @@
+# OS
+Thumbs.db
+Desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# Java / Gradle
+backend/.gradle/
+backend/build/
+backend/out/
+backend/bin/
+
+# Angular / Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+
+# Local DB / runtime
+*.db
+*.mv.db
+*.trace.db
+data/
+
+# Generated reports
+backend/build/reports/
+backend/build/test-results/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Local tooling downloads
+.tools/

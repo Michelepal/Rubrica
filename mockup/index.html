@@ -1,0 +1,1020 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mockup Rubrica Full Stack</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --panel-soft: #eef4f2;
+      --line: #d7dde2;
+      --text: #1d2935;
+      --muted: #667789;
+      --brand: #1f7a6b;
+      --brand-dark: #16594f;
+      --danger: #b42318;
+      --danger-soft: #fff1f0;
+      --warn: #946200;
+      --warn-soft: #fff7df;
+      --ok: #16703c;
+      --shadow: 0 12px 30px rgba(24, 39, 54, .12);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: #17242f;
+      color: #f7fbfc;
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 750;
+      font-size: 19px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #2bb99f;
+      color: #0f261f;
+      font-weight: 900;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      color: #dce8eb;
+      background: transparent;
+      border-radius: 7px;
+      padding: 11px 12px;
+      text-align: left;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      background: #263845;
+      color: #ffffff;
+    }
+
+    .nav-icon {
+      width: 18px;
+      text-align: center;
+      color: #8bd8ca;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      color: #b8c8cf;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .content {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      min-height: 72px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      justify-content: space-between;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .page-title p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--panel-soft);
+      color: var(--brand-dark);
+      font-weight: 800;
+    }
+
+    .main {
+      padding: 26px 28px 34px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search,
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      color: var(--text);
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    .search:focus,
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(31, 122, 107, .12);
+    }
+
+    .btn {
+      min-height: 40px;
+      border-radius: 7px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 650;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--brand-dark);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 24px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 380px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .section-head {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .section-head small {
+      color: var(--muted);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      background: #fafbfc;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .contact-name {
+      display: grid;
+      gap: 3px;
+    }
+
+    .contact-name strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .contact-name span,
+    .muted {
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: var(--panel-soft);
+      color: var(--brand-dark);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .tag button {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(22, 89, 79, .12);
+      color: var(--brand-dark);
+      line-height: 1;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    .tag button:hover {
+      background: rgba(22, 89, 79, .22);
+    }
+
+    .row-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+    }
+
+    .icon-btn:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
+    .icon-btn.danger:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .form {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: #344454;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .field small {
+      color: var(--muted);
+      min-height: 16px;
+    }
+
+    .field.error input {
+      border-color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .field.error small {
+      color: var(--danger);
+    }
+
+    .inline-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .tag-manager {
+      display: grid;
+      gap: 10px;
+    }
+
+    .tag-editor {
+      display: grid;
+      grid-template-columns: 1fr 42px 42px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .color-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      background: var(--brand);
+      box-shadow: 0 0 0 3px rgba(31, 122, 107, .12);
+    }
+
+    .inline-item {
+      display: grid;
+      grid-template-columns: 90px 1fr 34px;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .login-view,
+    .error-view {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background:
+        linear-gradient(120deg, rgba(31,122,107,.12), transparent 44%),
+        linear-gradient(300deg, rgba(42,94,145,.12), transparent 36%),
+        var(--bg);
+    }
+
+    .login-panel,
+    .error-panel {
+      width: min(440px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    .login-panel h1,
+    .error-panel h1 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .login-panel p,
+    .error-panel p {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(16, 28, 39, .45);
+      z-index: 20;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      width: min(440px, 100%);
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .modal-body {
+      padding: 18px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      padding: 14px 18px 18px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .notice {
+      border: 1px solid #f0d58a;
+      background: var(--warn-soft);
+      color: var(--warn);
+      border-radius: 7px;
+      padding: 11px 12px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1050px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .workspace,
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar,
+      .toolbar,
+      .form-grid,
+      .inline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      table,
+      thead,
+      tbody,
+      tr,
+      th,
+      td {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        border-bottom: 1px solid var(--line);
+      }
+
+      td {
+        border-bottom: 0;
+        padding: 9px 14px;
+      }
+
+      .row-actions {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="loginScreen" class="screen active">
+    <section class="login-view">
+      <form class="login-panel" id="loginForm">
+        <div class="brand" style="color: var(--text); margin-bottom: 22px;">
+          <span class="brand-mark">R</span>
+          <span>Rubrica</span>
+        </div>
+        <h1>Accesso</h1>
+        <p>Inserisci le credenziali per entrare nella tua rubrica.</p>
+        <div class="field" id="usernameField">
+          <label for="username">Username</label>
+          <input id="username" value="admin" autocomplete="username">
+          <small>Utente demo: admin</small>
+        </div>
+        <div class="field" id="passwordField" style="margin-top: 14px;">
+          <label for="password">Password</label>
+          <input id="password" type="password" value="admin" autocomplete="current-password">
+          <small>Password demo: admin</small>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" type="button" id="showError">Simula errore</button>
+          <button class="btn btn-primary" type="submit">Accedi</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <main id="errorScreen" class="screen">
+    <section class="error-view">
+      <div class="error-panel">
+        <div class="notice">Login non riuscito: credenziali non valide o utente non autorizzato.</div>
+        <h1 style="margin-top: 18px;">Accesso negato</h1>
+        <p>La pagina di errore mostra il motivo dell'esito negativo e permette di tornare al login.</p>
+        <button class="btn btn-primary" id="backToLogin">Torna al login</button>
+      </div>
+    </section>
+  </main>
+
+  <main id="appScreen" class="screen">
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark">R</span>
+          <span>Rubrica</span>
+        </div>
+        <nav class="nav" aria-label="Navigazione principale">
+          <button class="active"><span class="nav-icon">⌂</span>Home</button>
+          <button><span class="nav-icon">☷</span>Contatti</button>
+          <button><span class="nav-icon">#</span>Tag</button>
+          <button><span class="nav-icon">⚙</span>Impostazioni</button>
+        </nav>
+        <div class="sidebar-footer">
+          Utente autenticato<br>
+          <strong>admin@example.local</strong>
+        </div>
+      </aside>
+
+      <section class="content">
+        <header class="topbar">
+          <div class="page-title">
+            <h1>Home rubrica</h1>
+            <p>Gestione contatti con validazioni, conferme e dati isolati per utente.</p>
+          </div>
+          <div class="user-chip">
+            <span class="avatar">A</span>
+            <span>Admin</span>
+            <button class="btn btn-secondary" id="logoutButton">Esci</button>
+          </div>
+        </header>
+
+        <div class="main">
+          <div class="toolbar">
+            <input class="search" placeholder="Cerca per nome, azienda, email o telefono" aria-label="Cerca contatti">
+            <button class="btn btn-secondary" type="button">Filtra tag</button>
+            <button class="btn btn-primary" type="button" id="newContactButton">Nuovo contatto</button>
+          </div>
+
+          <section class="summary" aria-label="Riepilogo rubrica">
+            <div class="metric"><span>Contatti</span><strong>128</strong></div>
+            <div class="metric"><span>Preferiti</span><strong>14</strong></div>
+            <div class="metric"><span>Tag</span><strong>9</strong></div>
+            <div class="metric"><span>Da verificare</span><strong>3</strong></div>
+          </section>
+
+          <div class="workspace">
+            <section class="section">
+              <div class="section-head">
+                <div>
+                  <h2>Contatti recenti</h2>
+                  <small>Le azioni di modifica e cancellazione aprono una conferma.</small>
+                </div>
+              </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 30%;">Contatto</th>
+                    <th style="width: 24%;">Email</th>
+                    <th style="width: 18%;">Telefono</th>
+                    <th style="width: 18%;">Tag</th>
+                    <th style="width: 10%;">Azioni</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="contact-name">
+                        <strong>Laura Bianchi</strong>
+                        <span>Product manager, Northwind</span>
+                      </div>
+                    </td>
+                    <td>laura.bianchi@example.local</td>
+                    <td>+39 333 123 4567</td>
+                    <td><div class="tag-row"><span class="tag">Lavoro</span><span class="tag">VIP</span></div></td>
+                    <td>
+                      <div class="row-actions">
+                        <button class="icon-btn edit-contact" title="Modifica contatto" type="button">✎</button>
+                        <button class="icon-btn danger delete-contact" title="Cancella contatto" type="button">×</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="contact-name">
+                        <strong>Marco Rossi</strong>
+                        <span>Studio Legale Rossi</span>
+                      </div>
+                    </td>
+                    <td>m.rossi@example.local</td>
+                    <td>02 555 0199</td>
+                    <td><div class="tag-row"><span class="tag">Clienti</span></div></td>
+                    <td>
+                      <div class="row-actions">
+                        <button class="icon-btn edit-contact" title="Modifica contatto" type="button">✎</button>
+                        <button class="icon-btn danger delete-contact" title="Cancella contatto" type="button">×</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="contact-name">
+                        <strong>Giulia Verdi</strong>
+                        <span>Contatto personale</span>
+                      </div>
+                    </td>
+                    <td>giulia.verdi@example.local</td>
+                    <td>+39 347 222 8899</td>
+                    <td><div class="tag-row"><span class="tag">Famiglia</span></div></td>
+                    <td>
+                      <div class="row-actions">
+                        <button class="icon-btn edit-contact" title="Modifica contatto" type="button">✎</button>
+                        <button class="icon-btn danger delete-contact" title="Cancella contatto" type="button">×</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="section" aria-label="Form contatto">
+              <div class="section-head">
+                <div>
+                  <h2>Modifica contatto</h2>
+                  <small>Mockup form con validazione frontend.</small>
+                </div>
+              </div>
+              <form class="form" id="contactForm">
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="firstName">Nome</label>
+                    <input id="firstName" value="Laura">
+                    <small>Obbligatorio, minimo 2 caratteri.</small>
+                  </div>
+                  <div class="field">
+                    <label for="lastName">Cognome</label>
+                    <input id="lastName" value="Bianchi">
+                    <small>Lettere, spazi, apostrofi e trattini.</small>
+                  </div>
+                </div>
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="company">Azienda</label>
+                    <input id="company" value="Northwind">
+                    <small>Massimo 120 caratteri.</small>
+                  </div>
+                  <div class="field">
+                    <label for="jobTitle">Ruolo</label>
+                    <input id="jobTitle" value="Product manager">
+                    <small>Massimo 120 caratteri.</small>
+                  </div>
+                </div>
+                <div class="inline-list">
+                  <div class="inline-item">
+                    <select aria-label="Tipo telefono">
+                      <option>Mobile</option>
+                      <option>Casa</option>
+                      <option>Lavoro</option>
+                    </select>
+                    <input value="+39 333 123 4567" aria-label="Telefono">
+                    <button class="icon-btn danger" type="button" data-modal="delete-phone" title="Cancella telefono">×</button>
+                  </div>
+                  <div class="inline-item">
+                    <select aria-label="Tipo email">
+                      <option>Lavoro</option>
+                      <option>Personale</option>
+                    </select>
+                    <input value="laura.bianchi@example.local" aria-label="Email">
+                    <button class="icon-btn danger" type="button" data-modal="delete-email" title="Cancella email">×</button>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Tag associati</label>
+                  <div class="tag-manager">
+                    <div class="tag-row" aria-label="Tag del contatto">
+                      <span class="tag">Lavoro <button type="button" data-modal="edit-tag" title="Modifica tag Lavoro">✎</button><button type="button" data-modal="delete-tag" title="Cancella tag Lavoro">×</button></span>
+                      <span class="tag">VIP <button type="button" data-modal="edit-tag" title="Modifica tag VIP">✎</button><button type="button" data-modal="delete-tag" title="Cancella tag VIP">×</button></span>
+                    </div>
+                    <div class="tag-editor">
+                      <input value="Fornitori" aria-label="Nome nuovo tag">
+                      <button class="icon-btn" type="button" data-modal="edit-tag" title="Salva modifica tag">✓</button>
+                      <button class="icon-btn danger" type="button" data-modal="delete-tag" title="Cancella tag">×</button>
+                    </div>
+                  </div>
+                  <small>I tag possono essere modificati o cancellati solo dopo conferma.</small>
+                </div>
+                <div class="field">
+                  <label for="notes">Note</label>
+                  <textarea id="notes" rows="4">Preferisce essere contattata via email durante l'orario lavorativo.</textarea>
+                  <small>Nessun HTML attivo, massimo 1000 caratteri.</small>
+                </div>
+                <div class="form-actions">
+                  <button class="btn btn-secondary" type="button">Annulla</button>
+                  <button class="btn btn-primary" type="submit">Salva modifiche</button>
+                </div>
+              </form>
+            </section>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Conferma operazione</h2>
+        <button class="icon-btn" id="closeModal" type="button" title="Chiudi">×</button>
+      </div>
+      <div class="modal-body" id="modalText">
+        Confermi l'operazione selezionata?
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="cancelModal" type="button">Annulla</button>
+        <button class="btn btn-primary" id="confirmModalButton" type="button">Conferma</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const screens = {
+      login: document.getElementById('loginScreen'),
+      app: document.getElementById('appScreen'),
+      error: document.getElementById('errorScreen')
+    };
+
+    const modal = document.getElementById('confirmModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
+    const confirmModalButton = document.getElementById('confirmModalButton');
+
+    function showScreen(name) {
+      Object.values(screens).forEach(screen => screen.classList.remove('active'));
+      screens[name].classList.add('active');
+    }
+
+    function openModal(type) {
+      const config = {
+        edit: {
+          title: 'Conferma modifica contatto',
+          text: 'Stai per salvare le modifiche al contatto Laura Bianchi. I dati saranno validati e inviati al backend.',
+          danger: false
+        },
+        delete: {
+          title: 'Conferma cancellazione contatto',
+          text: 'Stai per cancellare Laura Bianchi dalla rubrica. L’operazione richiedera conferma esplicita prima della chiamata API.',
+          danger: true
+        },
+        'delete-phone': {
+          title: 'Conferma cancellazione telefono',
+          text: 'Stai per rimuovere il numero principale del contatto. Nessuna richiesta verra inviata se annulli.',
+          danger: true
+        },
+        'delete-email': {
+          title: 'Conferma cancellazione email',
+          text: 'Stai per rimuovere l’indirizzo email del contatto. Nessuna richiesta verra inviata se annulli.',
+          danger: true
+        },
+        'edit-tag': {
+          title: 'Conferma modifica tag',
+          text: 'Stai per modificare un tag della rubrica. Il nuovo nome sara validato e salvato solo dopo conferma.',
+          danger: false
+        },
+        'delete-tag': {
+          title: 'Conferma cancellazione tag',
+          text: 'Stai per cancellare un tag associato al contatto. Le associazioni verranno rimosse solo dopo conferma.',
+          danger: true
+        }
+      }[type] || {
+        title: 'Conferma operazione',
+        text: 'Confermi di voler procedere?',
+        danger: false
+      };
+
+      modalTitle.textContent = config.title;
+      modalText.textContent = config.text;
+      confirmModalButton.textContent = config.danger ? 'Conferma cancellazione' : 'Conferma modifica';
+      confirmModalButton.className = config.danger ? 'btn btn-danger' : 'btn btn-primary';
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (username === 'admin' && password === 'admin') {
+        showScreen('app');
+      } else {
+        showScreen('error');
+      }
+    });
+
+    document.getElementById('showError').addEventListener('click', () => showScreen('error'));
+    document.getElementById('backToLogin').addEventListener('click', () => showScreen('login'));
+    document.getElementById('logoutButton').addEventListener('click', () => showScreen('login'));
+    document.getElementById('newContactButton').addEventListener('click', () => {
+      document.getElementById('firstName').value = '';
+      document.getElementById('lastName').value = '';
+      document.getElementById('company').value = '';
+      document.getElementById('jobTitle').value = '';
+      document.getElementById('notes').value = '';
+    });
+
+    document.querySelectorAll('.edit-contact').forEach(button => {
+      button.addEventListener('click', () => openModal('edit'));
+    });
+
+    document.querySelectorAll('.delete-contact').forEach(button => {
+      button.addEventListener('click', () => openModal('delete'));
+    });
+
+    document.querySelectorAll('[data-modal]').forEach(button => {
+      button.addEventListener('click', () => openModal(button.dataset.modal));
+    });
+
+    document.getElementById('contactForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const firstNameField = document.getElementById('firstName').closest('.field');
+      const firstName = document.getElementById('firstName').value.trim();
+      firstNameField.classList.toggle('error', firstName.length < 2);
+      firstNameField.querySelector('small').textContent = firstName.length < 2
+        ? 'Il nome e obbligatorio e deve contenere almeno 2 caratteri.'
+        : 'Obbligatorio, minimo 2 caratteri.';
+      if (firstName.length >= 2) {
+        openModal('edit');
+      }
+    });
+
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('cancelModal').addEventListener('click', closeModal);
+    confirmModalButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', event => {
+      if (event.target === modal) closeModal();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<div class="app-shell">
+  <aside class="sidebar" aria-label="Navigazione principale">
+    <div class="brand"><span class="brand__mark">R</span><span>Rubrica</span></div>
+    <nav>
+      <a class="nav-link nav-link--active" href="/home">Home</a>
+      <a class="nav-link" href="/contacts">Contatti</a>
+      <a class="nav-link" href="/contacts">Tag</a>
+    </nav>
+  </aside>
+
+  <main class="workspace">
+    <header class="topbar">
+      <div>
+        <h1>Home rubrica</h1>
+        <p>Gestisci contatti, tag e recapiti personali.</p>
+      </div>
+      <div class="topbar__actions">
+        <button class="button button--secondary" type="button" (click)="toggleTheme()">Tema</button>
+        <button class="button button--secondary" type="button" (click)="logout()">Esci</button>
+      </div>
+    </header>
+
+    <section class="toolbar" aria-label="Strumenti rubrica">
+      <label class="visually-hidden" for="search">Cerca contatti</label>
+      <input id="search" [(ngModel)]="search" placeholder="Cerca per nome, email, telefono o tag">
+      <button class="button" type="button">Nuovo contatto</button>
+    </section>
+
+    <section class="content-grid">
+      <section class="panel" aria-labelledby="contacts-title">
+        <h2 id="contacts-title">Contatti</h2>
+        <div class="contact-list">
+          @for (contact of filteredContacts; track contact.id) {
+            <article class="contact-row">
+              <div>
+                <strong>{{ contact.name }}</strong>
+                <span>{{ contact.company }}</span>
+              </div>
+              <span>{{ contact.email }}</span>
+              <span>{{ contact.phone }}</span>
+              <div class="tag-row">
+                @for (tag of contact.tags; track tag) {
+                  <span class="tag">
+                    {{ tag }}
+                    <button type="button" [attr.aria-label]="'Modifica tag ' + tag" (click)="askEditTag(tag)">✎</button>
+                    <button type="button" [attr.aria-label]="'Cancella tag ' + tag" (click)="askDeleteTag(tag)">x</button>
+                  </span>
+                }
+              </div>
+              <div class="row-actions">
+                <button class="icon-button" type="button" aria-label="Modifica contatto" (click)="openModal('Conferma modifica contatto', 'Vuoi salvare le modifiche al contatto?', false)">✎</button>
+                <button class="icon-button icon-button--danger" type="button" aria-label="Cancella contatto" (click)="askDeleteContact(contact)">x</button>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="form-title">
+        <h2 id="form-title">Scheda contatto</h2>
+        <form class="contact-form">
+          <label>Nome <input value="Laura"></label>
+          <label>Cognome <input value="Bianchi"></label>
+          <label>Email <input value="laura.bianchi@example.local"></label>
+          <label>Telefono <input value="+39 333 123 4567"></label>
+          <label>Note <textarea rows="5">Preferisce contatto via email.</textarea></label>
+          <button class="button" type="button" (click)="openModal('Conferma modifica contatto', 'Vuoi salvare le modifiche al contatto?', false)">Salva modifiche</button>
+        </form>
+      </section>
+    </section>
+  </main>
+</div>
+
+<app-confirm-dialog
+  [open]="modalOpen"
+  [title]="modalTitle"
+  [message]="modalMessage"
+  [destructive]="modalDestructive"
+  (cancelled)="closeModal()"
+  (confirmed)="closeModal()"
+/>
+

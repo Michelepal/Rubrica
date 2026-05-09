@@ -1,0 +1,30 @@
+h1,
+h2,
+h3,
+p {
+  margin-block-start: 0;
+}
+
+h1 {
+  font-size: clamp(1.5rem, 2vw, 2rem);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(1.15rem, 1.5vw, 1.45rem);
+  line-height: 1.25;
+}
+
+p,
+label,
+input,
+textarea,
+button {
+  font-size: clamp(.95rem, 1vw, 1rem);
+}
+
+.form-error {
+  color: var(--color-danger);
+  font-weight: 700;
+}
+

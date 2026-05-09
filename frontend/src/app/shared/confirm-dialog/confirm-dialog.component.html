@@ -1,0 +1,16 @@
+@if (open) {
+  <div class="modal-backdrop" role="presentation" (click)="cancelled.emit()">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title" (click)="$event.stopPropagation()">
+      <header class="modal__header">
+        <h2 id="confirm-title">{{ title }}</h2>
+        <button class="icon-button" type="button" aria-label="Chiudi modale" (click)="cancelled.emit()">x</button>
+      </header>
+      <p>{{ message }}</p>
+      <footer class="modal__actions">
+        <button class="button button--secondary" type="button" (click)="cancelled.emit()">Annulla</button>
+        <button class="button" [class.button--danger]="destructive" type="button" (click)="confirmed.emit()">Conferma</button>
+      </footer>
+    </section>
+  </div>
+}
+

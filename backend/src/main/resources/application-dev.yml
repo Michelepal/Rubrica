@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/rubrica-dev
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    it.michelepal.rubrica: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:4200
+

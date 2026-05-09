@@ -1,0 +1,4536 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+2 0 obj
+<< /Length 3430 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 18 Tf
+1 0 0 1 48.00 785.89 Tm
+(Requisiti progetto rubricaJavaAngular) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 743.89 Tm
+(Obiettivo) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(Creare la base di un'applicazione full stack per la gestione di una rubrica personale) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(multiutente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(Il nome ufficiale del progetto, sia in locale sia nel repository GitHub, deve essere:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(rubricaJavaAngular) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(L'applicazione deve essere composta da:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* frontend Angular per interfaccia grafica, login e gestione contatti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* backend Spring Boot con Gradle;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* autenticazione gestita con Spring Security;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* database locale per utenti, contatti e dati collegati alla rubrica;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* validazione e sanitizzazione dei dati lato frontend, backend e database.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 463.89 Tm
+(Architettura generale) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(La struttura del repository dovra' essere organizzata in due moduli principali:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(frontend/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(backend/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(In sviluppo:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(Frontend Angular: http://localhost:4200) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(Backend Spring Boot: http://localhost:8080) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(In una possibile configurazione integrata, Spring Boot potra' servire il build statico) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(Angular e l'applicazione sara' raggiungibile dal path base del backend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(Il progetto deve supportare due modalita' operative:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* modalita' sviluppo, con frontend Angular e backend Spring Boot avviati separatamente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* modalita' produzione/integrata, con build statica Angular servita direttamente dal backend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(Spring Boot.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 99.89 Tm
+(Integrazione build Angular nel backend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(In modalita' produzione/integrata, la build statica del frontend Angular deve essere) Tj
+ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Length 3472 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(inserita nel backend Spring Boot e servita come risorsa statica.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(Flusso previsto:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(cd frontend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(npm run build) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(Output Angular previsto:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(frontend/dist/<nome-app>/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(I file generati dalla build Angular devono essere copiati nel backend in una posizione) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(standard Spring Boot:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(backend/src/main/resources/static/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(In questo modo Spring Boot potra' servire l'app Angular dal path base:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(http://localhost:8080/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(Le API REST devono rimanere sotto path dedicato:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(/api/**) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(Requisiti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* la build Angular non deve essere committata se considerata artifact generato, salvo scelta) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(esplicita documentata;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* il processo di build deve documentare come generare e copiare gli artifact Angular nel) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(backend;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(* il processo puo' essere automatizzato tramite script npm, task Gradle o pipeline CI;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(* Spring Boot deve servire correttamente index.html e gli asset statici Angular;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(* le rotte Angular come /login, /home, /error e /contacts devono funzionare anche con) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(refresh diretto del browser;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(* il backend deve prevedere un fallback SPA che inoltri le rotte frontend a index.html;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* il fallback SPA non deve intercettare le API /api/**;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* in sviluppo devono essere configurati CORS o proxy Angular per permettere la comunicazione) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(tra localhost:4200 e localhost:8080;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* in produzione/integrata Angular deve chiamare le API usando path relativi, ad esempio) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(/api/auth/login.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 71.89 Tm
+(Distinzione tra sviluppo e produzione) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 3962 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(Il progetto deve distinguere chiaramente tra ambiente di sviluppo e ambiente di produzione.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(La distinzione deve essere gestita sia lato backend Spring Boot sia lato frontend Angular.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(Backend Spring Boot) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(Il backend deve usare profili Spring dedicati.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(File consigliati:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(backend/src/main/resources/application.yml) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(backend/src/main/resources/application-dev.yml) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(backend/src/main/resources/application-prod.yml) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(Requisiti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* usare dev come profilo per lo sviluppo locale;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* usare prod come profilo per produzione o build integrata;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* definire in application.yml le impostazioni comuni;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(* definire in application-dev.yml configurazioni locali e piu' permissive;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* definire in application-prod.yml configurazioni piu' restrittive;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(* evitare credenziali reali committate nei file di configurazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(* usare variabili d'ambiente o configurazioni esterne per segreti e impostazioni sensibili;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* documentare il profilo attivo e il comando di avvio.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(Configurazioni tipiche per dev:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* CORS abilitato per http://localhost:4200;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(* database locale H2;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(* console H2 abilitata solo se utile allo sviluppo;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* logging piu' dettagliato, utile al debug e alla diagnosi locale;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* eventuali dati demo;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* errori tecnici loggati in modo piu' verboso ma mai mostrati direttamente all'utente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(Configurazioni tipiche per prod:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* Angular servito da Spring Boot tramite resources/static;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(* API disponibili sotto /api/**;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(* nessun CORS necessario se frontend e backend sono serviti dallo stesso host;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(* console H2 disabilitata;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* logging essenziale e controllato;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(* nessuna esposizione di dettagli tecnici o stack trace;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* configurazioni sensibili lette da variabili d'ambiente o file esterni;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* eventuale database locale in modalita' file, se previsto dai requisiti, con percorso) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(documentato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(Logging per ambiente) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(Il progetto deve prevedere una configurazione dei log differenziata tra sviluppo e) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(produzione.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 3901 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(Requisiti logging ambiente dev:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* livello di log piu' dettagliato per facilitare debug e sviluppo;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* possibilita' di abilitare log DEBUG per package applicativi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* log chiari per chiamate REST, errori di validazione, autenticazione e operazioni) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(principali sui contatti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* log tecnici sufficienti a diagnosticare problemi locali;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* nessuna esposizione di password, token JWT, hash, segreti o dati sensibili nei log.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(Requisiti logging ambiente prod:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* livello di log piu' essenziale, preferibilmente INFO o WARN secondo contesto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* log degli errori applicativi e degli eventi rilevanti senza rumore eccessivo;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* nessun dettaglio tecnico sensibile nei messaggi restituiti all'utente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* nessun logging di credenziali, token, dati personali non necessari o informazioni) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(riservate;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* stack trace completi solo se necessari nei log server, mai nelle risposte REST;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* configurazione coerente con application-prod.yml.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(Comando sviluppo backend:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(./gradlew bootRun --args='--spring.profiles.active=dev') Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(Comando produzione backend:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(java -jar build/libs/rubricaJavaAngular-x.y.z.jar --spring.profiles.active=prod) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(Frontend Angular) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(Il frontend deve usare environment separati per sviluppo e produzione.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(File consigliati:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(frontend/src/environments/environment.ts) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(frontend/src/environments/environment.development.ts) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(frontend/src/environments/environment.production.ts) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(Requisiti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* in sviluppo Angular deve chiamare le API backend con URL esplicito, ad esempio) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(http://localhost:8080/api;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* in produzione Angular deve chiamare le API con path relativo, ad esempio /api;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* la configurazione dell'API base URL deve stare in environment o configurazione dedicata,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(non hardcoded nei servizi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(* il build Angular di produzione deve usare l'environment production;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(* eventuale proxy Angular di sviluppo deve essere documentato se usato.) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 3173 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(Configurazione sviluppo consigliata:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(production: false) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(apiBaseUrl: http://localhost:8080/api) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(Configurazione produzione consigliata:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(production: true) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(apiBaseUrl: /api) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(Flussi operativi) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(Sviluppo locale:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(1. Avviare backend Spring Boot con profilo dev.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(2. Avviare frontend Angular su localhost:4200.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(3. Angular chiama Spring Boot su localhost:8080/api.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(4. CORS o proxy Angular gestiscono la comunicazione tra porte diverse.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(Produzione/integrata:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(1. Generare build Angular production.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(2. Copiare gli artifact Angular in backend/src/main/resources/static.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(3. Generare jar Spring Boot con Gradle.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(4. Avviare Spring Boot con profilo prod.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(5. L'utente accede al path base del backend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(6. Angular chiama le API tramite path relativo /api.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(Questa distinzione deve essere descritta nel README del progetto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 239.89 Tm
+(Repository e pubblicazione) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(Il codice del progetto dovra' essere pubblicato su GitHub sotto il namespace:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(https://github.com/Michelepal) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(Il repository finale dovra' essere creato o individuato all'interno di tale namespace, ad) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(esempio:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(https://github.com/Michelepal/rubricaJavaAngular) Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Length 4706 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(Requisiti per la pubblicazione:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* mantenere una struttura repository chiara con frontend/, backend/ e documentazione alla) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(root;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* includere un README.md alla root del repository per spiegare il progetto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* nel README.md descrivere obiettivo dell'applicazione, architettura, tecnologie usate,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(struttura delle cartelle, requisiti di avvio, configurazione locale, comandi per frontend,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(comandi per backend, test e note sulla sicurezza;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* includere il file dei requisiti del progetto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* includere un file con lo storico dei prompt forniti durante la progettazione dei) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(requisiti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* evitare di pubblicare credenziali, token, password, file temporanei, build locali o) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(database locali;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* configurare .gitignore per Angular, Gradle, Java, IDE e file generati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(* usare commit con messaggi chiari e coerenti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* pubblicare solo codice compilabile, testabile e coerente con i requisiti definiti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 519.89 Tm
+(Versionamento) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(Ogni commit pubblicato su GitHub deve comportare un aggiornamento della versione del) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(programma, sia lato frontend sia lato backend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(Requisiti di versionamento:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(* mantenere una versione applicativa frontend, ad esempio nel package.json Angular;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* mantenere una versione applicativa backend rispettando gli standard Gradle e Spring Boot;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(* definire la versione backend tramite la proprieta' Gradle standard version nel file) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(build.gradle o build.gradle.kts;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(* mantenere coordinate Gradle coerenti, includendo almeno group, version e nome progetto in) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(settings.gradle;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* evitare meccanismi di versionamento custom che non siano integrati con la build Gradle;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* usare la versione Gradle del progetto come fonte principale per artifact, build e) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(packaging Spring Boot;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* aggiornare entrambe le versioni prima di ogni commit destinato al repository GitHub;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* usare una convenzione di versionamento coerente, preferibilmente Semantic Versioning nel) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(formato MAJOR.MINOR.PATCH;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* incrementare PATCH per correzioni e modifiche minori;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(* incrementare MINOR per nuove funzionalita' compatibili;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(* incrementare MAJOR per modifiche incompatibili o cambi rilevanti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(* documentare nel README o in un changelog la modalita' scelta per il versionamento;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* evitare commit pubblicati senza allineamento delle versioni frontend e backend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(Per il backend Spring Boot:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(* il nome del progetto deve essere definito in settings.gradle, ad esempio rootProject.name) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(= 'rubricaJavaAngular';) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* la versione deve essere gestita dalla build Gradle con version = 'x.y.z';) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(* eventuali artifact generati da bootJar o task Gradle devono riflettere la versione) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(definita nella build;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(* la modifica della versione non deve essere hardcoded in classi Java se non attraverso) Tj
+ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 12 0 R >>
+endobj
+14 0 obj
+<< /Length 4699 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(configurazione letta dalla build o dalle properties applicative;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(* se la versione viene esposta tramite API, deve derivare da proprieta' applicative o build) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(metadata coerenti con Gradle.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 729.89 Tm
+(Qualita' del codice) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(Il codice deve rispettare i principi SOLID ed essere progettato per risultare testabile,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(manutenibile e comprensibile a chi lo legge.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(Requisiti generali:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* applicare il principio di responsabilita' singola, evitando classi o componenti con troppe) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(responsabilita';) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* separare chiaramente logica di presentazione, logica applicativa, accesso ai dati,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(sicurezza e validazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(* preferire dipendenze esplicite e facilmente sostituibili nei test;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* evitare accoppiamento non necessario tra controller, service, repository, componenti e) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(servizi frontend;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* usare interfacce o astrazioni quando aiutano realmente la testabilita' o la separazione) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(delle responsabilita';) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* mantenere metodi e funzioni di dimensione ragionevole;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(* evitare duplicazioni significative;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* evitare codice duplicato applicando il principio DRY, estraendo logica comune in servizi,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(helper, mapper, validator o componenti riutilizzabili quando questo migliora chiarezza e) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(manutenibilita';) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* usare nomi chiari, coerenti e descrittivi per classi, metodi, variabili, componenti,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(servizi, DTO ed entity;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* evitare abbreviazioni ambigue e nomi generici come data, item, obj, manager, utility, se) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(non giustificati dal contesto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* inserire commenti dove aiutano a comprendere decisioni, regole di business o passaggi non) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(immediati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(* evitare commenti ovvi che ripetono semplicemente cosa fa una singola istruzione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* mantenere il codice leggibile anche per sviluppatori che non hanno partecipato alla) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(progettazione iniziale.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(Il codice Java backend e il codice JavaScript/TypeScript frontend devono essere progettati) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(per essere testabili con la copertura massima possibile.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(Requisiti di testabilita' e copertura:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(* strutturare codice Java e TypeScript in moduli, classi, funzioni e servizi facilmente) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(testabili in isolamento;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* evitare logica complessa direttamente nei controller, nei componenti Angular o nei) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(template;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* separare logica pura, accesso dati, chiamate HTTP, validazioni, mapping e gestione stato;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* rendere mockabili dipendenze esterne, repository, servizi HTTP, storage locale, sicurezza) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(e provider di tempo;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* coprire con test unitari la maggior parte della logica Java e TypeScript;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* coprire con test di integrazione i flussi critici di autenticazione, autorizzazione, CRUD) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(e persistenza;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(* usare strumenti di coverage per misurare la copertura del codice;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(* per il backend Java, prevedere strumenti compatibili con Gradle come JaCoCo;) Tj
+ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 14 0 R >>
+endobj
+16 0 obj
+<< /Length 4283 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(* per il frontend Angular, prevedere coverage tramite il test runner Angular configurato;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(* puntare alla copertura piu' alta possibile, con particolare attenzione a regole di) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(business, validazioni, sicurezza, service layer, guard, interceptor, sanitizer e modali;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* documentare eventuali parti non coperte e la motivazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* evitare codice non testabile o fortemente accoppiato se non strettamente necessario;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* non sacrificare chiarezza e manutenibilita' solo per aumentare artificialmente la) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(percentuale di coverage.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(I test devono generare report sullo stato dell'applicazione.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(Requisiti report test:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* generare report dei test backend;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* generare report dei test frontend;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* generare report di coverage backend;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* generare report di coverage frontend;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(* produrre un riepilogo leggibile dello stato applicativo dopo l'esecuzione dei test;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* indicare test eseguiti, test superati, test falliti, test saltati e percentuale di) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(copertura;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* evidenziare eventuali aree critiche non coperte;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* rendere i report consultabili localmente dopo l'esecuzione dei task di test;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* documentare nel README dove trovare i report generati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(* evitare che report generati e temporanei vengano committati, salvo scelta esplicita) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(documentata.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(Report consigliati:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(backend/build/reports/tests/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(backend/build/reports/jacoco/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(frontend/coverage/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(Nel backend Spring Boot:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* i controller devono delegare la logica applicativa ai service;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* i service devono contenere le regole di business e rimanere testabili con mock dei) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(repository;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* i repository devono occuparsi solo dell'accesso ai dati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* la sicurezza deve essere isolata in classi dedicate;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(* i DTO devono separare il contratto API dalle entity JPA;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(* mapping e normalizzazione dei dati devono essere collocati in punti chiari e testabili.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(Nel frontend Angular:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* i componenti devono gestire principalmente stato UI e interazioni utente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* i servizi devono gestire chiamate API, autenticazione e logica condivisa;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(* validator e sanitizer devono essere funzioni o servizi isolati e testabili;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* guard, interceptor e servizi devono avere responsabilita' distinte;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* i template devono rimanere leggibili, evitando logica complessa direttamente nell'HTML.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 71.89 Tm
+(Frontend Angular) Tj
+ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 16 0 R >>
+endobj
+18 0 obj
+<< /Length 4438 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(Il frontend deve essere realizzato con Angular e deve includere almeno:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* pagina di login;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* home dell'applicazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* pagina di errore;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* lista contatti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* form creazione contatto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* form modifica contatto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* servizio autenticazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* servizio contatti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* interceptor HTTP per inviare il token di autenticazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* guardia di rotta per proteggere le sezioni riservate.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 589.89 Tm
+(Requisiti grafici e responsive) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(L'interfaccia grafica deve essere responsive e correttamente utilizzabile su tutti i) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(principali breakpoint.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(Requisiti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(* supportare viewport mobile, tablet, laptop e desktop;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* definire breakpoint chiari e coerenti con il layout Angular/CSS scelto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(* garantire che menu, liste, form, tabelle, modali e pulsanti rimangano utilizzabili anche) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(su schermi piccoli;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* evitare sovrapposizioni tra testi, controlli e contenitori;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(* evitare scroll orizzontale non necessario;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* adattare tabelle e liste a layout mobile leggibili;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(* mantenere le modali visibili e usabili su viewport piccoli;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* usare spaziature, altezze dei controlli e aree cliccabili adeguate anche per uso touch;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(* ridimensionare il testo quando necessario, mantenendolo leggibile ma mai eccessivamente) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(grande o troppo piccolo;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* scegliere un font adeguato alla visibilita' e alla lettura prolungata;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* usare una scala tipografica coerente per titoli, sottotitoli, etichette, testo dei campi e) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(messaggi di errore;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* garantire contrasto sufficiente tra testo e sfondo;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* permettere all'utente di passare tra modalita' chiara e modalita' scura;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* mantenere leggibilita', contrasto e coerenza grafica sia in light mode sia in dark mode;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* salvare la preferenza del tema dell'utente, ad esempio in local storage o nel profilo) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(utente se previsto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(* rispettare, se opportuno, la preferenza di sistema prefers-color-scheme come valore) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(iniziale;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* verificare che testi lunghi, email, numeri di telefono e nomi tag non rompano il layout;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(* mantenere la UI coerente tra login, home, lista contatti, form, modali e pagina errore.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(Il font deve essere leggibile e adatto a una applicazione gestionale. Sono preferibili font) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(sans-serif moderni e ben supportati, ad esempio Inter, Segoe UI, Roboto, Arial o) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(equivalenti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(Lo switch tra tema chiaro e tema scuro deve essere disponibile nell'interfaccia utente,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(preferibilmente nella topbar o nelle impostazioni, e deve applicarsi a tutte le viste) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(dell'applicazione.) Tj
+ET
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 18 0 R >>
+endobj
+20 0 obj
+<< /Length 3602 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 771.89 Tm
+(Organizzazione CSS) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(Il CSS deve essere organizzato in modo da evitare conflitti tra regole globali e regole) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(specifiche delle singole pagine o componenti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(Requisiti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* le regole CSS generiche devono stare in file globali dedicati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* le regole CSS specifiche devono stare nei file stile dei singoli componenti o pagine) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(Angular;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* evitare selettori globali troppo ampi che possano alterare componenti non correlati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* usare naming chiaro e coerente per classi CSS;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* preferire variabili CSS o tema centralizzato per colori, spaziature, font e breakpoint;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* mantenere reset, typography, tema, utility e layout base separati dagli stili specifici di) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(pagina;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* evitare duplicazioni di regole CSS;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* evitare conflitti tra tema chiaro e tema scuro;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* evitare l'uso non controllato di !important;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* verificare che modifiche CSS a una pagina non rompano layout o componenti di altre pagine;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* documentare la convenzione CSS scelta.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(Struttura consigliata:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(frontend/src/styles/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(base.css) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(theme.css) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(typography.css) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(utilities.css) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(responsive.css) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(frontend/src/app/<feature>/<component>/<component>.component.css) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(Le regole globali devono contenere solo stili realmente condivisi. Le regole locali devono) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(rimanere vicine al componente Angular a cui appartengono.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 239.89 Tm
+(Compatibilita' browser) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(La grafica deve essere correttamente visibile e utilizzabile nei browser moderni principali.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(Browser da supportare:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* Google Chrome;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(* Microsoft Edge;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* Mozilla Firefox;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* Safari;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(* Brave;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(* altri browser moderni basati su Chromium, quando possibile.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+() Tj
+ET
+endstream
+endobj
+21 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 20 0 R >>
+endobj
+22 0 obj
+<< /Length 4591 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(Requisiti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(* evitare API CSS o JavaScript sperimentali non supportate dai browser target, salvo) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(fallback;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* verificare layout, responsive design, modali, form, tabelle, menu e switch tema sui) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(browser target;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* garantire rendering coerente di font, spaziature, colori, focus e stati interattivi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* usare fallback CSS dove necessario;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* evitare dipendenze da comportamenti specifici di un singolo browser;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* garantire funzionamento corretto di local storage o meccanismo equivalente per il) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(salvataggio del tema;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* verificare che validazioni, modali e navigazione da tastiera siano coerenti tra browser;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* documentare eventuali limitazioni note.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 589.89 Tm
+(Accessibilita' e usabilita') Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(La grafica deve rispettare criteri di accessibilita' e usabilita' anche per persone) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(diversamente abili.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(Requisiti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(* progettare l'interfaccia seguendo le linee guida WCAG, preferibilmente livello AA;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* garantire navigazione completa da tastiera;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(* rendere visibile e chiaro lo stato di focus degli elementi interattivi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(* usare elementi HTML semantici dove possibile;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* associare correttamente label e descrizioni ai campi form;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(* usare attributi ARIA solo quando necessari e in modo coerente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* garantire compatibilita' con screen reader per form, errori, modali, menu e azioni) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(principali;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* comunicare gli errori di validazione anche in modo testuale, non solo tramite colore;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(* mantenere contrasto adeguato tra testo, icone, bordi, focus e sfondi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(* non affidare informazioni essenziali solo al colore;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* prevedere testi chiari per bottoni, azioni distruttive e modali di conferma;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* rendere modali accessibili con focus trap, chiusura controllata e ritorno del focus) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(all'elemento di origine;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* garantire dimensioni adeguate per aree cliccabili e controlli touch;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* evitare animazioni e transizioni che possano disturbare l'utente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* rispettare, dove possibile, la preferenza utente prefers-reduced-motion;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* mantenere la UI semplice, prevedibile e coerente tra le viste;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(* rendere comprensibili icone e pulsanti tramite testo visibile, aria-label o tooltip) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(accessibili;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(* verificare che tema chiaro e tema scuro rispettino entrambi i requisiti di accessibilita'.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(Ogni operazione di modifica o cancellazione dei dati deve passare attraverso una modale di) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(conferma prima dell'invio effettivo della richiesta al backend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(La modale deve essere usata almeno per:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* modifica di un contatto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(* cancellazione di un contatto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(* modifica di telefono, email, indirizzo o tag associati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(* cancellazione di telefono, email, indirizzo o tag associati;) Tj
+ET
+endstream
+endobj
+23 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 22 0 R >>
+endobj
+24 0 obj
+<< /Length 3628 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(* eventuale cancellazione dell'account utente, se prevista in futuro.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(I tag associati ai contatti devono essere modificabili e cancellabili dall'interfaccia) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(grafica.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(La gestione dei tag deve prevedere:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* modifica del nome tag;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* cancellazione del tag;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* validazione del nome tag prima del salvataggio;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* controllo di unicita' del tag per utente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* modale di conferma prima di ogni modifica;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* modale di conferma prima di ogni cancellazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* nessuna chiamata API se l'utente annulla la modale;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* aggiornamento della UI dopo conferma e risposta positiva del backend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(La conferma deve distinguere chiaramente tra:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* annullamento dell'operazione, senza chiamata API;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* conferma dell'operazione, con invio della chiamata API;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* errore durante l'operazione, con messaggio coerente all'utente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(La modale deve evitare conferme ambigue: il testo deve indicare l'entita' coinvolta e) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(l'azione richiesta, ad esempio modifica o cancellazione.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 435.89 Tm
+(Routing frontend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(Rotte richieste:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(/ redirect a /login) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(/login pagina login) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(/home home applicazione, protetta) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(/error pagina errore) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(/contacts lista contatti, protetta) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(/contacts/new) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(/contacts/:id/edit) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(Dal path base localhost:<porta>/ l'utente deve essere reindirizzato a /login.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(Dopo login riuscito, l'utente deve essere reindirizzato alla home Angular.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(In caso di credenziali errate o errore applicativo, l'utente deve essere reindirizzato alla) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(pagina /error, eventualmente con un parametro che indichi il motivo dell'errore.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(Esempi:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(/error?reason=login-failed) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(/error?reason=unauthorized) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(/error?reason=forbidden) Tj
+ET
+endstream
+endobj
+25 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 24 0 R >>
+endobj
+26 0 obj
+<< /Length 2881 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(/error?reason=server) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 743.89 Tm
+(Backend Spring Boot) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(Il backend deve essere un progetto Gradle + Spring Boot.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(Dipendenze previste:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* Spring Web;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* Spring Data JPA;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* Spring Security;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* Spring Validation;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* H2 Database;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* supporto JWT;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(* eventuale Lombok, se coerente con lo stile del progetto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 533.89 Tm
+(Convenzioni Gradle e Spring Boot) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(Il progetto backend deve rispettare le convenzioni standard di Gradle e Spring Boot per) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(nomenclature, struttura delle cartelle e organizzazione del codice.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(Struttura backend prevista:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(backend/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(build.gradle) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(settings.gradle) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(gradlew) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(gradlew.bat) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(src/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(main/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(java/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(<base-package>/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(RubricaApplication.java) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(config/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(controller/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(dto/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(entity/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(exception/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(mapper/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(repository/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(security/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(service/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(resources/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(application.yml) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(data.sql o import.sql, se necessari) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(test/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(java/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(<base-package>/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(controller/) Tj
+ET
+endstream
+endobj
+27 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 26 0 R >>
+endobj
+28 0 obj
+<< /Length 3551 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(repository/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(security/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(service/) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(Convenzioni richieste:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* usare un package base coerente, ad esempio it.example.rubrica o equivalente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* mantenere la classe principale Spring Boot nel package root, ad esempio) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(RubricaApplication;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* usare nomi classi descrittivi e allineati agli standard Java:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(- ContactController;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(- ContactService;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(- ContactRepository;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(- ContactRequest;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(- ContactResponse;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(- SecurityConfig;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(- JwtService;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* usare suffissi coerenti con il ruolo della classe:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(- Controller per i controller REST;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(- Service per la logica applicativa;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(- Repository per l'accesso dati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(- Request e Response per i DTO;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(- Config per la configurazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(- Exception per eccezioni applicative;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(* separare DTO ed entity JPA;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* non esporre direttamente le entity JPA nelle API REST;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(* collocare i test in src/test/java rispettando lo stesso package delle classi testate;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* usare src/main/resources/application.yml o application.properties per la configurazione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(* mantenere configurazioni, sicurezza, controller, service e repository in package dedicati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* usare Gradle Wrapper per permettere l'avvio del progetto senza richiedere una) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(installazione Gradle globale;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(* rispettare le convenzioni Gradle per task, dipendenze e source set;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* evitare nomi generici come Manager, Utility, Data, Object quando non aggiungono) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(significato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 281.89 Tm
+(API richieste) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(Endpoint pubblici:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(POST /api/auth/login) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(POST /api/auth/logout) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(Endpoint protetti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(GET /api/auth/me) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(GET /api/contacts) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(GET /api/contacts/{id}) Tj
+ET
+endstream
+endobj
+29 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 28 0 R >>
+endobj
+30 0 obj
+<< /Length 3723 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(POST /api/contacts) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(PUT /api/contacts/{id}) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(DELETE /api/contacts/{id}) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(GET /api/tags) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(POST /api/tags) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(PUT /api/tags/{id}) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(DELETE /api/tags/{id}) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(Gli endpoint della rubrica devono essere accessibili solo da utenti autenticati.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(Ogni operazione sui contatti deve essere filtrata in base all'utente autenticato, impedendo) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(l'accesso ai dati di altri utenti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 575.89 Tm
+(Gestione errori REST) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(Le chiamate REST devono gestire correttamente tutti gli errori sia lato backend sia lato) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(frontend, restituendo sempre messaggi comprensibili all'utente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(Requisiti backend:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* definire una gestione centralizzata degli errori, ad esempio con @ControllerAdvice e) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(@ExceptionHandler;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(* restituire risposte di errore strutturate e coerenti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* includere informazioni utili come timestamp, status HTTP, codice errore applicativo,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(messaggio leggibile e path della richiesta;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* non esporre stack trace, dettagli interni, query SQL, token, password o informazioni) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(sensibili;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* gestire errori di validazione DTO con messaggi specifici per campo;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(* gestire errori di autenticazione e autorizzazione con 401 e 403;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(* gestire risorse non trovate con 404;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* gestire conflitti, duplicati e vincoli univoci con 409;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* gestire payload non validi con 400;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* gestire errori imprevisti con 500 e messaggio generico comprensibile;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* mantenere codici HTTP coerenti con il tipo di errore;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* loggare internamente gli errori tecnici senza mostrarli all'utente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(Formato errore consigliato:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+({) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+("timestamp": "2026-05-08T12:00:00Z",) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+("status": 400,) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+("error": "VALIDATION_ERROR",) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+("message": "Alcuni campi non sono validi.",) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+("path": "/api/contacts",) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+("fieldErrors": {) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+("firstName": "Il nome e' obbligatorio.") Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(}) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(}) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+() Tj
+ET
+endstream
+endobj
+31 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 30 0 R >>
+endobj
+32 0 obj
+<< /Length 4000 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(Requisiti frontend:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* intercettare gli errori HTTP tramite servizio dedicato o HTTP interceptor;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* mostrare messaggi comprensibili e non tecnici all'utente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* associare gli errori di validazione ai rispettivi campi form quando possibile;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* gestire errori 400, 401, 403, 404, 409, 500 e assenza di connessione;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* reindirizzare a /login o /error quando la sessione non e' valida o il login fallisce;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* mostrare messaggi coerenti in modali, form, toast o pagina errore;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* evitare di mostrare dettagli tecnici come stack trace o nomi interni delle classi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* prevedere fallback generico quando il backend non restituisce un errore strutturato;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* mantenere i messaggi accessibili anche per screen reader.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 603.89 Tm
+(Autenticazione e sicurezza) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(Il login deve essere gestito con Spring Security e Spring Boot.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(Flusso previsto:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(Utente apre /) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(-> redirect a /login) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(Utente invia credenziali) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(-> Angular chiama POST /api/auth/login) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(Spring Security autentica l'utente) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(-> se OK, il backend restituisce un token JWT) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(-> Angular salva il token e naviga a /home) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(-> se KO, Angular naviga a /error) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 351.89 Tm
+(Requisiti sicurezza backend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* Usare AuthenticationManager per validare le credenziali.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* Usare UserDetailsService per caricare gli utenti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* Salvare le password con hash BCrypt.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* Non salvare mai password in chiaro.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* Usare JWT per autenticare le richieste successive.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* Configurare un filtro JWT prima di UsernamePasswordAuthenticationFilter.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(* Proteggere tutti gli endpoint /api/contacts/**.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(* Consentire pubblicamente solo gli endpoint di login e le risorse statiche necessarie.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(* Configurare CORS per permettere le chiamate dal frontend Angular in sviluppo.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* Restituire codici HTTP coerenti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(- 401 Unauthorized per credenziali errate;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(- 403 Forbidden per utente non autorizzato o disabilitato;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(- 500 Internal Server Error per errori applicativi non gestiti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 113.89 Tm
+(Database locale) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(Il database locale consigliato per la base progetto e' H2 in file mode.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+() Tj
+ET
+endstream
+endobj
+33 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 32 0 R >>
+endobj
+34 0 obj
+<< /Length 3042 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(La struttura deve supportare:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(* utenti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* contatti;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* numeri di telefono multipli;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* email multiple;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* indirizzi multipli;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* tag/categorie per organizzare la rubrica.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 659.89 Tm
+(Modello dati) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 617.89 Tm
+(Tabella users) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(id BIGINT PK) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(username VARCHAR\(50\) NOT NULL UNIQUE) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(email VARCHAR\(254\) NOT NULL UNIQUE) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(password_hash VARCHAR\(255\) NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(first_name VARCHAR\(80\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(last_name VARCHAR\(80\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(enabled BOOLEAN NOT NULL DEFAULT TRUE) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(created_at TIMESTAMP NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(updated_at TIMESTAMP NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 407.89 Tm
+(Tabella contacts) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(id BIGINT PK) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(user_id BIGINT NOT NULL FK -> users.id) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(first_name VARCHAR\(80\) NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(last_name VARCHAR\(80\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(company VARCHAR\(120\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(job_title VARCHAR\(120\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(notes VARCHAR\(1000\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(favorite BOOLEAN NOT NULL DEFAULT FALSE) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(created_at TIMESTAMP NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(updated_at TIMESTAMP NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 183.89 Tm
+(Tabella contact_phones) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(id BIGINT PK) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(contact_id BIGINT NOT NULL FK -> contacts.id) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(type VARCHAR\(30\) NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(phone_number VARCHAR\(30\) NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(primary_phone BOOLEAN NOT NULL DEFAULT FALSE) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+() Tj
+ET
+endstream
+endobj
+35 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 34 0 R >>
+endobj
+36 0 obj
+<< /Length 2835 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 771.89 Tm
+(Tabella contact_emails) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(id BIGINT PK) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(contact_id BIGINT NOT NULL FK -> contacts.id) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(type VARCHAR\(30\) NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(email VARCHAR\(254\) NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(primary_email BOOLEAN NOT NULL DEFAULT FALSE) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 617.89 Tm
+(Tabella contact_addresses) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(id BIGINT PK) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(contact_id BIGINT NOT NULL FK -> contacts.id) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(type VARCHAR\(30\) NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(street VARCHAR\(160\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(city VARCHAR\(100\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(province VARCHAR\(80\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(postal_code VARCHAR\(20\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(country VARCHAR\(80\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(primary_address BOOLEAN NOT NULL DEFAULT FALSE) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 407.89 Tm
+(Tabella tags) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(id BIGINT PK) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(user_id BIGINT NOT NULL FK -> users.id) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(name VARCHAR\(40\) NOT NULL) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(color VARCHAR\(20\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(UNIQUE\(user_id, name\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 239.89 Tm
+(Tabella contact_tags) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(contact_id BIGINT NOT NULL FK -> contacts.id) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(tag_id BIGINT NOT NULL FK -> tags.id) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(PRIMARY KEY\(contact_id, tag_id\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 99.89 Tm
+(Relazioni) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+() Tj
+ET
+endstream
+endobj
+37 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 36 0 R >>
+endobj
+38 0 obj
+<< /Length 3159 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(users 1 -> N contacts) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(contacts 1 -> N contact_phones) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(contacts 1 -> N contact_emails) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(contacts 1 -> N contact_addresses) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(users 1 -> N tags) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(contacts N -> N tags tramite contact_tags) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(Ogni contatto appartiene a un solo utente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(Ogni tag appartiene a un solo utente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(Un contatto puo' avere piu' telefoni, email, indirizzi e tag.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 589.89 Tm
+(Regole di cancellazione) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* Eliminando un utente, devono essere eliminati i suoi contatti, tag e dati collegati.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* Eliminando un contatto, devono essere eliminati telefoni, email, indirizzi e associazioni) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(ai tag.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* Eliminando un tag, devono essere eliminate le associazioni in contact_tags.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 477.89 Tm
+(Validazione e sanitizzazione frontend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(Il frontend deve usare Reactive Forms con validator standard e custom.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 407.89 Tm
+(Campi contatto) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(firstName:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(* obbligatorio) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* minimo 2 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* massimo 80 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* ammessi lettere, spazi, apostrofi e trattini) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(lastName:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* massimo 80 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* ammessi lettere, spazi, apostrofi e trattini) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(company:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(* massimo 120 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(jobTitle:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* massimo 120 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(notes:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* massimo 1000 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* nessun HTML attivo) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(favorite:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(* boolean) Tj
+ET
+endstream
+endobj
+39 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 38 0 R >>
+endobj
+40 0 obj
+<< /Length 2696 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 757.89 Tm
+(Campi telefono) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(phoneNumber:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* obbligatorio) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* massimo 30 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* ammessi numeri, +, spazi, trattini, parentesi e punti) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 617.89 Tm
+(Campi email) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(email:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* obbligatoria) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* formato email valido) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* massimo 254 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* normalizzazione lowercase) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 463.89 Tm
+(Campi indirizzo) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(street: massimo 160 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(city: massimo 100 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(province: massimo 80 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(postalCode: massimo 20 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(country: massimo 80 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 309.89 Tm
+(Campi tag) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(name:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* obbligatorio) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+(* massimo 40 caratteri) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(* univoco per utente) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(* nessun HTML attivo) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 155.89 Tm
+(Validator Angular custom) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(Validator previsti:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(* personNameValidator;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(* phoneValidator;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(* safeTextValidator;) Tj
+ET
+endstream
+endobj
+41 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 40 0 R >>
+endobj
+42 0 obj
+<< /Length 3263 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(* tagNameValidator;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(* noOnlyWhitespaceValidator.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(Sanitizzazione lato frontend:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* trim dei campi testuali;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* collasso degli spazi multipli;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* rimozione dei tag HTML dai campi liberi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* normalizzazione lowercase delle email;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* normalizzazione dei tipi di telefono, email, indirizzo e tag.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(La sanitizzazione frontend migliora l'esperienza utente, ma non deve essere considerata un) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(controllo di sicurezza sufficiente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 589.89 Tm
+(Validazione backend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(Il backend deve validare i DTO in ingresso usando Bean Validation.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(Esempio di regole:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(firstName:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* @NotBlank) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(* @Size\(min = 2, max = 80\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(* @Pattern per nomi validi) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(email:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* @NotBlank) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(* @Email) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* @Size\(max = 254\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(phoneNumber:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* @NotBlank) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* @Size\(max = 30\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* @Pattern per formato telefonico) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(notes:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* @Size\(max = 1000\)) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+(Il backend deve inoltre:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* eseguire trim e normalizzazione dei dati;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(* sanificare i campi liberi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* verificare che la risorsa richiesta appartenga all'utente autenticato;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* impedire duplicati dove previsto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(* gestire il vincolo di un solo telefono, email o indirizzo principale per contatto;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* usare DTO separati dalle entity JPA;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* restituire errori di validazione strutturati e leggibili dal frontend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 71.89 Tm
+(Vincoli database) Tj
+ET
+endstream
+endobj
+43 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 42 0 R >>
+endobj
+44 0 obj
+<< /Length 3699 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(Il database deve includere:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* chiavi primarie;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* chiavi esterne;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* NOT NULL sui campi obbligatori;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* UNIQUE su username ed email utente;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* UNIQUE\(user_id, name\) sui tag;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* lunghezze massime coerenti con i DTO;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* indici su campi utili alla ricerca e ai join.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(Regole come "un solo telefono principale per contatto" possono essere gestite nel service) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(layer, soprattutto usando H2, dove gli indici parziali non sono la scelta piu' portabile.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 589.89 Tm
+(Test unitari frontend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(I test Angular devono coprire almeno:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 519.89 Tm
+(Validator custom) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(* personNameValidator accetta nomi validi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* personNameValidator rifiuta stringhe vuote, solo spazi, numeri e caratteri non ammessi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(* phoneValidator accetta numeri locali e internazionali validi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(* phoneValidator rifiuta numeri troppo corti, troppo lunghi o con caratteri non ammessi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* safeTextValidator rifiuta input con tag HTML o script.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(* tagNameValidator rifiuta tag vuoti, troppo lunghi o con HTML.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* noOnlyWhitespaceValidator rifiuta stringhe composte solo da spazi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 365.89 Tm
+(AuthService) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* invia le credenziali a POST /api/auth/login.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* salva il token dopo login riuscito.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* rimuove il token al logout.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* riconosce correttamente lo stato autenticato/non autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* gestisce errore 401 senza salvare token.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 239.89 Tm
+(AuthGuard) Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+(* consente accesso a /home se il token e' presente e valido.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* reindirizza a /login se il token manca.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(* reindirizza a /error o /login in caso di token non valido o scaduto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 141.89 Tm
+(HTTP interceptor) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* aggiunge header Authorization: Bearer <token> alle richieste protette.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(* non aggiunge il token alla richiesta di login.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(* gestisce risposte 401 o 403 secondo la strategia definita.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+() Tj
+ET
+endstream
+endobj
+45 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 44 0 R >>
+endobj
+46 0 obj
+<< /Length 4613 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 785.89 Tm
+(Componenti) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* LoginComponent mostra errori di validazione sui campi obbligatori.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* LoginComponent naviga a /home in caso di login riuscito.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* LoginComponent naviga a /error in caso di login fallito.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* ContactFormComponent impedisce submit con dati non validi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* ContactFormComponent apre una modale di conferma prima di inviare una modifica.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* ContactFormComponent non invia la richiesta di modifica se la modale viene annullata.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* ContactFormComponent normalizza i dati prima dell'invio.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* ContactsListComponent mostra la lista ricevuta dal servizio.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* ContactsListComponent apre una modale di conferma prima di cancellare un contatto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* ContactsListComponent non invia la richiesta di cancellazione se la modale viene) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(annullata.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* la modale di conferma mostra testo coerente con l'azione richiesta.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* la modale di conferma chiama il servizio corretto solo dopo conferma esplicita.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(* i tag associati ai contatti sono modificabili tramite interfaccia dedicata.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* la modifica di un tag apre una modale di conferma prima della chiamata API.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* la cancellazione di un tag apre una modale di conferma prima della chiamata API.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* annullando la modale di modifica o cancellazione tag non viene inviata alcuna chiamata) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(API.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* confermando la modale di modifica o cancellazione tag viene chiamato il servizio corretto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 463.89 Tm
+(Responsive UI) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* layout login correttamente visibile su mobile, tablet e desktop.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(* layout home correttamente visibile su mobile, tablet e desktop.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* lista contatti leggibile senza scroll orizzontale non necessario.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(* form contatto utilizzabile su schermi piccoli.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* modale di conferma centrata e usabile su mobile.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(* testi lunghi non sovrapposti ad altri elementi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(* font leggibile e coerente tra le diverse viste.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* dimensione del testo adeguata ai diversi breakpoint.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* pulsanti e controlli hanno area cliccabile adeguata anche su touch.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* switch tema chiaro/scuro disponibile nell'interfaccia.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* tema chiaro applicato correttamente a login, home, form, modali e pagina errore.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* tema scuro applicato correttamente a login, home, form, modali e pagina errore.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* preferenza tema mantenuta dopo refresh o nuova apertura dell'applicazione.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+(* contrasto testi/sfondi adeguato in entrambe le modalita'.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 219.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 211.89 Tm
+(CSS) Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(* regole globali separate da regole specifiche di componente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* assenza di conflitti CSS tra pagine e componenti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* assenza di selettori globali troppo invasivi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(* tema chiaro e scuro non introducono conflitti di stile.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* modifiche CSS locali non alterano viste non correlate.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* convenzione CSS documentata.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 71.89 Tm
+(Accessibilita') Tj
+ET
+endstream
+endobj
+47 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 46 0 R >>
+endobj
+48 0 obj
+<< /Length 4087 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(* tutti i campi form hanno label associate correttamente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(* gli errori di validazione sono annunciabili e leggibili.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* la navigazione principale e' usabile da tastiera.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+(* il focus e' visibile su pulsanti, link, campi e controlli.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* le modali gestiscono correttamente focus iniziale, focus trap e ritorno del focus.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* i bottoni iconici hanno nome accessibile.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* il contrasto e' adeguato in modalita' chiara e scura.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* le azioni distruttive sono comprensibili anche senza affidarsi solo al colore.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* l'interfaccia resta utilizzabile con screen reader.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* eventuali animazioni rispettano prefers-reduced-motion.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 617.89 Tm
+(Compatibilita' browser) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* login visibile e utilizzabile nei browser moderni principali.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(* home visibile e utilizzabile nei browser moderni principali.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* form, modali, tabelle e liste mantengono layout coerente tra browser.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* switch tema chiaro/scuro funziona tra browser supportati.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* local storage o meccanismo di persistenza tema funziona tra browser supportati.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* focus, hover e stati disabilitati sono visibili in modo coerente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* nessuna funzionalita' critica dipende da API sperimentali senza fallback.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 463.89 Tm
+(Copertura frontend JavaScript/TypeScript) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* configurazione test Angular per generare report di coverage.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(* copertura elevata per servizi, validator, sanitizer, guard, interceptor e componenti con) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(logica.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(* test dei template e delle interazioni utente dove rilevante.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(* test delle modali di conferma e dello switch tema.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(* esclusione motivata solo per codice generato o parti prive di logica.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+(* build o task dedicato per eseguire test e report coverage.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* report finale con stato test frontend e copertura.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 295.89 Tm
+(Test unitari backend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(I test backend devono coprire almeno:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 225.89 Tm
+(Servizi autenticazione) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* login riuscito con credenziali valide.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(* login fallito con password errata.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* login fallito con username inesistente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* login fallito con utente disabilitato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(* generazione token JWT con subject corretto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* validazione token JWT valido.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* rifiuto token JWT scaduto o malformato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 71.89 Tm
+(UserDetailsService) Tj
+ET
+endstream
+endobj
+49 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 48 0 R >>
+endobj
+50 0 obj
+<< /Length 4165 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(* carica un utente esistente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(* solleva errore per utente inesistente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* restituisce correttamente enabled/disabled.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 715.89 Tm
+(Copertura backend Java) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* configurazione Gradle per generare report di coverage, preferibilmente con JaCoCo.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* copertura elevata per service, security, validator, mapper e controller.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* esclusione motivata solo per codice generato, configurazioni banali o classi prive di) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(logica.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* build o task dedicato per eseguire test e report coverage.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* report finale con stato test backend e copertura.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 575.89 Tm
+(Servizi contatti) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+(* crea un contatto associandolo all'utente autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 527.89 Tm
+(* aggiorna solo contatti appartenenti all'utente autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+(* impedisce aggiornamento di contatti appartenenti ad altri utenti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* elimina solo contatti appartenenti all'utente autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(* restituisce solo i contatti dell'utente autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* gestisce correttamente telefono/email/indirizzo principale.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(* modifica un tag appartenente all'utente autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(* impedisce la modifica di tag appartenenti ad altri utenti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+(* cancella un tag appartenente all'utente autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+(* impedisce la cancellazione di tag appartenenti ad altri utenti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 401.89 Tm
+(* normalizza email e campi testuali.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+(* rifiuta dati non validi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 351.89 Tm
+(Validator DTO) Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* rifiuta firstName vuoto o troppo corto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* rifiuta email non valida.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* rifiuta telefono non valido.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* rifiuta note troppo lunghe.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* rifiuta tag vuoti o troppo lunghi.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 225.89 Tm
+(Controller REST) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(* POST /api/auth/login restituisce 200 e token con credenziali valide.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+(* POST /api/auth/login restituisce 401 con credenziali errate.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+(* endpoint contatti restituiscono 401 senza token.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(* endpoint contatti restituiscono 403 se l'utente non e' autorizzato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(* GET /api/contacts restituisce solo i contatti dell'utente autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(* POST /api/contacts restituisce 400 con payload non valido.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+(* PUT /api/contacts/{id} restituisce 404 se il contatto non esiste per l'utente corrente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+(* DELETE /api/contacts/{id} elimina il contatto corretto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(* endpoint di modifica tag restituisce 400 con nome tag non valido.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+(* endpoint di modifica tag restituisce 404 se il tag non appartiene all'utente corrente.) Tj
+ET
+endstream
+endobj
+51 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 50 0 R >>
+endobj
+52 0 obj
+<< /Length 3827 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(* endpoint di cancellazione tag elimina solo tag appartenenti all'utente autenticato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+(* errori REST restituiscono formato strutturato e coerente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+(* errori di validazione restituiscono messaggi specifici per campo.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 751.89 Tm
+(* errori imprevisti non espongono dettagli tecnici o sensibili.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 715.89 Tm
+(Gestione errori frontend) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* interceptor o servizio errori intercetta risposte HTTP non riuscite.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(* errore 400 mostra messaggi di validazione comprensibili.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* errore 401 gestisce sessione non valida o credenziali errate.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* errore 403 mostra messaggio di autorizzazione negata.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* errore 404 mostra messaggio di risorsa non trovata.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* errore 409 mostra messaggio di conflitto o duplicato.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* errore 500 mostra messaggio generico comprensibile.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* errore di rete mostra messaggio di connessione non disponibile.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(* messaggi errore sono visibili e accessibili all'utente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 533.89 Tm
+(Repository e database) Tj
+/F1 10 Tf
+1 0 0 1 48.00 513.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 499.89 Tm
+(* vincolo unique su username.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 485.89 Tm
+(* vincolo unique su email utente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 471.89 Tm
+(* vincolo unique su \(user_id, name\) per i tag.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 457.89 Tm
+(* cancellazione a cascata dei dati collegati al contatto.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 443.89 Tm
+(* persistenza corretta di telefoni, email, indirizzi e tag.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 429.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 415.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 407.89 Tm
+(Test di integrazione consigliati) Tj
+/F1 10 Tf
+1 0 0 1 48.00 387.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 373.89 Tm
+(Oltre ai test unitari, sono consigliati test di integrazione con Spring Boot Test e database) Tj
+/F1 10 Tf
+1 0 0 1 48.00 359.89 Tm
+(H2:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 345.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 331.89 Tm
+(* login end-to-end tramite API;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 317.89 Tm
+(* chiamata protetta con JWT valido;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 303.89 Tm
+(* chiamata protetta con JWT mancante o invalido;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 289.89 Tm
+(* creazione contatto completa con telefoni, email, indirizzi e tag;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 275.89 Tm
+(* verifica isolamento dati tra utenti diversi;) Tj
+/F1 10 Tf
+1 0 0 1 48.00 261.89 Tm
+(* verifica risposta strutturata per errori di validazione.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 247.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 233.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 225.89 Tm
+(Dati iniziali) Tj
+/F1 10 Tf
+1 0 0 1 48.00 205.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 191.89 Tm
+(Per facilitare sviluppo e test, il backend puo' inizializzare un utente demo:) Tj
+/F1 10 Tf
+1 0 0 1 48.00 177.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 163.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 149.89 Tm
+(username: admin) Tj
+/F1 10 Tf
+1 0 0 1 48.00 135.89 Tm
+(password: admin) Tj
+/F1 10 Tf
+1 0 0 1 48.00 121.89 Tm
+(email: admin@example.local) Tj
+/F1 10 Tf
+1 0 0 1 48.00 107.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 93.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 79.89 Tm
+(La password deve essere salvata nel database solo in formato hash BCrypt.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 65.89 Tm
+() Tj
+ET
+endstream
+endobj
+53 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 52 0 R >>
+endobj
+54 0 obj
+<< /Length 1516 >>
+stream
+BT
+/F1 10 Tf
+1 0 0 1 48.00 793.89 Tm
+(Si possono aggiungere alcuni contatti demo associati all'utente admin.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 779.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 765.89 Tm
+() Tj
+/F1 13 Tf
+1 0 0 1 48.00 757.89 Tm
+(Criteri di accettazione) Tj
+/F1 10 Tf
+1 0 0 1 48.00 737.89 Tm
+() Tj
+/F1 10 Tf
+1 0 0 1 48.00 723.89 Tm
+(* Aprendo il path base dell'applicazione, l'utente viene mandato a /login.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 709.89 Tm
+(* Il login e' gestito da Spring Security.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 695.89 Tm
+(* Con credenziali corrette, l'utente arriva alla home Angular.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 681.89 Tm
+(* Con credenziali errate, l'utente arriva alla pagina di errore o visualizza un errore) Tj
+/F1 10 Tf
+1 0 0 1 48.00 667.89 Tm
+(coerente.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 653.89 Tm
+(* Le API della rubrica sono protette.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 639.89 Tm
+(* Ogni utente vede solo i propri contatti.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 625.89 Tm
+(* I dati sono validati lato frontend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 611.89 Tm
+(* I dati sono validati lato backend.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 597.89 Tm
+(* Il database applica vincoli coerenti con il modello.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 583.89 Tm
+(* Sono presenti test unitari per validator, autenticazione, servizi, controller e) Tj
+/F1 10 Tf
+1 0 0 1 48.00 569.89 Tm
+(repository.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 555.89 Tm
+(* Il progetto puo' essere avviato localmente con frontend Angular e backend Spring Boot.) Tj
+/F1 10 Tf
+1 0 0 1 48.00 541.89 Tm
+() Tj
+ET
+endstream
+endobj
+55 0 obj
+<< /Type /Page /Parent 56 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 1 0 R >> >> /Contents 54 0 R >>
+endobj
+56 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R 21 0 R 23 0 R 25 0 R 27 0 R 29 0 R 31 0 R 33 0 R 35 0 R 37 0 R 39 0 R 41 0 R 43 0 R 45 0 R 47 0 R 49 0 R 51 0 R 53 0 R 55 0 R] /Count 27 >>
+endobj
+57 0 obj
+<< /Type /Catalog /Pages 56 0 R >>
+endobj
+xref
+0 58
+0000000000 65535 f 
+0000000009 00000 n 
+0000000106 00000 n 
+0000003588 00000 n 
+0000003721 00000 n 
+0000007245 00000 n 
+0000007378 00000 n 
+0000011392 00000 n 
+0000011525 00000 n 
+0000015478 00000 n 
+0000015611 00000 n 
+0000018837 00000 n 
+0000018972 00000 n 
+0000023731 00000 n 
+0000023866 00000 n 
+0000028618 00000 n 
+0000028753 00000 n 
+0000033089 00000 n 
+0000033224 00000 n 
+0000037715 00000 n 
+0000037850 00000 n 
+0000041505 00000 n 
+0000041640 00000 n 
+0000046284 00000 n 
+0000046419 00000 n 
+0000050100 00000 n 
+0000050235 00000 n 
+0000053169 00000 n 
+0000053304 00000 n 
+0000056908 00000 n 
+0000057043 00000 n 
+0000060819 00000 n 
+0000060954 00000 n 
+0000065007 00000 n 
+0000065142 00000 n 
+0000068237 00000 n 
+0000068372 00000 n 
+0000071260 00000 n 
+0000071395 00000 n 
+0000074607 00000 n 
+0000074742 00000 n 
+0000077491 00000 n 
+0000077626 00000 n 
+0000080942 00000 n 
+0000081077 00000 n 
+0000084829 00000 n 
+0000084964 00000 n 
+0000089630 00000 n 
+0000089765 00000 n 
+0000093905 00000 n 
+0000094040 00000 n 
+0000098258 00000 n 
+0000098393 00000 n 
+0000102273 00000 n 
+0000102408 00000 n 
+0000103977 00000 n 
+0000104112 00000 n 
+0000104350 00000 n 
+trailer
+<< /Size 58 /Root 57 0 R >>
+startxref
+104401
+%%EOF

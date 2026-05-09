@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: rubricaJavaAngular
+  profiles:
+    default: dev
+
+server:
+  port: 8080
+
+app:
+  version: ${APP_VERSION:0.2.0}
+  jwt:
+    secret: ${APP_JWT_SECRET:development-secret-key-change-before-production-1234567890}
+    expiration-minutes: ${APP_JWT_EXPIRATION_MINUTES:120}
