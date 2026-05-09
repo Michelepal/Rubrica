@@ -17,6 +17,23 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.0] - 2026-05-09
+
+### Cambiato
+
+- Installato Node/npm locale al progetto per eseguire i task Angular e aggiunto `.node-version`.
+- Aggiornato Angular, Angular CLI e build tooling a versioni prive di vulnerabilita' note da `npm audit`.
+- Generato `package-lock.json` per rendere riproducibile l'installazione frontend.
+- Configurato l'esclusione degli artifact statici Angular copiati nel backend.
+
+### Verificato
+
+- Frontend: `npm audit --audit-level=high` completato con `0 vulnerabilities`.
+- Frontend: `npm run build` completato con successo.
+- Frontend: `npm test -- --watch=false --code-coverage` completato con `4 SUCCESS`.
+- Frontend: report coverage generato in `frontend/coverage/`.
+- Integrazione: `npm run copy-to-backend` ha copiato la build Angular in `backend/src/main/resources/static`.
+
 ## [0.2.0] - 2026-05-09
 
 ### Aggiunto
