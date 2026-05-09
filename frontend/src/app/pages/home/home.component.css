@@ -103,6 +103,11 @@
   border-radius: var(--radius);
 }
 
+.contact-row--active {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
 .contact-row strong,
 .contact-row span {
   overflow-wrap: anywhere;
@@ -154,6 +159,30 @@
   font-weight: 700;
 }
 
+.feedback {
+  margin: 0 0 var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius);
+}
+
+.feedback--error,
+.field-error {
+  color: var(--color-danger);
+}
+
+.feedback--error {
+  border: 1px solid var(--color-danger);
+}
+
+.feedback--success {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.field-error {
+  font-size: var(--font-size-sm);
+}
+
 @media (max-width: 64rem) {
   .app-shell,
   .content-grid {
@@ -177,4 +206,3 @@
     flex-direction: column;
   }
 }
-

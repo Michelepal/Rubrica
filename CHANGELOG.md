@@ -17,6 +17,15 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.3] - 2026-05-09
+
+### Corretto
+
+- Collegata la pagina Angular della rubrica alle API reali dei contatti.
+- La modifica di un contatto ora invia una richiesta `PUT /api/contacts/{id}` dopo conferma in modale e aggiorna subito la lista.
+- Aggiunti dati demo nel profilo `dev` per verificare immediatamente modifica e cancellazione su record reali.
+- Aggiunto test frontend per verificare la chiamata REST di aggiornamento contatto.
+
 ## [0.3.2] - 2026-05-09
 
 ### Corretto

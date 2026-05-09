@@ -68,7 +68,7 @@ public class ContactService {
     public ContactResponse update(String username, Long id, ContactRequest request) {
         Contact contact = findOwned(username, id);
         apply(contact, username, request);
-        return mapper.toResponse(contact);
+        return mapper.toResponse(contactRepository.save(contact));
     }
 
     @Transactional
@@ -156,4 +156,3 @@ public class ContactService {
         contact.getTags().addAll(tags);
     }
 }
-

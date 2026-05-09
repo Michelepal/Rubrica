@@ -23,48 +23,87 @@
     <section class="toolbar" aria-label="Strumenti rubrica">
       <label class="visually-hidden" for="search">Cerca contatti</label>
       <input id="search" [(ngModel)]="search" placeholder="Cerca per nome, email, telefono o tag">
-      <button class="button" type="button">Nuovo contatto</button>
+      <button class="button" type="button" (click)="startNewContact()">Nuovo contatto</button>
     </section>
+
+    @if (errorMessage) {
+      <p class="feedback feedback--error" role="alert">{{ errorMessage }}</p>
+    }
+    @if (successMessage) {
+      <p class="feedback feedback--success" role="status">{{ successMessage }}</p>
+    }
 
     <section class="content-grid">
       <section class="panel" aria-labelledby="contacts-title">
         <h2 id="contacts-title">Contatti</h2>
         <div class="contact-list">
+          @if (loading) {
+            <p>Caricamento contatti...</p>
+          }
           @for (contact of filteredContacts; track contact.id) {
-            <article class="contact-row">
+            <article class="contact-row" [class.contact-row--active]="selectedContact?.id === contact.id">
               <div>
-                <strong>{{ contact.name }}</strong>
-                <span>{{ contact.company }}</span>
+                <strong>{{ displayName(contact) }}</strong>
+                <span>{{ contact.company || '-' }}</span>
               </div>
-              <span>{{ contact.email }}</span>
-              <span>{{ contact.phone }}</span>
+              <span>{{ primaryEmail(contact) }}</span>
+              <span>{{ primaryPhone(contact) }}</span>
               <div class="tag-row">
-                @for (tag of contact.tags; track tag) {
+                @for (tag of contact.tags; track tag.id) {
                   <span class="tag">
-                    {{ tag }}
-                    <button type="button" [attr.aria-label]="'Modifica tag ' + tag" (click)="askEditTag(tag)">✎</button>
-                    <button type="button" [attr.aria-label]="'Cancella tag ' + tag" (click)="askDeleteTag(tag)">x</button>
+                    {{ tag.name }}
+                    <button type="button" [attr.aria-label]="'Modifica tag ' + tag.name" (click)="askEditTag(tag.name)">E</button>
+                    <button type="button" [attr.aria-label]="'Cancella tag ' + tag.name" (click)="askDeleteTag(tag.name)">x</button>
                   </span>
                 }
               </div>
               <div class="row-actions">
-                <button class="icon-button" type="button" aria-label="Modifica contatto" (click)="openModal('Conferma modifica contatto', 'Vuoi salvare le modifiche al contatto?', false)">✎</button>
+                <button class="icon-button" type="button" aria-label="Seleziona contatto" (click)="selectContact(contact)">E</button>
                 <button class="icon-button icon-button--danger" type="button" aria-label="Cancella contatto" (click)="askDeleteContact(contact)">x</button>
               </div>
             </article>
+          } @empty {
+            <p>Nessun contatto presente.</p>
           }
         </div>
       </section>
 
       <section class="panel" aria-labelledby="form-title">
-        <h2 id="form-title">Scheda contatto</h2>
-        <form class="contact-form">
-          <label>Nome <input value="Laura"></label>
-          <label>Cognome <input value="Bianchi"></label>
-          <label>Email <input value="laura.bianchi@example.local"></label>
-          <label>Telefono <input value="+39 333 123 4567"></label>
-          <label>Note <textarea rows="5">Preferisce contatto via email.</textarea></label>
-          <button class="button" type="button" (click)="openModal('Conferma modifica contatto', 'Vuoi salvare le modifiche al contatto?', false)">Salva modifiche</button>
+        <h2 id="form-title">{{ selectedContact ? 'Modifica contatto' : 'Nuovo contatto' }}</h2>
+        <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="askSaveContact()">
+          <label for="firstName">Nome
+            <input id="firstName" formControlName="firstName" autocomplete="given-name">
+          </label>
+          @if (contactForm.controls.firstName.touched && contactForm.controls.firstName.invalid) {
+            <small class="field-error">Nome obbligatorio, da 2 a 80 caratteri e senza simboli non validi.</small>
+          }
+
+          <label for="lastName">Cognome
+            <input id="lastName" formControlName="lastName" autocomplete="family-name">
+          </label>
+
+          <label for="company">Azienda
+            <input id="company" formControlName="company" autocomplete="organization">
+          </label>
+
+          <label for="email">Email
+            <input id="email" formControlName="email" autocomplete="email">
+          </label>
+          @if (contactForm.controls.email.touched && contactForm.controls.email.invalid) {
+            <small class="field-error">Inserisci un indirizzo email valido.</small>
+          }
+
+          <label for="phone">Telefono
+            <input id="phone" formControlName="phone" autocomplete="tel">
+          </label>
+
+          <label for="notes">Note
+            <textarea id="notes" formControlName="notes" rows="5"></textarea>
+          </label>
+
+          <button class="button" type="submit" [disabled]="saving">
+            {{ saving ? 'Salvataggio...' : 'Salva modifiche' }}
+          </button>
         </form>
       </section>
     </section>
@@ -77,6 +116,5 @@
   [message]="modalMessage"
   [destructive]="modalDestructive"
   (cancelled)="closeModal()"
-  (confirmed)="closeModal()"
+  (confirmed)="confirmModal()"
 />
-
