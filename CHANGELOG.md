@@ -17,6 +17,12 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.1] - 2026-05-09
+
+### Corretto
+
+- Corretti i launcher Windows per avviare backend con profilo `dev` e frontend con Node/npm locale nel `PATH`.
+
 ## [0.3.0] - 2026-05-09
 
 ### Cambiato
