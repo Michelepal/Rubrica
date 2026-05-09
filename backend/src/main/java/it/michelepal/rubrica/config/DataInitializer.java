@@ -9,6 +9,7 @@ import it.michelepal.rubrica.repository.AppUserRepository;
 import it.michelepal.rubrica.repository.ContactRepository;
 import it.michelepal.rubrica.repository.TagRepository;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +43,8 @@ public class DataInitializer {
                 Tag lavoro = createTag(user, "Lavoro", "#2563eb");
                 Tag vip = createTag(user, "VIP", "#b45309");
                 Tag clienti = createTag(user, "Clienti", "#047857");
-                tagRepository.saveAll(List.of(lavoro, vip, clienti));
+                Iterable<Tag> tags = Objects.requireNonNull(List.of(lavoro, vip, clienti));
+                tagRepository.saveAll(tags);
 
                 Contact laura = createContact(user, "Laura", "Bianchi", "Northwind", "laura.bianchi@example.local", "+39 333 123 4567");
                 laura.getTags().add(lavoro);
@@ -51,7 +53,8 @@ public class DataInitializer {
                 Contact marco = createContact(user, "Marco", "Rossi", "Studio Rossi", "m.rossi@example.local", "02 555 0199");
                 marco.getTags().add(clienti);
 
-                contactRepository.saveAll(List.of(laura, marco));
+                Iterable<Contact> contacts = Objects.requireNonNull(List.of(laura, marco));
+                contactRepository.saveAll(contacts);
             }
         };
     }

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -48,7 +49,7 @@ public class RestExceptionHandler {
     }
 
     private ResponseEntity<ApiErrorResponse> error(
-        HttpStatus status,
+        @NonNull HttpStatus status,
         String code,
         String message,
         HttpServletRequest request,
