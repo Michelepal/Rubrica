@@ -211,3 +211,147 @@ aggiungi tra i requisiti che il css non deve avere conflitti e che le regole gen
 ```text
 per quanto riguarda i task devi specificare che ogni task deve avere un cambiamento di versione, con aggiornamento di un changelog in cui tracciare i cambiamenti
 ```
+
+## Prompt 36
+
+```text
+Quando uso ng serve per far partire il frontend dalla cartella mi da errore perché non riconosce il comando ng.
+```
+
+## Prompt 37
+
+```text
+Ho risolto per i comandi. Ma quando carico il frontend i dati dei contatti non vengono caricati subito, devo eseguire un'azione come un click o un refresh.
+```
+
+## Prompt 38
+
+```text
+Sistema il layout della home: i contatori devono stare sempre in riga, il campo email deve restare su una riga, elimina testi e pulsanti non necessari, rimuovi la creazione tag dalla home, rendi cliccabili i record della tabella e mantieni la tabella contatti recenti a tutta larghezza su tutti i breakpoint.
+```
+
+## Prompt 39
+
+```text
+Gestisci anche la riga con l'icona dell'utente e i pulsanti tema ed esci. Devono essere allineati in tutti i breakpoint e avere una dimensione del testo coerente.
+```
+
+## Prompt 40
+
+```text
+Il pulsante tema della dark mode non è chiaro lato user experience: usa un'icona per indicare tema chiaro o scuro che cambia a seconda della modalità e inserisci un tooltip di spiegazione.
+```
+
+## Prompt 41
+
+```text
+Nella sezione Tag, invece del codice del colore, usa un color picker semplice da usare per l'utente, con colori predefiniti e ordine degli elementi più chiaro.
+```
+
+## Prompt 42
+
+```text
+Cambia versione minore, aggiorna il changelog e fai la commit degli ultimi cambiamenti.
+```
+
+## Prompt 43
+
+```text
+Nella modalità scura i tag hanno poco contrasto tra colore testo e colore sfondo del tag; migliora la visibilità.
+```
+
+## Prompt 44
+
+```text
+Aggiorna alla versione 0.4.1, aggiorna il changelog tracciando le nuove modifiche e fai la commit.
+```
+
+## Prompt 45
+
+```text
+Sia lato backend che lato frontend, le funzioni devono avere try/catch con logging opportuno, intercettare gli errori e comunicare le informazioni necessarie al debug.
+```
+
+## Prompt 46
+
+```text
+Rivedi il progetto e controlla se manca qualche try/catch necessario, per esempio per le interazioni dell'utente lato frontend.
+```
+
+## Prompt 47
+
+```text
+C'è un problema nella sezione Contatti: quando cerco di modificare un contatto non modifica il record e rimane aperta la maschera di modifica. Dovrebbe chiudersi e aggiornare la lista con i dati modificati.
+```
+
+## Prompt 48
+
+```text
+Qualora ci fossero errori nelle operazioni CRUD bisognerebbe mandare un messaggio di errore all'utente.
+```
+
+## Prompt 49
+
+```text
+Correggi l'errore Spring sui PathVariable: "Name for argument of type [java.lang.Long] not specified, and parameter name information not available via reflection".
+```
+
+## Prompt 50
+
+```text
+Nei messaggi di errore mancano gli accenti.
+```
+
+## Prompt 51
+
+```text
+Dopo logout e nuovo login compare errore login-failed: correggi il flusso di login.
+```
+
+## Prompt 52
+
+```text
+Nelle sezioni Contatti e Tag devi cambiare il placeholder in modo appropriato al contesto.
+```
+
+## Prompt 53
+
+```text
+Ogni volta che spunta un messaggio di errore, questo messaggio deve poter essere cancellato dalla grafica.
+```
+
+## Prompt 54
+
+```text
+Fai una verifica dei test lato backend e frontend, controlla se sono completi e se rispecchiano tutte le funzioni.
+```
+
+## Prompt 55
+
+```text
+Aggiungi i test mancanti sia per il frontend che per il backend.
+```
+
+## Prompt 56
+
+```text
+Lato backend ci sono warning di null type safety e import inutilizzati; sono tutte classi che fanno parte di una test suite. Raccogli tutti i test, anche quelli nuovi del backend, nella stessa suite.
+```
+
+## Prompt 57
+
+```text
+Cambia versione alla 0.4.2, aggiorna il changelog, fai la commit delle ultime fix.
+```
+
+## Prompt 58
+
+```text
+Passa alla versione 1.0.0, fai la build statica per GitHub Pages e pubblica l'applicazione funzionante in GitHub Pages.
+```
+
+## Prompt 59
+
+```text
+Aggiorna lo storico dei prompt e fai una commit solo per questo aggiornamento.
+```
