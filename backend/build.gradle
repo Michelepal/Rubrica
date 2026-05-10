@@ -6,11 +6,17 @@ plugins {
 }
 
 group = 'it.michelepal'
-version = '0.3.4'
+version = '0.3.5'
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+sourceSets {
+    test {
+        java.srcDirs += sourceSets.main.java.srcDirs
     }
 }
 
@@ -33,12 +39,21 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.junit.platform:junit-platform-suite-api'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'org.junit.platform:junit-platform-suite-engine'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+
+    // Mostra output dettagliato dei test
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showStandardStreams true
+    }
 }
 
 jacocoTestReport {

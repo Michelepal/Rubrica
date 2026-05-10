@@ -145,7 +145,6 @@ class ContactServiceTest {
         assertTrue(thrown.getMessage().contains("Contatto"), "Exception message should mention contact");
     }
 
-    @SuppressWarnings("null")
     @Test
     @DisplayName("create: should create a new contact")
     void testCreateContact() {
@@ -196,7 +195,6 @@ class ContactServiceTest {
         verify(contactRepository, times(1)).save(any(Contact.class));
     }
 
-    @SuppressWarnings("null")
     @Test
     @DisplayName("create: should throw NotFoundException when user not found")
     void testCreateContactUserNotFound() {
@@ -222,7 +220,6 @@ class ContactServiceTest {
         verify(contactRepository, times(0)).save(any(Contact.class));
     }
 
-    @SuppressWarnings("null")
     @Test
     @DisplayName("update: should update an existing contact")
     void testUpdateContact() {
@@ -314,7 +311,6 @@ class ContactServiceTest {
         verify(contactRepository, times(1)).delete(contactToDelete);
     }
 
-    @SuppressWarnings("null")
     @Test
     @DisplayName("delete: should throw NotFoundException when contact not found")
     void testDeleteContactNotFound() {

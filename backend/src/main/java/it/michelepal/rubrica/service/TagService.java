@@ -48,7 +48,8 @@ public class TagService {
 
     @Transactional
     public TagResponse update(String username, Long id, TagRequest request) {
-        Tag tag = java.util.Objects.requireNonNull(tagRepository.findByIdAndUserUsername(id, username).orElseThrow(() -> new NotFoundException("Tag non trovato.")));
+        Tag tag = tagRepository.findByIdAndUserUsername(id, username)
+            .orElseThrow(() -> new NotFoundException("Tag non trovato."));
         String name = normalizer.requiredText(request.name());
         if (!tag.getName().equalsIgnoreCase(name) && tagRepository.existsByUserUsernameAndNameIgnoreCase(username, name)) {
             throw new ConflictException("Esiste gia' un tag con questo nome.");
@@ -60,8 +61,8 @@ public class TagService {
 
     @Transactional
     public void delete(String username, Long id) {
-        Tag tag = java.util.Objects.requireNonNull(tagRepository.findByIdAndUserUsername(id, username).orElseThrow(() -> new NotFoundException("Tag non trovato.")));
+        Tag tag = tagRepository.findByIdAndUserUsername(id, username)
+            .orElseThrow(() -> new NotFoundException("Tag non trovato."));
         tagRepository.delete(tag);
     }
 }
-

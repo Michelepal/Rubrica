@@ -17,6 +17,13 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.5] - 2026-05-10
+
+### Corretto
+
+- Rimossi gli avvisi IDE legati a null-analysis JDT nei test backend.
+- Semplificata la gestione dei risultati Spring Data evitando conversioni nullability non necessarie nei servizi e nell'handler REST.
+
 ## [0.3.4] - 2026-05-10
 
 ### Cambiato

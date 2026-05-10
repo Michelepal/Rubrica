@@ -17,4 +17,3 @@ public record ContactResponse(
     Set<TagResponse> tags
 ) {
 }
-

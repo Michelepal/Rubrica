@@ -8,7 +8,7 @@ server:
   port: 8080
 
 app:
-  version: ${APP_VERSION:0.3.4}
+  version: ${APP_VERSION:0.3.5}
   jwt:
     secret: ${APP_JWT_SECRET:development-secret-key-change-before-production-1234567890}
     expiration-minutes: ${APP_JWT_EXPIRATION_MINUTES:120}

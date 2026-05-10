@@ -18,7 +18,6 @@ import it.michelepal.rubrica.repository.TagRepository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,9 +76,9 @@ public class ContactService {
         contactRepository.delete(findOwned(username, id));
     }
 
-    private @NonNull Contact findOwned(String username, Long id) {
-        return java.util.Objects.requireNonNull(contactRepository.findByIdAndUserUsername(id, username)
-            .orElseThrow(() -> new NotFoundException("Contatto non trovato.")));
+    private Contact findOwned(String username, Long id) {
+        return contactRepository.findByIdAndUserUsername(id, username)
+            .orElseThrow(() -> new NotFoundException("Contatto non trovato."));
     }
 
     private void apply(Contact contact, String username, ContactRequest request) {
