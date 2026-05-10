@@ -1,29 +1,37 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TimeoutError, finalize, timeout } from 'rxjs';
+import { forkJoin, finalize, timeout } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { Contact, ContactApiService, ContactRequest } from '../../core/contacts/contact-api.service';
+import { Tag, TagApiService, TagRequest } from '../../core/tags/tag-api.service';
 import { ThemeService } from '../../core/theme/theme.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+
+type PendingAction = (() => void) | null;
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, ConfirmDialogComponent],
+  imports: [FormsModule, ReactiveFormsModule, NgTemplateOutlet, ConfirmDialogComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly contactApiService = inject(ContactApiService);
+  private readonly tagApiService = inject(TagApiService);
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
 
   search = '';
   contacts: Contact[] = [];
+  tags: Tag[] = [];
+  expandedContactId: number | 'new' | null = null;
   selectedContact: Contact | null = null;
+  selectedTag: Tag | null = null;
   loading = false;
   saving = false;
   errorMessage = '';
@@ -32,19 +40,26 @@ export class HomeComponent implements OnInit {
   modalTitle = '';
   modalMessage = '';
   modalDestructive = false;
-  private pendingAction: (() => void) | null = null;
+  private pendingAction: PendingAction = null;
 
   readonly contactForm = this.formBuilder.group({
     firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80), Validators.pattern(/^[\p{L}][\p{L} '\-]*$/u)]],
     lastName: ['', [Validators.maxLength(80)]],
     company: ['', [Validators.maxLength(120)]],
+    jobTitle: ['', [Validators.maxLength(120)]],
     email: ['', [Validators.email, Validators.maxLength(254)]],
     phone: ['', [Validators.maxLength(254)]],
-    notes: ['', [Validators.maxLength(1000)]]
+    notes: ['', [Validators.maxLength(1000)]],
+    tagIds: [[] as number[]]
+  });
+
+  readonly tagForm = this.formBuilder.group({
+    name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/^[\p{L}0-9][\p{L}0-9 _\-]*$/u)]],
+    color: ['#1f7a6b', [Validators.maxLength(20)]]
   });
 
   ngOnInit(): void {
-    this.loadContacts();
+    this.loadDashboard();
   }
 
   get filteredContacts(): Contact[] {
@@ -53,6 +68,14 @@ export class HomeComponent implements OnInit {
       return this.contacts;
     }
     return this.contacts.filter(contact => JSON.stringify(contact).toLowerCase().includes(term));
+  }
+
+  get favoriteCount(): number {
+    return this.contacts.filter(contact => contact.favorite).length;
+  }
+
+  get contactsWithoutEmail(): number {
+    return this.contacts.filter(contact => !contact.emails?.length).length;
   }
 
   toggleTheme(): void {
@@ -64,25 +87,44 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  selectContact(contact: Contact): void {
+  openNewContactForm(): void {
+    this.expandedContactId = 'new';
+    this.selectedContact = null;
+    this.contactForm.reset({ firstName: '', lastName: '', company: '', jobTitle: '', email: '', phone: '', notes: '', tagIds: [] });
+    this.clearMessages();
+  }
+
+  openContactForm(contact: Contact): void {
+    this.expandedContactId = contact.id;
     this.selectedContact = contact;
     this.contactForm.setValue({
       firstName: contact.firstName ?? '',
       lastName: contact.lastName ?? '',
       company: contact.company ?? '',
+      jobTitle: contact.jobTitle ?? '',
       email: contact.emails?.[0]?.value ?? '',
       phone: contact.phones?.[0]?.value ?? '',
-      notes: contact.notes ?? ''
+      notes: contact.notes ?? '',
+      tagIds: contact.tags.map(tag => tag.id)
     });
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.clearMessages();
   }
 
-  startNewContact(): void {
+  closeContactForm(): void {
+    this.expandedContactId = null;
     this.selectedContact = null;
-    this.contactForm.reset();
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.contactForm.reset({ firstName: '', lastName: '', company: '', jobTitle: '', email: '', phone: '', notes: '', tagIds: [] });
+  }
+
+  isTagSelected(tagId: number): boolean {
+    return this.contactForm.controls.tagIds.value.includes(tagId);
+  }
+
+  toggleContactTag(tagId: number, checked: boolean): void {
+    const current = this.contactForm.controls.tagIds.value;
+    const next = checked ? [...new Set([...current, tagId])] : current.filter(id => id !== tagId);
+    this.contactForm.controls.tagIds.setValue(next);
+    this.contactForm.controls.tagIds.markAsDirty();
   }
 
   askSaveContact(): void {
@@ -105,12 +147,35 @@ export class HomeComponent implements OnInit {
     this.openModal('Conferma cancellazione contatto', `Vuoi cancellare ${this.displayName(contact)}?`, true, () => this.deleteContact(contact));
   }
 
-  askEditTag(tag: string): void {
-    this.openModal('Conferma modifica tag', `Vuoi modificare il tag "${tag}"?`, false);
+  selectTag(tag: Tag): void {
+    this.selectedTag = tag;
+    this.tagForm.setValue({ name: tag.name, color: tag.color ?? '#1f7a6b' });
+    this.clearMessages();
   }
 
-  askDeleteTag(tag: string): void {
-    this.openModal('Conferma cancellazione tag', `Vuoi cancellare il tag "${tag}"?`, true);
+  newTag(): void {
+    this.selectedTag = null;
+    this.tagForm.reset({ name: '', color: '#1f7a6b' });
+    this.clearMessages();
+  }
+
+  askSaveTag(): void {
+    if (this.tagForm.invalid) {
+      this.tagForm.markAllAsTouched();
+      this.errorMessage = 'Correggi il form del tag prima di salvare.';
+      return;
+    }
+
+    this.openModal(
+      this.selectedTag ? 'Conferma modifica tag' : 'Conferma creazione tag',
+      this.selectedTag ? 'Vuoi salvare le modifiche al tag?' : 'Vuoi creare questo tag?',
+      false,
+      () => this.saveTag()
+    );
+  }
+
+  askDeleteTag(tag: Tag): void {
+    this.openModal('Conferma cancellazione tag', `Vuoi cancellare il tag "${tag.name}"?`, true, () => this.deleteTag(tag));
   }
 
   confirmModal(): void {
@@ -124,7 +189,7 @@ export class HomeComponent implements OnInit {
     this.pendingAction = null;
   }
 
-  openModal(title: string, message: string, destructive: boolean, action: (() => void) | null = null): void {
+  openModal(title: string, message: string, destructive: boolean, action: PendingAction = null): void {
     this.modalTitle = title;
     this.modalMessage = message;
     this.modalDestructive = destructive;
@@ -144,22 +209,22 @@ export class HomeComponent implements OnInit {
     return contact.phones?.[0]?.value ?? '-';
   }
 
-  private loadContacts(selectId?: number): void {
+  private loadDashboard(selectId?: number): void {
     this.loading = true;
-    this.contactApiService.list()
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: contacts => {
-          this.contacts = contacts;
-          const contactToSelect = contacts.find(contact => contact.id === selectId) ?? contacts[0] ?? null;
-          if (contactToSelect) {
-            this.selectContact(contactToSelect);
-          } else {
-            this.startNewContact();
-          }
-        },
-        error: () => this.errorMessage = 'Non e stato possibile caricare i contatti. Riprova piu tardi.'
-      });
+    forkJoin({
+      contacts: this.contactApiService.list(),
+      tags: this.tagApiService.list()
+    }).pipe(finalize(() => this.loading = false)).subscribe({
+      next: result => {
+        this.contacts = result.contacts;
+        this.tags = result.tags;
+        const contactToKeepOpen = selectId ? this.contacts.find(contact => contact.id === selectId) : null;
+        if (contactToKeepOpen) {
+          this.openContactForm(contactToKeepOpen);
+        }
+      },
+      error: () => this.errorMessage = 'Non e stato possibile caricare la rubrica. Riprova piu tardi.'
+    });
   }
 
   private saveContact(): void {
@@ -172,25 +237,17 @@ export class HomeComponent implements OnInit {
     this.saving = true;
     if (selectedId) {
       this.applyOptimisticUpdate(selectedId, request);
-      this.successMessage = 'Modifica inviata. La lista e stata aggiornata.';
-      this.errorMessage = '';
-      this.saving = false;
     }
 
-    operation.pipe(
-      timeout({ first: 10000 }),
-      finalize(() => this.saving = false)
-    ).subscribe({
+    operation.pipe(timeout({ first: 10000 }), finalize(() => this.saving = false)).subscribe({
       next: savedContact => {
         this.successMessage = selectedId ? 'Contatto aggiornato correttamente.' : 'Contatto creato correttamente.';
         this.errorMessage = '';
-        this.loadContacts(savedContact.id);
+        this.loadDashboard(savedContact.id);
       },
-      error: error => {
-        this.errorMessage = error instanceof TimeoutError
-          ? 'La risposta del server ha richiesto troppo tempo. La lista viene aggiornata per verificare il risultato.'
-          : 'Non e stato possibile salvare il contatto. Verifica i dati o riprova piu tardi.';
-        this.loadContacts(selectedId);
+      error: () => {
+        this.errorMessage = 'Non e stato possibile salvare il contatto. Verifica i dati o riprova piu tardi.';
+        this.loadDashboard(selectedId);
       }
     });
   }
@@ -200,9 +257,39 @@ export class HomeComponent implements OnInit {
       next: () => {
         this.successMessage = 'Contatto cancellato correttamente.';
         this.errorMessage = '';
-        this.loadContacts();
+        this.closeContactForm();
+        this.loadDashboard();
       },
       error: () => this.errorMessage = 'Non e stato possibile cancellare il contatto. Riprova piu tardi.'
+    });
+  }
+
+  private saveTag(): void {
+    const request: TagRequest = this.tagForm.getRawValue();
+    const operation = this.selectedTag
+      ? this.tagApiService.update(this.selectedTag.id, request)
+      : this.tagApiService.create(request);
+
+    operation.subscribe({
+      next: () => {
+        this.successMessage = this.selectedTag ? 'Tag aggiornato correttamente.' : 'Tag creato correttamente.';
+        this.errorMessage = '';
+        this.newTag();
+        this.loadDashboard(this.selectedContact?.id);
+      },
+      error: () => this.errorMessage = 'Non e stato possibile salvare il tag. Verifica i dati o riprova piu tardi.'
+    });
+  }
+
+  private deleteTag(tag: Tag): void {
+    this.tagApiService.delete(tag.id).subscribe({
+      next: () => {
+        this.successMessage = 'Tag cancellato correttamente.';
+        this.errorMessage = '';
+        this.newTag();
+        this.loadDashboard(this.selectedContact?.id);
+      },
+      error: () => this.errorMessage = 'Non e stato possibile cancellare il tag. Potrebbe essere associato a un contatto.'
     });
   }
 
@@ -215,13 +302,13 @@ export class HomeComponent implements OnInit {
       firstName: value.firstName.trim(),
       lastName: this.optionalText(value.lastName),
       company: this.optionalText(value.company),
-      jobTitle: null,
+      jobTitle: this.optionalText(value.jobTitle),
       notes: this.optionalText(value.notes),
       favorite: this.selectedContact?.favorite ?? false,
       phones: phone ? [{ type: 'mobile', value: phone, primary: true }] : [],
       emails: email ? [{ type: 'email', value: email, primary: true }] : [],
       addresses: [],
-      tagIds: this.selectedContact?.tags.map(tag => tag.id) ?? []
+      tagIds: value.tagIds
     };
   }
 
@@ -231,28 +318,23 @@ export class HomeComponent implements OnInit {
   }
 
   private applyOptimisticUpdate(id: number, request: ContactRequest): void {
-    this.contacts = this.contacts.map(contact => {
-      if (contact.id !== id) {
-        return contact;
-      }
+    const selectedTags = this.tags.filter(tag => request.tagIds.includes(tag.id));
+    this.contacts = this.contacts.map(contact => contact.id === id ? {
+      ...contact,
+      firstName: request.firstName,
+      lastName: request.lastName,
+      company: request.company,
+      jobTitle: request.jobTitle,
+      notes: request.notes,
+      favorite: request.favorite,
+      phones: request.phones,
+      emails: request.emails,
+      tags: selectedTags
+    } : contact);
+  }
 
-      return {
-        ...contact,
-        firstName: request.firstName,
-        lastName: request.lastName,
-        company: request.company,
-        jobTitle: request.jobTitle,
-        notes: request.notes,
-        favorite: request.favorite,
-        phones: request.phones,
-        emails: request.emails
-      };
-    });
-
-    const updatedContact = this.contacts.find(contact => contact.id === id);
-    if (updatedContact) {
-      this.selectedContact = updatedContact;
-      this.selectContact(updatedContact);
-    }
+  private clearMessages(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
   }
 }

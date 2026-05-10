@@ -17,6 +17,15 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.4] - 2026-05-10
+
+### Cambiato
+
+- Riallineata la home Angular al mockup dashboard con riepilogo, contatti recenti e sezione tag.
+- Sostituite le lettere usate come azioni con pulsanti a icona SVG accessibili.
+- Spostato il form contatto in modalita' inline a scomparsa tra le righe della lista contatti.
+- La modifica dei tag associati al contatto avviene dentro il form del record tramite selezione dei tag disponibili.
+
 ## [0.3.3] - 2026-05-09
 
 ### Corretto

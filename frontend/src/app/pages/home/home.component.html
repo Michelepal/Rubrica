@@ -1,114 +1,223 @@
 <div class="app-shell">
   <aside class="sidebar" aria-label="Navigazione principale">
     <div class="brand"><span class="brand__mark">R</span><span>Rubrica</span></div>
-    <nav>
-      <a class="nav-link nav-link--active" href="/home">Home</a>
-      <a class="nav-link" href="/contacts">Contatti</a>
-      <a class="nav-link" href="/contacts">Tag</a>
+    <nav class="nav">
+      <a class="nav-link nav-link--active" href="/home">
+        <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg></span>Home
+      </a>
+      <a class="nav-link" href="#contacts-title">
+        <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM4 21a8 8 0 0 1 16 0"/></svg></span>Contatti
+      </a>
+      <a class="nav-link" href="#tags-title">
+        <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10 14 4H5v9l6 6zM8 8h.01"/></svg></span>Tag
+      </a>
     </nav>
+    <div class="sidebar-footer">
+      Utente autenticato<br>
+      <strong>admin@example.local</strong>
+    </div>
   </aside>
 
-  <main class="workspace">
+  <main class="content">
     <header class="topbar">
-      <div>
+      <div class="page-title">
         <h1>Home rubrica</h1>
-        <p>Gestisci contatti, tag e recapiti personali.</p>
+        <p>Gestione contatti con validazioni, conferme e dati isolati per utente.</p>
       </div>
-      <div class="topbar__actions">
+      <div class="user-chip">
+        <span class="avatar">A</span>
+        <span>Admin</span>
         <button class="button button--secondary" type="button" (click)="toggleTheme()">Tema</button>
         <button class="button button--secondary" type="button" (click)="logout()">Esci</button>
       </div>
     </header>
 
-    <section class="toolbar" aria-label="Strumenti rubrica">
-      <label class="visually-hidden" for="search">Cerca contatti</label>
-      <input id="search" [(ngModel)]="search" placeholder="Cerca per nome, email, telefono o tag">
-      <button class="button" type="button" (click)="startNewContact()">Nuovo contatto</button>
-    </section>
+    <div class="main">
+      <section class="toolbar" aria-label="Strumenti rubrica">
+        <label class="visually-hidden" for="search">Cerca contatti</label>
+        <input id="search" class="search" [(ngModel)]="search" placeholder="Cerca per nome, azienda, email o telefono">
+        <button class="button button--secondary" type="button" (click)="newTag()">Nuovo tag</button>
+        <button class="button" type="button" (click)="openNewContactForm()">Nuovo contatto</button>
+      </section>
 
-    @if (errorMessage) {
-      <p class="feedback feedback--error" role="alert">{{ errorMessage }}</p>
-    }
-    @if (successMessage) {
-      <p class="feedback feedback--success" role="status">{{ successMessage }}</p>
-    }
+      <section class="summary" aria-label="Riepilogo rubrica">
+        <div class="metric"><span>Contatti</span><strong>{{ contacts.length }}</strong></div>
+        <div class="metric"><span>Preferiti</span><strong>{{ favoriteCount }}</strong></div>
+        <div class="metric"><span>Tag</span><strong>{{ tags.length }}</strong></div>
+        <div class="metric"><span>Da verificare</span><strong>{{ contactsWithoutEmail }}</strong></div>
+      </section>
 
-    <section class="content-grid">
-      <section class="panel" aria-labelledby="contacts-title">
-        <h2 id="contacts-title">Contatti</h2>
-        <div class="contact-list">
-          @if (loading) {
-            <p>Caricamento contatti...</p>
-          }
-          @for (contact of filteredContacts; track contact.id) {
-            <article class="contact-row" [class.contact-row--active]="selectedContact?.id === contact.id">
-              <div>
-                <strong>{{ displayName(contact) }}</strong>
-                <span>{{ contact.company || '-' }}</span>
+      @if (errorMessage) {
+        <p class="feedback feedback--error" role="alert">{{ errorMessage }}</p>
+      }
+      @if (successMessage) {
+        <p class="feedback feedback--success" role="status">{{ successMessage }}</p>
+      }
+
+      <div class="workspace">
+        <section class="section" aria-labelledby="contacts-title">
+          <div class="section-head">
+            <div>
+              <h2 id="contacts-title">Contatti recenti</h2>
+              <small>Il form di modifica si apre sotto il record selezionato.</small>
+            </div>
+          </div>
+
+          <div class="contact-table" role="table" aria-label="Contatti recenti">
+            <div class="contact-table__head" role="row">
+              <span>Contatto</span>
+              <span>Email</span>
+              <span>Telefono</span>
+              <span>Tag</span>
+              <span>Azioni</span>
+            </div>
+
+            @if (loading) {
+              <p class="empty-state">Caricamento contatti...</p>
+            }
+
+            @if (expandedContactId === 'new') {
+              <div class="inline-form inline-form--new">
+                <ng-container *ngTemplateOutlet="contactFormTemplate"></ng-container>
               </div>
-              <span>{{ primaryEmail(contact) }}</span>
-              <span>{{ primaryPhone(contact) }}</span>
-              <div class="tag-row">
-                @for (tag of contact.tags; track tag.id) {
-                  <span class="tag">
-                    {{ tag.name }}
-                    <button type="button" [attr.aria-label]="'Modifica tag ' + tag.name" (click)="askEditTag(tag.name)">E</button>
-                    <button type="button" [attr.aria-label]="'Cancella tag ' + tag.name" (click)="askDeleteTag(tag.name)">x</button>
-                  </span>
+            }
+
+            @for (contact of filteredContacts; track contact.id) {
+              <article class="contact-row" role="row">
+                <div class="contact-name">
+                  <strong>{{ displayName(contact) }}</strong>
+                  <span>{{ contact.jobTitle || 'Contatto rubrica' }}{{ contact.company ? ', ' + contact.company : '' }}</span>
+                </div>
+                <span>{{ primaryEmail(contact) }}</span>
+                <span>{{ primaryPhone(contact) }}</span>
+                <div class="tag-row">
+                  @for (tag of contact.tags; track tag.id) {
+                    <span class="tag" [style.--tag-color]="tag.color || '#1f7a6b'">{{ tag.name }}</span>
+                  }
+                </div>
+                <div class="row-actions">
+                  <button class="icon-button" type="button" aria-label="Modifica contatto" (click)="openContactForm(contact)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L18.8 8.7l-3.5-3.5zM14.2 6.3l3.5 3.5"/></svg>
+                  </button>
+                  <button class="icon-button icon-button--danger" type="button" aria-label="Cancella contatto" (click)="askDeleteContact(contact)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
+                  </button>
+                </div>
+              </article>
+
+              @if (expandedContactId === contact.id) {
+                <div class="inline-form">
+                  <ng-container *ngTemplateOutlet="contactFormTemplate"></ng-container>
+                </div>
+              }
+            } @empty {
+              <p class="empty-state">Nessun contatto presente.</p>
+            }
+          </div>
+        </section>
+
+        <aside class="section" aria-labelledby="tags-title">
+          <div class="section-head">
+            <div>
+              <h2 id="tags-title">Tag</h2>
+              <small>Archivio tag della rubrica.</small>
+            </div>
+          </div>
+
+          <div class="tag-panel">
+            <div class="tag-list">
+              @for (tag of tags; track tag.id) {
+                <button class="tag-card" type="button" (click)="selectTag(tag)">
+                  <span class="color-dot" [style.background]="tag.color || '#1f7a6b'"></span>
+                  <span>{{ tag.name }}</span>
+                </button>
+              } @empty {
+                <p class="empty-state">Nessun tag presente.</p>
+              }
+            </div>
+
+            <form class="tag-form" [formGroup]="tagForm" (ngSubmit)="askSaveTag()">
+              <label for="tagName">Nome tag
+                <input id="tagName" formControlName="name">
+              </label>
+              <label for="tagColor">Colore
+                <input id="tagColor" formControlName="color">
+              </label>
+              <div class="form-actions">
+                <button class="button button--secondary" type="button" (click)="newTag()">Pulisci</button>
+                @if (selectedTag) {
+                  <button class="button button--danger" type="button" (click)="askDeleteTag(selectedTag)">Cancella</button>
                 }
+                <button class="button" type="submit">{{ selectedTag ? 'Salva tag' : 'Crea tag' }}</button>
               </div>
-              <div class="row-actions">
-                <button class="icon-button" type="button" aria-label="Seleziona contatto" (click)="selectContact(contact)">E</button>
-                <button class="icon-button icon-button--danger" type="button" aria-label="Cancella contatto" (click)="askDeleteContact(contact)">x</button>
-              </div>
-            </article>
-          } @empty {
-            <p>Nessun contatto presente.</p>
-          }
-        </div>
-      </section>
-
-      <section class="panel" aria-labelledby="form-title">
-        <h2 id="form-title">{{ selectedContact ? 'Modifica contatto' : 'Nuovo contatto' }}</h2>
-        <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="askSaveContact()">
-          <label for="firstName">Nome
-            <input id="firstName" formControlName="firstName" autocomplete="given-name">
-          </label>
-          @if (contactForm.controls.firstName.touched && contactForm.controls.firstName.invalid) {
-            <small class="field-error">Nome obbligatorio, da 2 a 80 caratteri e senza simboli non validi.</small>
-          }
-
-          <label for="lastName">Cognome
-            <input id="lastName" formControlName="lastName" autocomplete="family-name">
-          </label>
-
-          <label for="company">Azienda
-            <input id="company" formControlName="company" autocomplete="organization">
-          </label>
-
-          <label for="email">Email
-            <input id="email" formControlName="email" autocomplete="email">
-          </label>
-          @if (contactForm.controls.email.touched && contactForm.controls.email.invalid) {
-            <small class="field-error">Inserisci un indirizzo email valido.</small>
-          }
-
-          <label for="phone">Telefono
-            <input id="phone" formControlName="phone" autocomplete="tel">
-          </label>
-
-          <label for="notes">Note
-            <textarea id="notes" formControlName="notes" rows="5"></textarea>
-          </label>
-
-          <button class="button" type="submit" [disabled]="saving">
-            {{ saving ? 'Salvataggio...' : 'Salva modifiche' }}
-          </button>
-        </form>
-      </section>
-    </section>
+            </form>
+          </div>
+        </aside>
+      </div>
+    </div>
   </main>
 </div>
+
+<ng-template #contactFormTemplate>
+  <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="askSaveContact()">
+    <div class="form-grid">
+      <label for="firstName">Nome
+        <input id="firstName" formControlName="firstName" autocomplete="given-name">
+      </label>
+      <label for="lastName">Cognome
+        <input id="lastName" formControlName="lastName" autocomplete="family-name">
+      </label>
+    </div>
+
+    @if (contactForm.controls.firstName.touched && contactForm.controls.firstName.invalid) {
+      <small class="field-error">Nome obbligatorio, da 2 a 80 caratteri e senza simboli non validi.</small>
+    }
+
+    <div class="form-grid">
+      <label for="company">Azienda
+        <input id="company" formControlName="company" autocomplete="organization">
+      </label>
+      <label for="jobTitle">Ruolo
+        <input id="jobTitle" formControlName="jobTitle">
+      </label>
+    </div>
+
+    <div class="form-grid">
+      <label for="email">Email
+        <input id="email" formControlName="email" autocomplete="email">
+      </label>
+      <label for="phone">Telefono
+        <input id="phone" formControlName="phone" autocomplete="tel">
+      </label>
+    </div>
+
+    @if (contactForm.controls.email.touched && contactForm.controls.email.invalid) {
+      <small class="field-error">Inserisci un indirizzo email valido.</small>
+    }
+
+    <fieldset class="tag-selector">
+      <legend>Tag associati</legend>
+      <div class="tag-row">
+        @for (tag of tags; track tag.id) {
+          <label class="tag-check" [style.--tag-color]="tag.color || '#1f7a6b'">
+            <input type="checkbox" [checked]="isTagSelected(tag.id)" (change)="toggleContactTag(tag.id, $any($event.target).checked)">
+            <span>{{ tag.name }}</span>
+          </label>
+        }
+      </div>
+      <small>I tag del contatto si modificano da questo form insieme al record.</small>
+    </fieldset>
+
+    <label for="notes">Note
+      <textarea id="notes" formControlName="notes" rows="4"></textarea>
+    </label>
+
+    <div class="form-actions">
+      <button class="button button--secondary" type="button" (click)="closeContactForm()">Annulla</button>
+      <button class="button" type="submit" [disabled]="saving">{{ saving ? 'Salvataggio...' : 'Salva modifiche' }}</button>
+    </div>
+  </form>
+</ng-template>
 
 <app-confirm-dialog
   [open]="modalOpen"
