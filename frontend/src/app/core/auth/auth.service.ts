@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface LoginRequest {
@@ -20,6 +20,15 @@ export class AuthService {
   private readonly tokenKey = 'rubricaJavaAngular.token';
 
   login(request: LoginRequest): Observable<LoginResponse> {
+    if (environment.staticDemo) {
+      if (request.username === 'admin' && request.password === 'admin') {
+        return of({ token: 'static-demo-token', tokenType: 'Bearer', username: request.username }).pipe(
+          tap(response => this.storeToken(response.token))
+        );
+      }
+      return throwError(() => new Error('Credenziali demo non valide.'));
+    }
+
     return this.http.post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, request).pipe(
       tap(response => this.storeToken(response.token))
     );

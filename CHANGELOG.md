@@ -17,6 +17,17 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [1.0.0] - 2026-05-10
+
+### Aggiunto
+
+- Preparata la build statica per GitHub Pages con modalità demo locale nel browser.
+- Abilitato l'uso dell'app pubblicata senza backend Spring su GitHub Pages.
+
+### Cambiato
+
+- Aggiornata la versione stabile del progetto a `1.0.0`.
+
 ## [0.4.2] - 2026-05-10
 
 ### Aggiunto
