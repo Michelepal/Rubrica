@@ -42,7 +42,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .requestMatchers("/", "/login", "/home", "/error", "/contacts/**", "/*.js", "/*.css", "/*.ico", "/assets/**").permitAll()
+                .requestMatchers("/", "/login", "/home", "/error", "/contacts/**", "/tags/**", "/*.js", "/*.css", "/*.ico", "/assets/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()

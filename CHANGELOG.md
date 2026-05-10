@@ -17,6 +17,14 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.8] - 2026-05-10
+
+### Cambiato
+
+- Le voci laterali Contatti e Tag aprono pagine dedicate invece di restare nella dashboard.
+- La pagina Tag carica solo i tag, riducendo le chiamate non necessarie.
+- Ridotto il logging SQL in sviluppo per rendere piu' rapido e leggibile il caricamento locale.
+
 ## [0.3.7] - 2026-05-10
 
 ### Cambiato

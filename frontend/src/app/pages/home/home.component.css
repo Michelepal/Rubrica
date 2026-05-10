@@ -176,6 +176,10 @@
   align-items: start;
 }
 
+.workspace--single {
+  grid-template-columns: 1fr;
+}
+
 .section {
   overflow: hidden;
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { forkJoin, finalize, timeout } from 'rxjs';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { forkJoin, finalize, of, timeout } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { Contact, ContactApiService, ContactRequest } from '../../core/contacts/contact-api.service';
 import { Tag, TagApiService, TagRequest } from '../../core/tags/tag-api.service';
@@ -10,11 +10,12 @@ import { ThemeService } from '../../core/theme/theme.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 type PendingAction = (() => void) | null;
+type PageMode = 'dashboard' | 'contacts' | 'tags';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, NgTemplateOutlet, ConfirmDialogComponent],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, RouterLinkActive, NgTemplateOutlet, ConfirmDialogComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -25,7 +26,9 @@ export class HomeComponent implements OnInit {
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
+  pageMode: PageMode = 'dashboard';
   search = '';
   contacts: Contact[] = [];
   tags: Tag[] = [];
@@ -59,7 +62,40 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.pageMode = this.resolvePageMode();
     this.loadDashboard();
+  }
+
+  get pageTitle(): string {
+    if (this.pageMode === 'contacts') {
+      return 'Contatti';
+    }
+    if (this.pageMode === 'tags') {
+      return 'Tag';
+    }
+    return 'Home rubrica';
+  }
+
+  get pageSubtitle(): string {
+    if (this.pageMode === 'contacts') {
+      return 'Consulta, crea e modifica i contatti della rubrica.';
+    }
+    if (this.pageMode === 'tags') {
+    return 'Gestisci archivio tag e colori associati.';
+    }
+    return 'Gestione contatti con validazioni, conferme e dati isolati per utente.';
+  }
+
+  get showSummary(): boolean {
+    return this.pageMode === 'dashboard';
+  }
+
+  get showContactsSection(): boolean {
+    return this.pageMode !== 'tags';
+  }
+
+  get showTagsSection(): boolean {
+    return this.pageMode !== 'contacts';
   }
 
   get filteredContacts(): Contact[] {
@@ -80,14 +116,6 @@ export class HomeComponent implements OnInit {
 
   toggleTheme(): void {
     this.themeService.toggle();
-  }
-
-  scrollToSection(sectionId: string): void {
-    if (sectionId === 'top') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   logout(): void {
@@ -209,7 +237,7 @@ export class HomeComponent implements OnInit {
   private loadDashboard(selectId?: number): void {
     this.loading = true;
     forkJoin({
-      contacts: this.contactApiService.list(),
+      contacts: this.showContactsSection ? this.contactApiService.list() : of([]),
       tags: this.tagApiService.list()
     }).pipe(finalize(() => this.loading = false)).subscribe({
       next: result => {
@@ -334,5 +362,13 @@ export class HomeComponent implements OnInit {
   private clearMessages(): void {
     this.errorMessage = '';
     this.successMessage = '';
+  }
+
+  private resolvePageMode(): PageMode {
+    const path = this.route.snapshot.routeConfig?.path;
+    if (path === 'contacts' || path === 'tags') {
+      return path;
+    }
+    return 'dashboard';
   }
 }

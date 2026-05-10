@@ -2,15 +2,15 @@
   <aside class="sidebar" aria-label="Navigazione principale">
     <div class="brand"><span class="brand__mark">R</span><span>Rubrica</span></div>
     <nav class="nav">
-      <button class="nav-link nav-link--active" type="button" (click)="scrollToSection('top')">
+      <a class="nav-link" routerLink="/home" routerLinkActive="nav-link--active">
         <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></svg></span>Home
-      </button>
-      <button class="nav-link" type="button" (click)="scrollToSection('contacts-title')">
+      </a>
+      <a class="nav-link" routerLink="/contacts" routerLinkActive="nav-link--active">
         <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM4 21a8 8 0 0 1 16 0"/></svg></span>Contatti
-      </button>
-      <button class="nav-link" type="button" (click)="scrollToSection('tags-title')">
+      </a>
+      <a class="nav-link" routerLink="/tags" routerLinkActive="nav-link--active">
         <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10 14 4H5v9l6 6zM8 8h.01"/></svg></span>Tag
-      </button>
+      </a>
     </nav>
     <div class="sidebar-footer">
       Utente autenticato<br>
@@ -21,8 +21,8 @@
   <main class="content">
     <header class="topbar">
       <div class="page-title">
-        <h1>Home rubrica</h1>
-        <p>Gestione contatti con validazioni, conferme e dati isolati per utente.</p>
+        <h1>{{ pageTitle }}</h1>
+        <p>{{ pageSubtitle }}</p>
       </div>
       <div class="user-chip">
         <span class="avatar">A</span>
@@ -40,12 +40,14 @@
         <button class="button" type="button" (click)="openNewContactForm()">Nuovo contatto</button>
       </section>
 
+      @if (showSummary) {
       <section class="summary" aria-label="Riepilogo rubrica">
         <div class="metric"><span>Contatti</span><strong>{{ contacts.length }}</strong></div>
         <div class="metric"><span>Preferiti</span><strong>{{ favoriteCount }}</strong></div>
         <div class="metric"><span>Tag</span><strong>{{ tags.length }}</strong></div>
         <div class="metric"><span>Da verificare</span><strong>{{ contactsWithoutEmail }}</strong></div>
       </section>
+      }
 
       @if (errorMessage) {
         <p class="feedback feedback--error" role="alert">{{ errorMessage }}</p>
@@ -54,7 +56,8 @@
         <p class="feedback feedback--success" role="status">{{ successMessage }}</p>
       }
 
-      <div class="workspace">
+      <div class="workspace" [class.workspace--single]="pageMode !== 'dashboard'">
+        @if (showContactsSection) {
         <section class="section" aria-labelledby="contacts-title">
           <div class="section-head">
             <div>
@@ -109,7 +112,9 @@
             }
           </div>
         </section>
+        }
 
+        @if (showTagsSection) {
         <aside class="section" aria-labelledby="tags-title">
           <div class="section-head">
             <div>
@@ -147,6 +152,7 @@
             </form>
           </div>
         </aside>
+        }
       </div>
     </div>
   </main>
