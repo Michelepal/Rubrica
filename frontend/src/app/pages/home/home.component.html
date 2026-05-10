@@ -27,7 +27,13 @@
       <div class="user-chip">
         <span class="avatar">A</span>
         <span>Admin</span>
-        <button class="button button--secondary" type="button" (click)="toggleTheme()">Tema</button>
+        <button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-label]="themeToggleLabel" [attr.title]="themeToggleLabel">
+          @if (themeMode === 'dark') {
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2M12 19v2M5.6 5.6 7 7M17 17l1.4 1.4M3 12h2M19 12h2M5.6 18.4 7 17M17 7l1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/></svg>
+          } @else {
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 7 7 0 1 0 20.5 14.5z"/></svg>
+          }
+        </button>
         <button class="button button--secondary" type="button" (click)="logout()">Esci</button>
       </div>
     </header>
@@ -36,8 +42,12 @@
       <section class="toolbar" aria-label="Strumenti rubrica">
         <label class="visually-hidden" for="search">Cerca contatti</label>
         <input id="search" class="search" [(ngModel)]="search" placeholder="Cerca per nome, azienda, email o telefono">
-        <button class="button button--secondary" type="button" (click)="newTag()">Nuovo tag</button>
-        <button class="button" type="button" (click)="openNewContactForm()">Nuovo contatto</button>
+        @if (pageMode === 'tags') {
+          <button class="button button--secondary" type="button" (click)="newTag()">Nuovo tag</button>
+        }
+        @if (pageMode === 'contacts') {
+          <button class="button" type="button" (click)="openNewContactForm()">Nuovo contatto</button>
+        }
       </section>
 
       @if (showSummary) {
@@ -83,9 +93,9 @@
               <article class="contact-row" role="row">
                 <div class="contact-name">
                   <strong>{{ displayName(contact) }}</strong>
-                  <span>{{ contact.jobTitle || 'Contatto rubrica' }}{{ contact.company ? ', ' + contact.company : '' }}</span>
+                  <span>{{ contactSubtitle(contact) }}</span>
                 </div>
-                <span>{{ primaryEmail(contact) }}</span>
+                <span class="contact-email">{{ primaryEmail(contact) }}</span>
                 <span>{{ primaryPhone(contact) }}</span>
                 <div class="tag-row">
                   @for (tag of contact.tags; track tag.id) {
@@ -139,9 +149,31 @@
               <label for="tagName">Nome tag
                 <input id="tagName" formControlName="name">
               </label>
-              <label for="tagColor">Colore
-                <input id="tagColor" formControlName="color">
-              </label>
+              <div class="tag-color-field">
+                <span class="tag-color-field__label">Colore tag</span>
+                <div class="tag-color-field__controls">
+                  <label class="color-picker" for="tagColor">
+                    <input id="tagColor" type="color" formControlName="color" aria-label="Scegli colore tag">
+                    <span>
+                      <strong>Personalizzato</strong>
+                      <small>{{ tagForm.controls.color.value }}</small>
+                    </span>
+                  </label>
+                  <div class="color-presets" aria-label="Colori predefiniti">
+                    @for (color of presetTagColors; track color) {
+                      <button
+                        class="color-preset"
+                        type="button"
+                        [class.color-preset--active]="tagForm.controls.color.value === color"
+                        [style.background]="color"
+                        [attr.aria-label]="'Usa colore ' + color"
+                        [attr.title]="'Usa colore ' + color"
+                        (click)="chooseTagColor(color)">
+                      </button>
+                    }
+                  </div>
+                </div>
+              </div>
               <div class="form-actions">
                 <button class="button button--secondary" type="button" (click)="newTag()">Pulisci</button>
                 @if (selectedTag) {

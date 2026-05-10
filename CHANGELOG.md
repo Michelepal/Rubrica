@@ -17,6 +17,20 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.4.0] - 2026-05-10
+
+### Cambiato
+
+- Rifinito il layout responsive della home con contatori sempre in riga e tabella contatti a larghezza piena.
+- Mantenuta la tabella "Contatti recenti" in formato tabellare su tutti i breakpoint con testi compatti su una riga.
+- Semplificata la dashboard rimuovendo sezione tag e pulsanti di creazione dalla home.
+- Migliorata l'azione tema con icona dinamica, tooltip e label accessibile.
+- Migliorata la gestione colore dei tag con color picker, palette predefinita e layout piu' ordinato.
+
+### Corretto
+
+- I contatti vengono renderizzati subito al caricamento della pagina senza richiedere click o refresh manuali.
+
 ## [0.3.8] - 2026-05-10
 
 ### Cambiato

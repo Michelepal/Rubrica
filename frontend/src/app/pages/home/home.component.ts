@@ -6,7 +6,7 @@ import { distinctUntilChanged, finalize, forkJoin, of, timeout } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { Contact, ContactApiService, ContactRequest } from '../../core/contacts/contact-api.service';
 import { Tag, TagApiService, TagRequest } from '../../core/tags/tag-api.service';
-import { ThemeService } from '../../core/theme/theme.service';
+import { ThemeMode, ThemeService } from '../../core/theme/theme.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 type PendingAction = (() => void) | null;
@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
   modalTitle = '';
   modalMessage = '';
   modalDestructive = false;
+  themeMode: ThemeMode = 'light';
   private pendingAction: PendingAction = null;
 
   readonly contactForm = this.formBuilder.group({
@@ -61,8 +62,10 @@ export class HomeComponent implements OnInit {
     name: ['', [Validators.required, Validators.maxLength(40), Validators.pattern(/^[\p{L}0-9][\p{L}0-9 _\-]*$/u)]],
     color: ['#1f7a6b', [Validators.maxLength(20)]]
   });
+  readonly presetTagColors = ['#1f7a6b', '#2563eb', '#7c3aed', '#db2777', '#dc2626', '#ea580c', '#ca8a04', '#16a34a'];
 
   ngOnInit(): void {
+    this.themeMode = this.themeService.current();
     this.route.url.pipe(distinctUntilChanged((previous, current) => previous.join('/') === current.join('/'))).subscribe(() => {
       this.pageMode = this.resolvePageMode();
       this.loadDashboard();
@@ -98,7 +101,7 @@ export class HomeComponent implements OnInit {
   }
 
   get showTagsSection(): boolean {
-    return this.pageMode !== 'contacts';
+    return this.pageMode === 'tags';
   }
 
   get filteredContacts(): Contact[] {
@@ -118,7 +121,11 @@ export class HomeComponent implements OnInit {
   }
 
   toggleTheme(): void {
-    this.themeService.toggle();
+    this.themeMode = this.themeService.toggle();
+  }
+
+  get themeToggleLabel(): string {
+    return this.themeMode === 'dark' ? 'Passa al tema chiaro' : 'Passa al tema scuro';
   }
 
   logout(): void {
@@ -187,6 +194,10 @@ export class HomeComponent implements OnInit {
     this.clearMessages();
   }
 
+  chooseTagColor(color: string): void {
+    this.tagForm.controls.color.setValue(color);
+  }
+
   askSaveTag(): void {
     if (this.tagForm.invalid) {
       this.tagForm.markAllAsTouched();
@@ -227,6 +238,10 @@ export class HomeComponent implements OnInit {
 
   displayName(contact: Contact): string {
     return `${contact.firstName} ${contact.lastName ?? ''}`.trim();
+  }
+
+  contactSubtitle(contact: Contact): string {
+    return [contact.jobTitle, contact.company].filter(Boolean).join(', ');
   }
 
   primaryEmail(contact: Contact): string {
