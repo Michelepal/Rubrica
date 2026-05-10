@@ -1,8 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { forkJoin, finalize, of, timeout } from 'rxjs';
+import { distinctUntilChanged, finalize, forkJoin, of, timeout } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { Contact, ContactApiService, ContactRequest } from '../../core/contacts/contact-api.service';
 import { Tag, TagApiService, TagRequest } from '../../core/tags/tag-api.service';
@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
   private readonly themeService = inject(ThemeService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   pageMode: PageMode = 'dashboard';
   search = '';
@@ -62,8 +63,10 @@ export class HomeComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.pageMode = this.resolvePageMode();
-    this.loadDashboard();
+    this.route.url.pipe(distinctUntilChanged((previous, current) => previous.join('/') === current.join('/'))).subscribe(() => {
+      this.pageMode = this.resolvePageMode();
+      this.loadDashboard();
+    });
   }
 
   get pageTitle(): string {
@@ -239,7 +242,10 @@ export class HomeComponent implements OnInit {
     forkJoin({
       contacts: this.showContactsSection ? this.contactApiService.list() : of([]),
       tags: this.tagApiService.list()
-    }).pipe(finalize(() => this.loading = false)).subscribe({
+    }).pipe(finalize(() => {
+      this.loading = false;
+      this.changeDetectorRef.detectChanges();
+    })).subscribe({
       next: result => {
         this.contacts = result.contacts;
         this.tags = result.tags;
@@ -248,7 +254,10 @@ export class HomeComponent implements OnInit {
           this.openContactForm(contactToKeepOpen);
         }
       },
-      error: () => this.errorMessage = 'Non e stato possibile caricare la rubrica. Riprova piu tardi.'
+      error: () => {
+        this.errorMessage = 'Non e stato possibile caricare la rubrica. Riprova piu tardi.';
+        this.changeDetectorRef.detectChanges();
+      }
     });
   }
 
