@@ -1,5 +1,6 @@
 package it.michelepal.rubrica;
 
+import it.michelepal.rubrica.controller.RestApiIntegrationTest;
 import it.michelepal.rubrica.repository.AppUserRepositoryTest;
 import it.michelepal.rubrica.repository.ContactRepositoryTest;
 import it.michelepal.rubrica.repository.TagRepositoryTest;
@@ -23,7 +24,8 @@ import org.junit.platform.suite.api.Suite;
     ContactServiceTest.class,
     AppUserRepositoryTest.class,
     TagRepositoryTest.class,
-    ContactRepositoryTest.class
+    ContactRepositoryTest.class,
+    RestApiIntegrationTest.class
 })
 public class TestSuiteRunner {
 
@@ -33,13 +35,14 @@ public class TestSuiteRunner {
         System.out.println("===========================================================");
         System.out.println("RUBRICA TEST SUITE STARTED");
         System.out.println("===========================================================");
-        System.out.println("Esecuzione di 6 classi di test:");
+        System.out.println("Esecuzione di 7 classi di test:");
         System.out.println("  - InputNormalizerTest");
         System.out.println("  - TagServiceTest");
         System.out.println("  - ContactServiceTest");
         System.out.println("  - AppUserRepositoryTest");
         System.out.println("  - TagRepositoryTest");
         System.out.println("  - ContactRepositoryTest");
+        System.out.println("  - RestApiIntegrationTest");
         System.out.println();
     }
 

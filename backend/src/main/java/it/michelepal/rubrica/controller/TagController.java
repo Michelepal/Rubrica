@@ -38,14 +38,13 @@ public class TagController {
     }
 
     @PutMapping("/{id}")
-    public TagResponse update(Principal principal, @PathVariable Long id, @Valid @RequestBody TagRequest request) {
+    public TagResponse update(Principal principal, @PathVariable("id") Long id, @Valid @RequestBody TagRequest request) {
         return tagService.update(principal.getName(), id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(Principal principal, @PathVariable Long id) {
+    public void delete(Principal principal, @PathVariable("id") Long id) {
         tagService.delete(principal.getName(), id);
     }
 }
-

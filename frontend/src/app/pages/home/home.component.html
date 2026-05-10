@@ -41,7 +41,7 @@
     <div class="main">
       <section class="toolbar" aria-label="Strumenti rubrica">
         <label class="visually-hidden" for="search">Cerca contatti</label>
-        <input id="search" class="search" [(ngModel)]="search" placeholder="Cerca per nome, azienda, email o telefono">
+        <input id="search" class="search" [(ngModel)]="search" [placeholder]="searchPlaceholder">
         @if (pageMode === 'tags') {
           <button class="button button--secondary" type="button" (click)="newTag()">Nuovo tag</button>
         }
@@ -60,7 +60,12 @@
       }
 
       @if (errorMessage) {
-        <p class="feedback feedback--error" role="alert">{{ errorMessage }}</p>
+        <div class="feedback feedback--error" role="alert">
+          <span>{{ errorMessage }}</span>
+          <button class="feedback__dismiss" type="button" aria-label="Chiudi messaggio di errore" (click)="dismissError()">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
       }
       @if (successMessage) {
         <p class="feedback feedback--success" role="status">{{ successMessage }}</p>
@@ -135,7 +140,7 @@
 
           <div class="tag-panel">
             <div class="tag-list">
-              @for (tag of tags; track tag.id) {
+              @for (tag of filteredTags; track tag.id) {
                 <button class="tag-card" type="button" (click)="selectTag(tag)">
                   <span class="color-dot" [style.background]="tag.color || '#1f7a6b'"></span>
                   <span>{{ tag.name }}</span>

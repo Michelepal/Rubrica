@@ -15,12 +15,12 @@ describe('ErrorService', () => {
       status: 400,
       error: {
         message: 'Alcuni campi non sono validi.',
-        fieldErrors: { firstName: 'Il nome e obbligatorio.' }
+        fieldErrors: { firstName: 'Il nome è obbligatorio.' }
       }
     });
 
     expect(service.toMessage(error).message).toBe('Alcuni campi non sono validi.');
-    expect(service.toMessage(error).fieldErrors['firstName']).toBe('Il nome e obbligatorio.');
+    expect(service.toMessage(error).fieldErrors['firstName']).toBe('Il nome è obbligatorio.');
   });
 
   it('maps network error', () => {
@@ -29,4 +29,3 @@ describe('ErrorService', () => {
     expect(service.toMessage(error).message).toContain('Connessione');
   });
 });
-

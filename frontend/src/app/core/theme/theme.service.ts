@@ -7,14 +7,24 @@ export class ThemeService {
   private readonly storageKey = 'rubricaJavaAngular.theme';
 
   applySavedTheme(): void {
-    const saved = localStorage.getItem(this.storageKey) as ThemeMode | null;
-    const preferred: ThemeMode = window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    this.setTheme(saved ?? preferred);
+    try {
+      const saved = localStorage.getItem(this.storageKey) as ThemeMode | null;
+      const preferred: ThemeMode = window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      this.setTheme(saved ?? preferred);
+    } catch (error) {
+      console.error('Errore durante l applicazione del tema salvato.', error);
+      this.applyThemeToDocument('light');
+    }
   }
 
   setTheme(theme: ThemeMode): void {
-    document.documentElement.dataset['theme'] = theme;
-    localStorage.setItem(this.storageKey, theme);
+    try {
+      this.applyThemeToDocument(theme);
+      localStorage.setItem(this.storageKey, theme);
+    } catch (error) {
+      console.error('Errore durante il salvataggio del tema.', { theme, error });
+      this.applyThemeToDocument(theme);
+    }
   }
 
   toggle(): ThemeMode {
@@ -27,5 +37,8 @@ export class ThemeService {
   current(): ThemeMode {
     return document.documentElement.dataset['theme'] === 'dark' ? 'dark' : 'light';
   }
-}
 
+  private applyThemeToDocument(theme: ThemeMode): void {
+    document.documentElement.dataset['theme'] = theme;
+  }
+}

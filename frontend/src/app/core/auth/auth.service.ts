@@ -21,20 +21,37 @@ export class AuthService {
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiBaseUrl}/auth/login`, request).pipe(
-      tap(response => localStorage.setItem(this.tokenKey, response.token))
+      tap(response => this.storeToken(response.token))
     );
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
+    try {
+      localStorage.removeItem(this.tokenKey);
+    } catch (error) {
+      console.error('Errore durante la rimozione del token di autenticazione.', error);
+    }
   }
 
   token(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    try {
+      return localStorage.getItem(this.tokenKey);
+    } catch (error) {
+      console.error('Errore durante la lettura del token di autenticazione.', error);
+      return null;
+    }
   }
 
   isAuthenticated(): boolean {
     return Boolean(this.token());
   }
-}
 
+  private storeToken(token: string): void {
+    try {
+      localStorage.setItem(this.tokenKey, token);
+    } catch (error) {
+      console.error('Errore durante il salvataggio del token di autenticazione.', error);
+      throw error;
+    }
+  }
+}

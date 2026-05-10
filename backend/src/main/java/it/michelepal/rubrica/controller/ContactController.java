@@ -32,7 +32,7 @@ public class ContactController {
     }
 
     @GetMapping("/{id}")
-    public ContactResponse get(Principal principal, @PathVariable Long id) {
+    public ContactResponse get(Principal principal, @PathVariable("id") Long id) {
         return contactService.get(principal.getName(), id);
     }
 
@@ -43,14 +43,13 @@ public class ContactController {
     }
 
     @PutMapping("/{id}")
-    public ContactResponse update(Principal principal, @PathVariable Long id, @Valid @RequestBody ContactRequest request) {
+    public ContactResponse update(Principal principal, @PathVariable("id") Long id, @Valid @RequestBody ContactRequest request) {
         return contactService.update(principal.getName(), id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(Principal principal, @PathVariable Long id) {
+    public void delete(Principal principal, @PathVariable("id") Long id) {
         contactService.delete(principal.getName(), id);
     }
 }
-

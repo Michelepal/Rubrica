@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/r
 import { distinctUntilChanged, finalize, forkJoin, of, timeout } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { Contact, ContactApiService, ContactRequest } from '../../core/contacts/contact-api.service';
+import { ErrorService } from '../../core/errors/error.service';
 import { Tag, TagApiService, TagRequest } from '../../core/tags/tag-api.service';
 import { ThemeMode, ThemeService } from '../../core/theme/theme.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
@@ -28,6 +29,7 @@ export class HomeComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
+  private readonly errorService = inject(ErrorService);
 
   pageMode: PageMode = 'dashboard';
   search = '';
@@ -53,7 +55,7 @@ export class HomeComponent implements OnInit {
     company: ['', [Validators.maxLength(120)]],
     jobTitle: ['', [Validators.maxLength(120)]],
     email: ['', [Validators.email, Validators.maxLength(254)]],
-    phone: ['', [Validators.maxLength(254)]],
+    phone: ['', [Validators.maxLength(30)]],
     notes: ['', [Validators.maxLength(1000)]],
     tagIds: [[] as number[]]
   });
@@ -92,6 +94,16 @@ export class HomeComponent implements OnInit {
     return 'Gestione contatti con validazioni, conferme e dati isolati per utente.';
   }
 
+  get searchPlaceholder(): string {
+    if (this.pageMode === 'tags') {
+      return 'Cerca tag per nome o colore';
+    }
+    if (this.pageMode === 'contacts') {
+      return 'Cerca contatti per nome, azienda, email o telefono';
+    }
+    return 'Cerca nella rubrica per nome, azienda, email, telefono o tag';
+  }
+
   get showSummary(): boolean {
     return this.pageMode === 'dashboard';
   }
@@ -112,6 +124,14 @@ export class HomeComponent implements OnInit {
     return this.contacts.filter(contact => JSON.stringify(contact).toLowerCase().includes(term));
   }
 
+  get filteredTags(): Tag[] {
+    const term = this.search.trim().toLowerCase();
+    if (!term) {
+      return this.tags;
+    }
+    return this.tags.filter(tag => JSON.stringify(tag).toLowerCase().includes(term));
+  }
+
   get favoriteCount(): number {
     return this.contacts.filter(contact => contact.favorite).length;
   }
@@ -121,7 +141,12 @@ export class HomeComponent implements OnInit {
   }
 
   toggleTheme(): void {
-    this.themeMode = this.themeService.toggle();
+    try {
+      this.themeMode = this.themeService.toggle();
+    } catch (error) {
+      console.error('Cambio tema fallito.', { currentTheme: this.themeMode, error });
+      this.errorMessage = 'Non è stato possibile cambiare tema.';
+    }
   }
 
   get themeToggleLabel(): string {
@@ -129,8 +154,13 @@ export class HomeComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    try {
+      this.authService.logout();
+      this.router.navigate(['/login']).catch(error => console.error('Navigazione al login fallita dopo logout.', error));
+    } catch (error) {
+      console.error('Logout fallito.', error);
+      this.errorMessage = 'Non è stato possibile completare il logout.';
+    }
   }
 
   openNewContactForm(): void {
@@ -220,12 +250,21 @@ export class HomeComponent implements OnInit {
   confirmModal(): void {
     const action = this.pendingAction;
     this.closeModal();
-    action?.();
+    try {
+      action?.();
+    } catch (error) {
+      console.error('Esecuzione azione confermata fallita.', { modalTitle: this.modalTitle, error });
+      this.errorMessage = "Non è stato possibile completare l'operazione richiesta.";
+    }
   }
 
   closeModal(): void {
     this.modalOpen = false;
     this.pendingAction = null;
+  }
+
+  dismissError(): void {
+    this.errorMessage = '';
   }
 
   openModal(title: string, message: string, destructive: boolean, action: PendingAction = null): void {
@@ -269,8 +308,9 @@ export class HomeComponent implements OnInit {
           this.openContactForm(contactToKeepOpen);
         }
       },
-      error: () => {
-        this.errorMessage = 'Non e stato possibile caricare la rubrica. Riprova piu tardi.';
+      error: error => {
+        console.error('Caricamento dashboard fallito.', { pageMode: this.pageMode, selectId, error });
+        this.setCrudError('caricare la rubrica', error);
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -292,12 +332,14 @@ export class HomeComponent implements OnInit {
       next: savedContact => {
         this.successMessage = selectedId ? 'Contatto aggiornato correttamente.' : 'Contatto creato correttamente.';
         this.errorMessage = '';
+        this.upsertContact(savedContact);
         this.closeContactForm();
-        this.loadDashboard(selectedId ? undefined : savedContact.id);
+        this.loadDashboard();
       },
-      error: () => {
-        this.errorMessage = 'Non e stato possibile salvare il contatto. Verifica i dati o riprova piu tardi.';
-        this.loadDashboard(selectedId);
+      error: error => {
+        console.error('Salvataggio contatto fallito.', { selectedId, request, error });
+        this.setCrudError(selectedId ? 'modificare il contatto' : 'creare il contatto', error);
+        this.loadDashboard();
       }
     });
   }
@@ -310,7 +352,10 @@ export class HomeComponent implements OnInit {
         this.closeContactForm();
         this.loadDashboard();
       },
-      error: () => this.errorMessage = 'Non e stato possibile cancellare il contatto. Riprova piu tardi.'
+      error: error => {
+        console.error('Cancellazione contatto fallita.', { contactId: contact.id, error });
+        this.setCrudError('cancellare il contatto', error);
+      }
     });
   }
 
@@ -327,7 +372,10 @@ export class HomeComponent implements OnInit {
         this.newTag();
         this.loadDashboard(this.selectedContact?.id);
       },
-      error: () => this.errorMessage = 'Non e stato possibile salvare il tag. Verifica i dati o riprova piu tardi.'
+      error: error => {
+        console.error('Salvataggio tag fallito.', { selectedTagId: this.selectedTag?.id, request, error });
+        this.setCrudError(this.selectedTag ? 'modificare il tag' : 'creare il tag', error);
+      }
     });
   }
 
@@ -339,7 +387,10 @@ export class HomeComponent implements OnInit {
         this.newTag();
         this.loadDashboard(this.selectedContact?.id);
       },
-      error: () => this.errorMessage = 'Non e stato possibile cancellare il tag. Potrebbe essere associato a un contatto.'
+      error: error => {
+        console.error('Cancellazione tag fallita.', { tagId: tag.id, error });
+        this.setCrudError('cancellare il tag', error);
+      }
     });
   }
 
@@ -383,9 +434,24 @@ export class HomeComponent implements OnInit {
     } : contact);
   }
 
+  private upsertContact(savedContact: Contact): void {
+    const index = this.contacts.findIndex(contact => contact.id === savedContact.id);
+    if (index === -1) {
+      this.contacts = [savedContact, ...this.contacts];
+      return;
+    }
+    this.contacts = this.contacts.map(contact => contact.id === savedContact.id ? savedContact : contact);
+  }
+
   private clearMessages(): void {
     this.errorMessage = '';
     this.successMessage = '';
+  }
+
+  private setCrudError(action: string, error: unknown): void {
+    const apiError = this.errorService.toMessage(error);
+    this.successMessage = '';
+    this.errorMessage = `Non è stato possibile ${action}. ${apiError.message}`;
   }
 
   private resolvePageMode(): PageMode {

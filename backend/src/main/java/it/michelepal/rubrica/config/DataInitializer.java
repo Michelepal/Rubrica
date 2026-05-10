@@ -9,6 +9,7 @@ import it.michelepal.rubrica.repository.AppUserRepository;
 import it.michelepal.rubrica.repository.ContactRepository;
 import it.michelepal.rubrica.repository.TagRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @Profile("dev")
+@SuppressWarnings("null")
 public class DataInitializer {
 
     @Bean
@@ -51,7 +53,7 @@ public class DataInitializer {
                 Contact marco = createContact(user, "Marco", "Rossi", "Studio Rossi", "m.rossi@example.local", "02 555 0199");
                 marco.getTags().add(clienti);
 
-                contactRepository.saveAll(List.of(laura, marco));
+                contactRepository.saveAll(Objects.requireNonNull(List.of(laura, marco)));
             }
         };
     }
@@ -60,7 +62,7 @@ public class DataInitializer {
         Optional<Tag> existing = tagRepository.findByUserUsernameOrderByNameAsc(user.getUsername()).stream()
             .filter(tag -> tag.getName().equalsIgnoreCase(name))
             .findFirst();
-        return existing.orElseGet(() -> tagRepository.save(createTag(user, name, color)));
+        return existing.orElseGet(() -> tagRepository.save(Objects.requireNonNull(createTag(user, name, color))));
     }
 
     private Tag createTag(AppUser user, String name, String color) {

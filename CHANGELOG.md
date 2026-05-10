@@ -17,6 +17,22 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.4.2] - 2026-05-10
+
+### Aggiunto
+
+- Aggiunti test d'integrazione backend per login, protezione API, validazione, modifica contatto e conflitto/cancellazione tag.
+- Aggiunti test frontend per login, messaggi di errore dismissibili, placeholder contestuali, filtro tag, modifica contatto, tema e logout.
+- Inclusi i nuovi test backend nella suite JUnit esistente.
+
+### Corretto
+
+- Corretta la modifica contatto: il form si chiude dopo il salvataggio e la lista viene aggiornata.
+- Aggiunta gestione utente degli errori CRUD con messaggi visibili e cancellabili.
+- Corretti i path variable espliciti nei controller backend per evitare errori runtime Spring.
+- Migliorati logging e gestione errori su backend e frontend.
+- Corretti accenti nei messaggi utente e ripuliti warning Java di null-safety nella suite backend.
+
 ## [0.4.1] - 2026-05-10
 
 ### Corretto

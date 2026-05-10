@@ -17,11 +17,13 @@ import it.michelepal.rubrica.repository.ContactRepository;
 import it.michelepal.rubrica.repository.TagRepository;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@SuppressWarnings("null")
 public class ContactService {
     private final ContactRepository contactRepository;
     private final AppUserRepository userRepository;
@@ -61,14 +63,14 @@ public class ContactService {
         Contact contact = new Contact();
         contact.setUser(user);
         apply(contact, username, request);
-        return mapper.toResponse(contactRepository.save(contact));
+        return mapper.toResponse(contactRepository.save(Objects.requireNonNull(contact)));
     }
 
     @Transactional
     public ContactResponse update(String username, Long id, ContactRequest request) {
         Contact contact = findOwned(username, id);
         apply(contact, username, request);
-        return mapper.toResponse(contactRepository.save(contact));
+        return mapper.toResponse(contactRepository.save(Objects.requireNonNull(contact)));
     }
 
     @Transactional

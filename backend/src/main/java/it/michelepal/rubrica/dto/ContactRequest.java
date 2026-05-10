@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public record ContactRequest(
-    @NotBlank(message = "Il nome e' obbligatorio.")
+    @NotBlank(message = "Il nome è obbligatorio.")
     @Size(min = 2, max = 80, message = "Il nome deve avere tra 2 e 80 caratteri.")
     @Pattern(regexp = "^[\\p{L}][\\p{L} '\\-]*$", message = "Il nome contiene caratteri non validi.")
     String firstName,
@@ -33,4 +33,3 @@ public record ContactRequest(
     Set<Long> tagIds
 ) {
 }
-

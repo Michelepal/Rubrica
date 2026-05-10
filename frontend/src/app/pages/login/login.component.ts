@@ -30,12 +30,17 @@ export class LoginComponent {
       return;
     }
     this.authService.login(this.form.getRawValue()).subscribe({
-      next: () => this.router.navigate(['/home']),
+      next: () => {
+        this.router.navigate(['/home']).catch(error => console.error('Navigazione alla home fallita dopo il login.', error));
+      },
       error: error => {
+        console.error('Login fallito.', { username: this.form.controls.username.value, error });
         this.errorMessage = this.errorService.toMessage(error).message;
-        this.router.navigate(['/error'], { queryParams: { reason: 'login-failed' } });
       }
     });
   }
-}
 
+  dismissError(): void {
+    this.errorMessage = '';
+  }
+}

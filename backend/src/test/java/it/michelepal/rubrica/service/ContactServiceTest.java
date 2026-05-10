@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ContactService Tests")
+@SuppressWarnings("null")
 public
 class ContactServiceTest {
 
