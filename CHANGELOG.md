@@ -17,6 +17,12 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.4.1] - 2026-05-10
+
+### Corretto
+
+- Migliorato il contrasto dei badge tag in modalita' scura con sfondo piu' chiaro, testo scuro e bordo dedicato.
+
 ## [0.4.0] - 2026-05-10
 
 ### Cambiato
