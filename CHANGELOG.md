@@ -17,6 +17,14 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.7] - 2026-05-10
+
+### Cambiato
+
+- La modifica di un contatto chiude il form inline dopo il salvataggio.
+- La creazione di un nuovo contatto si apre in una modale sopra il contenuto centrale.
+- I tag associati al contatto si selezionano con una select multipla invece che con checkbox.
+
 ## [0.3.6] - 2026-05-10
 
 ### Corretto

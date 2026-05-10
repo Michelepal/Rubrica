@@ -76,12 +76,6 @@
               <p class="empty-state">Caricamento contatti...</p>
             }
 
-            @if (expandedContactId === 'new') {
-              <div class="inline-form inline-form--new">
-                <ng-container *ngTemplateOutlet="contactFormTemplate"></ng-container>
-              </div>
-            }
-
             @for (contact of filteredContacts; track contact.id) {
               <article class="contact-row" role="row">
                 <div class="contact-name">
@@ -158,6 +152,23 @@
   </main>
 </div>
 
+@if (expandedContactId === 'new') {
+  <div class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="new-contact-title">
+    <div class="contact-modal__panel">
+      <div class="contact-modal__head">
+        <div>
+          <h2 id="new-contact-title">Nuovo contatto</h2>
+          <p>Compila i dati principali e associa i tag disponibili.</p>
+        </div>
+        <button class="icon-button" type="button" aria-label="Chiudi creazione contatto" (click)="closeContactForm()">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <ng-container *ngTemplateOutlet="contactFormTemplate"></ng-container>
+    </div>
+  </div>
+}
+
 <ng-template #contactFormTemplate>
   <form class="contact-form" [formGroup]="contactForm" (ngSubmit)="askSaveContact()">
     <div class="form-grid">
@@ -197,14 +208,13 @@
 
     <fieldset class="tag-selector">
       <legend>Tag associati</legend>
-      <div class="tag-row">
-        @for (tag of tags; track tag.id) {
-          <label class="tag-check" [style.--tag-color]="tag.color || '#1f7a6b'">
-            <input type="checkbox" [checked]="isTagSelected(tag.id)" (change)="toggleContactTag(tag.id, $any($event.target).checked)">
-            <span>{{ tag.name }}</span>
-          </label>
-        }
-      </div>
+      <label for="contactTags">Seleziona tag
+        <select id="contactTags" multiple formControlName="tagIds">
+          @for (tag of tags; track tag.id) {
+            <option [ngValue]="tag.id">{{ tag.name }}</option>
+          }
+        </select>
+      </label>
       <small>I tag del contatto si modificano da questo form insieme al record.</small>
     </fieldset>
 

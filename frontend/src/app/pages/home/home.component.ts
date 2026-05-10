@@ -124,17 +124,6 @@ export class HomeComponent implements OnInit {
     this.contactForm.reset({ firstName: '', lastName: '', company: '', jobTitle: '', email: '', phone: '', notes: '', tagIds: [] });
   }
 
-  isTagSelected(tagId: number): boolean {
-    return this.contactForm.controls.tagIds.value.includes(tagId);
-  }
-
-  toggleContactTag(tagId: number, checked: boolean): void {
-    const current = this.contactForm.controls.tagIds.value;
-    const next = checked ? [...new Set([...current, tagId])] : current.filter(id => id !== tagId);
-    this.contactForm.controls.tagIds.setValue(next);
-    this.contactForm.controls.tagIds.markAsDirty();
-  }
-
   askSaveContact(): void {
     if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
@@ -251,7 +240,8 @@ export class HomeComponent implements OnInit {
       next: savedContact => {
         this.successMessage = selectedId ? 'Contatto aggiornato correttamente.' : 'Contatto creato correttamente.';
         this.errorMessage = '';
-        this.loadDashboard(savedContact.id);
+        this.closeContactForm();
+        this.loadDashboard(selectedId ? undefined : savedContact.id);
       },
       error: () => {
         this.errorMessage = 'Non e stato possibile salvare il contatto. Verifica i dati o riprova piu tardi.';

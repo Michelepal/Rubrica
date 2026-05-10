@@ -234,8 +234,7 @@
   gap: .4rem;
 }
 
-.tag,
-.tag-check {
+.tag {
   --tag-color: var(--color-primary);
   display: inline-flex;
   align-items: center;
@@ -247,10 +246,6 @@
   color: var(--tag-color);
   font-size: var(--font-size-sm);
   font-weight: 700;
-}
-
-.tag-check {
-  cursor: pointer;
 }
 
 .row-actions,
@@ -284,10 +279,6 @@
   background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
 }
 
-.inline-form--new {
-  border-top: 0;
-}
-
 .contact-form,
 .tag-form,
 .tag-panel {
@@ -315,6 +306,56 @@
   padding: var(--space-sm);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
+}
+
+.tag-selector label {
+  display: grid;
+  gap: .35rem;
+  font-weight: 700;
+}
+
+.tag-selector select {
+  min-height: 7.5rem;
+}
+
+.contact-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: var(--space-lg);
+  background: rgb(15 23 42 / 48%);
+}
+
+.contact-modal__panel {
+  width: min(48rem, 100%);
+  max-height: min(42rem, calc(100vh - 2rem));
+  overflow: auto;
+  display: grid;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: 0 1.5rem 4rem rgb(15 23 42 / 24%);
+}
+
+.contact-modal__head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.contact-modal__head h2,
+.contact-modal__head p {
+  margin: 0;
+}
+
+.contact-modal__head p {
+  margin-top: .25rem;
+  color: var(--color-muted);
 }
 
 .tag-list {
