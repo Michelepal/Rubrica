@@ -82,6 +82,14 @@ export class HomeComponent implements OnInit {
     this.themeService.toggle();
   }
 
+  scrollToSection(sectionId: string): void {
+    if (sectionId === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

@@ -17,6 +17,14 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [0.3.6] - 2026-05-10
+
+### Corretto
+
+- Corretto il menu laterale Angular: i collegamenti a contatti e tag scorrono nella pagina senza uscire dalla sessione.
+- Aggiunta la route Angular `/tags` per evitare redirect al login su navigazione diretta.
+- Reso piu' robusto il seed dei dati demo in sviluppo quando nel DB locale esistono gia' tag ma non contatti.
+
 ## [0.3.5] - 2026-05-10
 
 ### Corretto

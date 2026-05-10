@@ -9,6 +9,7 @@ import it.michelepal.rubrica.repository.AppUserRepository;
 import it.michelepal.rubrica.repository.ContactRepository;
 import it.michelepal.rubrica.repository.TagRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,10 +40,9 @@ public class DataInitializer {
                 });
 
             if (contactRepository.findByUserUsernameOrderByLastNameAscFirstNameAsc(user.getUsername()).isEmpty()) {
-                Tag lavoro = createTag(user, "Lavoro", "#2563eb");
-                Tag vip = createTag(user, "VIP", "#b45309");
-                Tag clienti = createTag(user, "Clienti", "#047857");
-                tagRepository.saveAll(List.of(lavoro, vip, clienti));
+                Tag lavoro = findOrCreateTag(user, "Lavoro", "#2563eb", tagRepository);
+                Tag vip = findOrCreateTag(user, "VIP", "#b45309", tagRepository);
+                Tag clienti = findOrCreateTag(user, "Clienti", "#047857", tagRepository);
 
                 Contact laura = createContact(user, "Laura", "Bianchi", "Northwind", "laura.bianchi@example.local", "+39 333 123 4567");
                 laura.getTags().add(lavoro);
@@ -54,6 +54,13 @@ public class DataInitializer {
                 contactRepository.saveAll(List.of(laura, marco));
             }
         };
+    }
+
+    private Tag findOrCreateTag(AppUser user, String name, String color, TagRepository tagRepository) {
+        Optional<Tag> existing = tagRepository.findByUserUsernameOrderByNameAsc(user.getUsername()).stream()
+            .filter(tag -> tag.getName().equalsIgnoreCase(name))
+            .findFirst();
+        return existing.orElseGet(() -> tagRepository.save(createTag(user, name, color)));
     }
 
     private Tag createTag(AppUser user, String name, String color) {

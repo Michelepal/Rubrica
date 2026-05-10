@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'contacts', component: HomeComponent, canActivate: [authGuard] },
+  { path: 'tags', component: HomeComponent, canActivate: [authGuard] },
   { path: 'error', component: ErrorComponent },
   { path: '**', redirectTo: 'login' }
 ];
@@ -23,4 +24,3 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(withInterceptors([authInterceptor]))
   ]
 }).catch(error => console.error(error));
-
