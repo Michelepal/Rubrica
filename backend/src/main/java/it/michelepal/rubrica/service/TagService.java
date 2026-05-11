@@ -1,5 +1,6 @@
 package it.michelepal.rubrica.service;
 
+import it.michelepal.rubrica.dto.PageResponse;
 import it.michelepal.rubrica.dto.TagRequest;
 import it.michelepal.rubrica.dto.TagResponse;
 import it.michelepal.rubrica.entity.AppUser;
@@ -11,6 +12,9 @@ import it.michelepal.rubrica.repository.AppUserRepository;
 import it.michelepal.rubrica.repository.TagRepository;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +31,21 @@ public class TagService {
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.normalizer = normalizer;
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<TagResponse> list(String username, int page, int size) {
+        Page<Tag> tags = tagRepository.findByUserUsername(
+            username,
+            PageRequest.of(safePage(page), safeSize(size), Sort.by("name").ascending())
+        );
+        return new PageResponse<>(
+            tags.getContent().stream().map(mapper::toResponse).toList(),
+            tags.getNumber(),
+            tags.getSize(),
+            tags.getTotalElements(),
+            tags.getTotalPages()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -66,5 +85,13 @@ public class TagService {
         Tag tag = tagRepository.findByIdAndUserUsername(id, username)
             .orElseThrow(() -> new NotFoundException("Tag non trovato."));
         tagRepository.delete(tag);
+    }
+
+    private int safePage(int page) {
+        return Math.max(page, 0);
+    }
+
+    private int safeSize(int size) {
+        return Math.min(Math.max(size, 1), 10);
     }
 }

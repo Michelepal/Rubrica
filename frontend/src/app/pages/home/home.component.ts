@@ -33,15 +33,28 @@ export class HomeComponent implements OnInit {
 
   pageMode: PageMode = 'dashboard';
   search = '';
+  favoriteFilter: 'all' | 'favorites' = 'all';
+  filterTagId: number | null = null;
+  tagColorFilter: string | null = null;
+  tagColorMenuOpen = false;
+  readonly pageSize = 10;
+  contactPage = 0;
+  contactTotalPages = 0;
+  contactTotalElements = 0;
+  tagPage = 0;
+  tagTotalPages = 0;
+  tagTotalElements = 0;
   contacts: Contact[] = [];
   tags: Tag[] = [];
   expandedContactId: number | 'new' | null = null;
   selectedContact: Contact | null = null;
   selectedTag: Tag | null = null;
+  showTagForm = false;
   loading = false;
   saving = false;
   errorMessage = '';
   successMessage = '';
+  private feedbackTimer: ReturnType<typeof setTimeout> | null = null;
   modalOpen = false;
   modalTitle = '';
   modalMessage = '';
@@ -96,7 +109,7 @@ export class HomeComponent implements OnInit {
 
   get searchPlaceholder(): string {
     if (this.pageMode === 'tags') {
-      return 'Cerca tag per nome o colore';
+      return 'Cerca tag per nome';
     }
     if (this.pageMode === 'contacts') {
       return 'Cerca contatti per nome, azienda, email o telefono';
@@ -117,19 +130,16 @@ export class HomeComponent implements OnInit {
   }
 
   get filteredContacts(): Contact[] {
-    const term = this.search.trim().toLowerCase();
-    if (!term) {
-      return this.contacts;
-    }
-    return this.contacts.filter(contact => JSON.stringify(contact).toLowerCase().includes(term));
+    return this.contacts;
   }
 
   get filteredTags(): Tag[] {
     const term = this.search.trim().toLowerCase();
-    if (!term) {
-      return this.tags;
-    }
-    return this.tags.filter(tag => JSON.stringify(tag).toLowerCase().includes(term));
+    return this.tags.filter(tag => {
+      const matchesName = !term || tag.name.toLowerCase().includes(term);
+      const matchesColor = !this.tagColorFilter || tag.color === this.tagColorFilter;
+      return matchesName && matchesColor;
+    });
   }
 
   get favoriteCount(): number {
@@ -137,7 +147,36 @@ export class HomeComponent implements OnInit {
   }
 
   get contactsWithoutEmail(): number {
-    return this.contacts.filter(contact => !contact.emails?.length).length;
+    return this.contacts.filter(contact => this.needsReview(contact)).length;
+  }
+
+  get hasPreviousContactPage(): boolean {
+    return this.contactPage > 0;
+  }
+
+  get hasNextContactPage(): boolean {
+    return this.contactPage + 1 < this.contactTotalPages;
+  }
+
+  get hasPreviousTagPage(): boolean {
+    return this.tagPage > 0;
+  }
+
+  get hasNextTagPage(): boolean {
+    return this.tagPage + 1 < this.tagTotalPages;
+  }
+
+  get contactPageLabel(): string {
+    return this.contactTotalPages ? `${this.contactPage + 1} / ${this.contactTotalPages}` : '0 / 0';
+  }
+
+  get tagPageLabel(): string {
+    return this.tagTotalPages ? `${this.tagPage + 1} / ${this.tagTotalPages}` : '0 / 0';
+  }
+
+  get tagColorOptions(): { value: string; label: string }[] {
+    const colors = new Set(this.tags.map(tag => tag.color).filter((color): color is string => Boolean(color)));
+    return Array.from(colors).map(color => ({ value: color, label: this.colorLabel(color) }));
   }
 
   toggleTheme(): void {
@@ -170,6 +209,63 @@ export class HomeComponent implements OnInit {
     this.clearMessages();
   }
 
+  onSearchChanged(): void {
+    this.contactPage = 0;
+    this.tagPage = 0;
+    this.loadDashboard();
+  }
+
+  onTagFiltersChanged(): void {
+    this.tagPage = 0;
+    this.tagColorMenuOpen = false;
+  }
+
+  toggleTagColorMenu(): void {
+    this.tagColorMenuOpen = !this.tagColorMenuOpen;
+  }
+
+  chooseTagColorFilter(color: string | null): void {
+    this.tagColorFilter = color;
+    this.onTagFiltersChanged();
+  }
+
+  onContactFiltersChanged(): void {
+    this.contactPage = 0;
+    this.loadDashboard();
+  }
+
+  previousContactPage(): void {
+    if (!this.hasPreviousContactPage) {
+      return;
+    }
+    this.contactPage -= 1;
+    this.loadDashboard();
+  }
+
+  nextContactPage(): void {
+    if (!this.hasNextContactPage) {
+      return;
+    }
+    this.contactPage += 1;
+    this.loadDashboard();
+  }
+
+  previousTagPage(): void {
+    if (!this.hasPreviousTagPage) {
+      return;
+    }
+    this.tagPage -= 1;
+    this.loadDashboard();
+  }
+
+  nextTagPage(): void {
+    if (!this.hasNextTagPage) {
+      return;
+    }
+    this.tagPage += 1;
+    this.loadDashboard();
+  }
+
   openContactForm(contact: Contact): void {
     this.expandedContactId = contact.id;
     this.selectedContact = contact;
@@ -199,6 +295,17 @@ export class HomeComponent implements OnInit {
       return;
     }
 
+    const value = this.contactForm.getRawValue();
+    if (!value.email.trim() && !value.phone.trim()) {
+      this.openModal(
+        'Contatto da verificare',
+        'Email e telefono non sono stati inseriti. Il contatto sara segnalato come da verificare. Vuoi continuare?',
+        false,
+        () => this.saveContact()
+      );
+      return;
+    }
+
     const isUpdate = Boolean(this.selectedContact);
     this.openModal(
       isUpdate ? 'Conferma modifica contatto' : 'Conferma creazione contatto',
@@ -212,20 +319,73 @@ export class HomeComponent implements OnInit {
     this.openModal('Conferma cancellazione contatto', `Vuoi cancellare ${this.displayName(contact)}?`, true, () => this.deleteContact(contact));
   }
 
+  askToggleFavorite(contact: Contact): void {
+    const displayName = this.displayName(contact);
+    this.openModal(
+      contact.favorite ? 'Rimuovi preferito' : 'Aggiungi preferito',
+      contact.favorite
+        ? `Vuoi rimuovere ${displayName} dai preferiti?`
+        : `Vuoi inserire ${displayName} tra i preferiti?`,
+      false,
+      () => this.toggleFavorite(contact)
+    );
+  }
+
+  private toggleFavorite(contact: Contact): void {
+    const request = this.toContactRequestFromContact({ ...contact, favorite: !contact.favorite });
+    this.contactApiService.update(contact.id, request).subscribe({
+      next: savedContact => {
+        this.upsertContact(savedContact);
+        this.setSuccess(savedContact.favorite ? 'Contatto aggiunto ai preferiti.' : 'Contatto rimosso dai preferiti.');
+        this.loadDashboard();
+      },
+      error: error => {
+        console.error('Aggiornamento preferito fallito.', { contactId: contact.id, error });
+        this.setCrudError('aggiornare il preferito', error);
+      }
+    });
+  }
+
+  needsReview(contact: Contact): boolean {
+    return !contact.emails?.length || !contact.phones?.length;
+  }
+
   selectTag(tag: Tag): void {
     this.selectedTag = tag;
+    this.showTagForm = true;
     this.tagForm.setValue({ name: tag.name, color: tag.color ?? '#1f7a6b' });
     this.clearMessages();
   }
 
   newTag(): void {
     this.selectedTag = null;
+    this.showTagForm = true;
     this.tagForm.reset({ name: '', color: '#1f7a6b' });
     this.clearMessages();
   }
 
+  closeTagForm(): void {
+    this.selectedTag = null;
+    this.showTagForm = false;
+    this.tagForm.reset({ name: '', color: '#1f7a6b' });
+  }
+
   chooseTagColor(color: string): void {
     this.tagForm.controls.color.setValue(color);
+  }
+
+  colorLabel(color: string | null): string {
+    const labels: Record<string, string> = {
+      '#1f7a6b': 'Verde petrolio',
+      '#2563eb': 'Blu',
+      '#7c3aed': 'Viola',
+      '#db2777': 'Rosa',
+      '#dc2626': 'Rosso',
+      '#ea580c': 'Arancione',
+      '#ca8a04': 'Oro',
+      '#16a34a': 'Verde'
+    };
+    return color ? labels[color.toLowerCase()] ?? 'Colore personalizzato' : 'Senza colore';
   }
 
   askSaveTag(): void {
@@ -265,6 +425,12 @@ export class HomeComponent implements OnInit {
 
   dismissError(): void {
     this.errorMessage = '';
+    this.clearFeedbackTimer();
+  }
+
+  dismissSuccess(): void {
+    this.successMessage = '';
+    this.clearFeedbackTimer();
   }
 
   openModal(title: string, message: string, destructive: boolean, action: PendingAction = null): void {
@@ -294,15 +460,27 @@ export class HomeComponent implements OnInit {
   private loadDashboard(selectId?: number): void {
     this.loading = true;
     forkJoin({
-      contacts: this.showContactsSection ? this.contactApiService.list() : of([]),
-      tags: this.tagApiService.list()
+      contacts: this.showContactsSection ? this.contactApiService.list({
+        page: this.contactPage,
+        size: this.pageSize,
+        q: this.search,
+        tagId: this.filterTagId,
+        favorite: this.favoriteFilter === 'favorites' ? true : null
+      }) : of({ content: [], page: 0, size: this.pageSize, totalElements: 0, totalPages: 0 }),
+      tags: this.tagApiService.list(this.tagPage, this.pageSize)
     }).pipe(finalize(() => {
       this.loading = false;
       this.changeDetectorRef.detectChanges();
     })).subscribe({
       next: result => {
-        this.contacts = result.contacts;
-        this.tags = result.tags;
+        this.contacts = result.contacts.content;
+        this.contactPage = result.contacts.page;
+        this.contactTotalPages = result.contacts.totalPages;
+        this.contactTotalElements = result.contacts.totalElements;
+        this.tags = result.tags.content;
+        this.tagPage = result.tags.page;
+        this.tagTotalPages = result.tags.totalPages;
+        this.tagTotalElements = result.tags.totalElements;
         const contactToKeepOpen = selectId ? this.contacts.find(contact => contact.id === selectId) : null;
         if (contactToKeepOpen) {
           this.openContactForm(contactToKeepOpen);
@@ -330,8 +508,7 @@ export class HomeComponent implements OnInit {
 
     operation.pipe(timeout({ first: 10000 }), finalize(() => this.saving = false)).subscribe({
       next: savedContact => {
-        this.successMessage = selectedId ? 'Contatto aggiornato correttamente.' : 'Contatto creato correttamente.';
-        this.errorMessage = '';
+        this.setSuccess(selectedId ? 'Contatto aggiornato correttamente.' : 'Contatto creato correttamente.');
         this.upsertContact(savedContact);
         this.closeContactForm();
         this.loadDashboard();
@@ -347,8 +524,7 @@ export class HomeComponent implements OnInit {
   private deleteContact(contact: Contact): void {
     this.contactApiService.delete(contact.id).subscribe({
       next: () => {
-        this.successMessage = 'Contatto cancellato correttamente.';
-        this.errorMessage = '';
+        this.setSuccess('Contatto cancellato correttamente.');
         this.closeContactForm();
         this.loadDashboard();
       },
@@ -367,9 +543,8 @@ export class HomeComponent implements OnInit {
 
     operation.subscribe({
       next: () => {
-        this.successMessage = this.selectedTag ? 'Tag aggiornato correttamente.' : 'Tag creato correttamente.';
-        this.errorMessage = '';
-        this.newTag();
+        this.setSuccess(this.selectedTag ? 'Tag aggiornato correttamente.' : 'Tag creato correttamente.');
+        this.closeTagForm();
         this.loadDashboard(this.selectedContact?.id);
       },
       error: error => {
@@ -382,9 +557,8 @@ export class HomeComponent implements OnInit {
   private deleteTag(tag: Tag): void {
     this.tagApiService.delete(tag.id).subscribe({
       next: () => {
-        this.successMessage = 'Tag cancellato correttamente.';
-        this.errorMessage = '';
-        this.newTag();
+        this.setSuccess('Tag cancellato correttamente.');
+        this.closeTagForm();
         this.loadDashboard(this.selectedContact?.id);
       },
       error: error => {
@@ -410,6 +584,21 @@ export class HomeComponent implements OnInit {
       emails: email ? [{ type: 'email', value: email, primary: true }] : [],
       addresses: [],
       tagIds: value.tagIds
+    };
+  }
+
+  private toContactRequestFromContact(contact: Contact): ContactRequest {
+    return {
+      firstName: contact.firstName,
+      lastName: contact.lastName,
+      company: contact.company,
+      jobTitle: contact.jobTitle,
+      notes: contact.notes,
+      favorite: contact.favorite,
+      phones: contact.phones,
+      emails: contact.emails,
+      addresses: [],
+      tagIds: contact.tags.map(tag => tag.id)
     };
   }
 
@@ -446,12 +635,37 @@ export class HomeComponent implements OnInit {
   private clearMessages(): void {
     this.errorMessage = '';
     this.successMessage = '';
+    this.clearFeedbackTimer();
   }
 
   private setCrudError(action: string, error: unknown): void {
     const apiError = this.errorService.toMessage(error);
     this.successMessage = '';
     this.errorMessage = `Non è stato possibile ${action}. ${apiError.message}`;
+    this.scheduleFeedbackDismiss();
+  }
+
+  private setSuccess(message: string): void {
+    this.errorMessage = '';
+    this.successMessage = message;
+    this.scheduleFeedbackDismiss();
+  }
+
+  private scheduleFeedbackDismiss(): void {
+    this.clearFeedbackTimer();
+    this.feedbackTimer = setTimeout(() => {
+      this.errorMessage = '';
+      this.successMessage = '';
+      this.feedbackTimer = null;
+      this.changeDetectorRef.detectChanges();
+    }, 3500);
+  }
+
+  private clearFeedbackTimer(): void {
+    if (this.feedbackTimer) {
+      clearTimeout(this.feedbackTimer);
+      this.feedbackTimer = null;
+    }
   }
 
   private resolvePageMode(): PageMode {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface ContactChannel {
@@ -42,6 +42,22 @@ export interface ContactRequest {
   tagIds: number[];
 }
 
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
+export interface ContactQuery {
+  page: number;
+  size: number;
+  q?: string;
+  tagId?: number | null;
+  favorite?: boolean | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ContactApiService {
   private readonly http = inject(HttpClient);
@@ -49,11 +65,26 @@ export class ContactApiService {
   private readonly storageKey = 'rubricaJavaAngular.demo.contacts';
   private readonly tagStorageKey = 'rubricaJavaAngular.demo.tags';
 
-  list(): Observable<Contact[]> {
+  list(query: ContactQuery = { page: 0, size: 10 }): Observable<PageResponse<Contact>> {
     if (environment.staticDemo) {
-      return of(this.readContacts());
+      return of(this.toPage(this.filterContacts(this.readContacts(), query), query.page, query.size));
     }
-    return this.http.get<Contact[]>(this.contactsUrl);
+    const params: Record<string, string> = {
+      page: String(query.page),
+      size: String(query.size)
+    };
+    if (query.q?.trim()) {
+      params['q'] = query.q.trim();
+    }
+    if (query.tagId) {
+      params['tagId'] = String(query.tagId);
+    }
+    if (query.favorite !== null && query.favorite !== undefined) {
+      params['favorite'] = String(query.favorite);
+    }
+    return this.http.get<PageResponse<Contact> | Contact[]>(this.contactsUrl, { params }).pipe(
+      map(response => Array.isArray(response) ? this.toPage(this.filterContacts(response, query), query.page, query.size) : response)
+    );
   }
 
   create(request: ContactRequest): Observable<Contact> {
@@ -91,6 +122,29 @@ export class ContactApiService {
       console.error('Errore durante la lettura dei contatti demo.', error);
       return this.seedContacts();
     }
+  }
+
+  private filterContacts(contacts: Contact[], query: ContactQuery): Contact[] {
+    const term = query.q?.trim().toLowerCase();
+    return contacts.filter(contact => {
+      const matchesText = !term || JSON.stringify(contact).toLowerCase().includes(term);
+      const matchesTag = !query.tagId || contact.tags.some(tag => tag.id === query.tagId);
+      const matchesFavorite = query.favorite === null || query.favorite === undefined || contact.favorite === query.favorite;
+      return matchesText && matchesTag && matchesFavorite;
+    });
+  }
+
+  private toPage<T>(items: T[], page: number, size: number): PageResponse<T> {
+    const safeSize = Math.min(Math.max(size, 1), 10);
+    const safePage = Math.max(page, 0);
+    const start = safePage * safeSize;
+    return {
+      content: items.slice(start, start + safeSize),
+      page: safePage,
+      size: safeSize,
+      totalElements: items.length,
+      totalPages: Math.ceil(items.length / safeSize)
+    };
   }
 
   private writeContacts(contacts: Contact[]): void {

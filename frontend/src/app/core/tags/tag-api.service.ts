@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, map, of, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 export interface Tag {
@@ -14,17 +14,27 @@ export interface TagRequest {
   color: string | null;
 }
 
+export interface PageResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TagApiService {
   private readonly http = inject(HttpClient);
   private readonly tagsUrl = `${environment.apiBaseUrl}/tags`;
   private readonly storageKey = 'rubricaJavaAngular.demo.tags';
 
-  list(): Observable<Tag[]> {
+  list(page = 0, size = 10): Observable<PageResponse<Tag>> {
     if (environment.staticDemo) {
-      return of(this.readTags());
+      return of(this.toPage(this.readTags(), page, size));
     }
-    return this.http.get<Tag[]>(this.tagsUrl);
+    return this.http.get<PageResponse<Tag> | Tag[]>(this.tagsUrl, { params: { page: String(page), size: String(size) } }).pipe(
+      map(response => Array.isArray(response) ? this.toPage(response, page, size) : response)
+    );
   }
 
   create(request: TagRequest): Observable<Tag> {
@@ -78,6 +88,19 @@ export class TagApiService {
       console.error('Errore durante il salvataggio dei tag demo.', error);
       throw error;
     }
+  }
+
+  private toPage<T>(items: T[], page: number, size: number): PageResponse<T> {
+    const safeSize = Math.min(Math.max(size, 1), 10);
+    const safePage = Math.max(page, 0);
+    const start = safePage * safeSize;
+    return {
+      content: items.slice(start, start + safeSize),
+      page: safePage,
+      size: safeSize,
+      totalElements: items.length,
+      totalPages: Math.ceil(items.length / safeSize)
+    };
   }
 
   private seedTags(): Tag[] {

@@ -17,6 +17,23 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [1.1.0] - 2026-05-11
+
+### Aggiunto
+
+- Aggiunta paginazione a contatti e tag con limite massimo di 10 risultati per pagina.
+- Aggiunta gestione preferiti con conferma dedicata e filtri per preferiti e tag.
+- Aggiunti filtri tag per nome e colore con selezione visuale dei colori presenti.
+- Aggiunti toast centrati a scomparsa per messaggi di conferma ed errore.
+- Aggiunti tooltip sui pulsanti operativi.
+- Estesi i test backend e frontend per paginazione, filtri, preferiti, contatti da verificare e UI dei filtri.
+
+### Corretto
+
+- Segnalati graficamente i contatti da verificare quando mancano email o telefono.
+- Reso neutro il pulsante filtro "Tutti" nella selezione colori.
+- Corrette le aspettative HTTP nei test backend per creazione e modifica contatto.
+
 ## [1.0.1] - 2026-05-11
 
 ### Corretto

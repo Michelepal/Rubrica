@@ -1,5 +1,6 @@
 package it.michelepal.rubrica.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -128,6 +129,128 @@ public class RestApiIntegrationTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
             .andExpect(jsonPath("$.fieldErrors.firstName").exists());
+    }
+
+    @Test
+    @DisplayName("contacts: should paginate with max size 10 and filter by favorite and tag")
+    void contactsShouldPaginateAndFilter() throws Exception {
+        Tag tag = new Tag();
+        tag.setUser(user);
+        tag.setName("Clienti");
+        tag.setColor("#047857");
+        tagRepository.save(tag);
+
+        for (int index = 0; index < 12; index++) {
+            Contact contact = new Contact();
+            contact.setUser(user);
+            contact.setFirstName("Contatto" + index);
+            contact.setLastName("Demo");
+            contact.setFavorite(index % 2 == 0);
+            if (index % 2 == 0) {
+                contact.getTags().add(tag);
+            }
+            contactRepository.save(contact);
+        }
+
+        mockMvc.perform(get("/api/contacts")
+                .header("Authorization", bearerToken())
+                .param("size", "50"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.size").value(10))
+            .andExpect(jsonPath("$.content.length()").value(10))
+            .andExpect(jsonPath("$.totalElements").value(12));
+
+        mockMvc.perform(get("/api/contacts")
+                .header("Authorization", bearerToken())
+                .param("favorite", "true")
+                .param("tagId", tag.getId().toString()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.totalElements").value(6))
+            .andExpect(jsonPath("$.content[0].favorite").value(true))
+            .andExpect(jsonPath("$.content[0].tags[0].name").value("Clienti"));
+
+        mockMvc.perform(get("/api/contacts")
+                .header("Authorization", bearerToken())
+                .param("q", "contatto1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.totalElements").value(3));
+    }
+
+    @Test
+    @DisplayName("contacts: should allow contacts to review and persist favorite changes")
+    void contactsShouldAllowReviewRecordsAndFavoriteUpdates() throws Exception {
+        String created = mockMvc.perform(post("/api/contacts")
+                .header("Authorization", bearerToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "firstName":"SoloNome",
+                      "lastName":null,
+                      "company":null,
+                      "jobTitle":null,
+                      "notes":null,
+                      "favorite":false,
+                      "phones":[],
+                      "emails":[],
+                      "addresses":[],
+                      "tagIds":[]
+                    }
+                    """))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.phones.length()").value(0))
+            .andExpect(jsonPath("$.emails.length()").value(0))
+            .andExpect(jsonPath("$.favorite").value(false))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+        Long id = objectMapper.readTree(created).get("id").asLong();
+
+        mockMvc.perform(put("/api/contacts/{id}", id)
+                .header("Authorization", bearerToken())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                      "firstName":"SoloNome",
+                      "lastName":null,
+                      "company":null,
+                      "jobTitle":null,
+                      "notes":null,
+                      "favorite":true,
+                      "phones":[],
+                      "emails":[],
+                      "addresses":[],
+                      "tagIds":[]
+                    }
+                    """))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.favorite").value(true));
+
+        mockMvc.perform(get("/api/contacts")
+                .header("Authorization", bearerToken())
+                .param("favorite", "true"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.totalElements").value(1))
+            .andExpect(jsonPath("$.content[0].firstName").value("SoloNome"));
+    }
+
+    @Test
+    @DisplayName("tags: should paginate with max size 10")
+    void tagsShouldPaginate() throws Exception {
+        for (int index = 0; index < 12; index++) {
+            Tag tag = new Tag();
+            tag.setUser(user);
+            tag.setName("Tag " + index);
+            tagRepository.save(tag);
+        }
+
+        mockMvc.perform(get("/api/tags")
+                .header("Authorization", bearerToken())
+                .param("size", "50"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.size").value(10))
+            .andExpect(jsonPath("$.content.length()").value(10))
+            .andExpect(jsonPath("$.totalElements").value(12));
     }
 
     @Test

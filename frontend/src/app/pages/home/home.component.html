@@ -49,41 +49,92 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 7 7 0 1 0 20.5 14.5z"/></svg>
           }
         </button>
-        <button class="button button--secondary" type="button" (click)="logout()">Esci</button>
+        <button class="button button--secondary" type="button" title="Esci dall'applicazione" (click)="logout()">Esci</button>
       </div>
     </header>
 
     <div class="main">
       <section class="toolbar" aria-label="Strumenti rubrica">
         <label class="visually-hidden" for="search">Cerca contatti</label>
-        <input id="search" class="search" [(ngModel)]="search" [placeholder]="searchPlaceholder">
+        <input id="search" class="search" [(ngModel)]="search" (ngModelChange)="onSearchChanged()" [placeholder]="searchPlaceholder">
         @if (pageMode === 'tags') {
-          <button class="button button--secondary" type="button" (click)="newTag()">Nuovo tag</button>
+          <div class="color-filter">
+            <button class="color-filter__trigger" type="button" aria-label="Filtra tag per colore" title="Filtra tag per colore" [attr.aria-expanded]="tagColorMenuOpen" (click)="toggleTagColorMenu()">
+              @if (tagColorFilter) {
+                <span class="color-filter__pill" [style.--filter-color]="tagColorFilter" [attr.title]="colorLabel(tagColorFilter)"></span>
+              } @else {
+                <span class="color-filter__all color-filter__all--trigger">Tutti</span>
+              }
+            </button>
+            @if (tagColorMenuOpen) {
+              <div class="color-filter__menu" role="menu">
+                <button class="color-filter__option" type="button" role="menuitem" aria-label="Tutti i colori" title="Mostra tutti i colori" (click)="chooseTagColorFilter(null)">
+                  <span class="color-filter__all color-filter__all--option">Tutti</span>
+                </button>
+                @for (option of tagColorOptions; track option.value) {
+                  <button class="color-filter__option" type="button" role="menuitem" [attr.aria-label]="option.label" [attr.title]="option.label" (click)="chooseTagColorFilter(option.value)">
+                    <span class="color-filter__pill" [class.color-filter__pill--active]="tagColorFilter === option.value" [style.--filter-color]="option.value"></span>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        }
+        @if (pageMode === 'tags') {
+          <button class="button toolbar__action" type="button" title="Crea un nuovo tag" (click)="newTag()">Nuovo tag</button>
         }
         @if (pageMode === 'contacts') {
-          <button class="button" type="button" (click)="openNewContactForm()">Nuovo contatto</button>
+          <button class="button toolbar__action" type="button" title="Crea un nuovo contatto" (click)="openNewContactForm()">Nuovo contatto</button>
         }
       </section>
 
+      @if (showContactsSection) {
+      <section class="filterbar" aria-label="Filtri contatti">
+        <label for="favoriteFilter">Preferiti
+          <select id="favoriteFilter" [(ngModel)]="favoriteFilter" (ngModelChange)="onContactFiltersChanged()">
+            <option value="all">Tutti</option>
+            <option value="favorites">Solo preferiti</option>
+          </select>
+        </label>
+        <label for="tagFilter">Tag
+          <select id="tagFilter" [(ngModel)]="filterTagId" (ngModelChange)="onContactFiltersChanged()">
+            <option [ngValue]="null">Tutti i tag</option>
+            @for (tag of tags; track tag.id) {
+              <option [ngValue]="tag.id">{{ tag.name }}</option>
+            }
+          </select>
+        </label>
+      </section>
+      }
+
       @if (showSummary) {
       <section class="summary" aria-label="Riepilogo rubrica">
-        <div class="metric"><span>Contatti</span><strong>{{ contacts.length }}</strong></div>
+        <div class="metric"><span>Contatti</span><strong>{{ contactTotalElements }}</strong></div>
         <div class="metric"><span>Preferiti</span><strong>{{ favoriteCount }}</strong></div>
-        <div class="metric"><span>Tag</span><strong>{{ tags.length }}</strong></div>
+        <div class="metric"><span>Tag</span><strong>{{ tagTotalElements }}</strong></div>
         <div class="metric"><span>Da verificare</span><strong>{{ contactsWithoutEmail }}</strong></div>
       </section>
       }
 
-      @if (errorMessage) {
-        <div class="feedback feedback--error" role="alert">
-          <span>{{ errorMessage }}</span>
-          <button class="feedback__dismiss" type="button" aria-label="Chiudi messaggio di errore" (click)="dismissError()">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-          </button>
+      @if (errorMessage || successMessage) {
+        <div class="toast-stack" aria-live="polite">
+          @if (errorMessage) {
+            <div class="feedback feedback--error" role="alert">
+              <span>{{ errorMessage }}</span>
+              <button class="feedback__dismiss" type="button" aria-label="Chiudi messaggio di errore" title="Chiudi messaggio di errore" (click)="dismissError()">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+              </button>
+            </div>
+          }
+          @if (successMessage) {
+            <div class="feedback feedback--success" role="status">
+              <span>{{ successMessage }}</span>
+              <button class="feedback__dismiss" type="button" aria-label="Chiudi messaggio di conferma" title="Chiudi messaggio di conferma" (click)="dismissSuccess()">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+              </button>
+            </div>
+          }
         </div>
-      }
-      @if (successMessage) {
-        <p class="feedback feedback--success" role="status">{{ successMessage }}</p>
       }
 
       <div class="workspace" [class.workspace--single]="pageMode !== 'dashboard'">
@@ -110,10 +161,13 @@
             }
 
             @for (contact of filteredContacts; track contact.id) {
-              <article class="contact-row" role="row">
+              <article class="contact-row" [class.contact-row--needs-review]="needsReview(contact)" role="row">
                 <div class="contact-name">
                   <strong>{{ displayName(contact) }}</strong>
                   <span>{{ contactSubtitle(contact) }}</span>
+                  @if (needsReview(contact)) {
+                    <span class="review-badge">Da verificare</span>
+                  }
                 </div>
                 <span class="contact-email">{{ primaryEmail(contact) }}</span>
                 <span>{{ primaryPhone(contact) }}</span>
@@ -123,10 +177,13 @@
                   }
                 </div>
                 <div class="row-actions">
-                  <button class="icon-button" type="button" aria-label="Modifica contatto" (click)="openContactForm(contact)">
+                  <button class="icon-button favorite-button" [class.favorite-button--active]="contact.favorite" type="button" [attr.aria-label]="contact.favorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'" [attr.title]="contact.favorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'" (click)="askToggleFavorite(contact); $event.stopPropagation()">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 16.9l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>
+                  </button>
+                  <button class="icon-button" type="button" aria-label="Modifica contatto" title="Modifica contatto" (click)="openContactForm(contact)">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L18.8 8.7l-3.5-3.5zM14.2 6.3l3.5 3.5"/></svg>
                   </button>
-                  <button class="icon-button icon-button--danger" type="button" aria-label="Cancella contatto" (click)="askDeleteContact(contact)">
+                  <button class="icon-button icon-button--danger" type="button" aria-label="Cancella contatto" title="Cancella contatto" (click)="askDeleteContact(contact)">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
                   </button>
                 </div>
@@ -140,6 +197,11 @@
             } @empty {
               <p class="empty-state">Nessun contatto presente.</p>
             }
+          </div>
+          <div class="pagination" aria-label="Paginazione contatti">
+            <button class="button button--secondary" type="button" title="Vai alla pagina precedente dei contatti" [disabled]="!hasPreviousContactPage" (click)="previousContactPage()">Precedente</button>
+            <span>Pagina {{ contactPageLabel }} - {{ contactTotalElements }} risultati</span>
+            <button class="button button--secondary" type="button" title="Vai alla pagina successiva dei contatti" [disabled]="!hasNextContactPage" (click)="nextContactPage()">Successiva</button>
           </div>
         </section>
         }
@@ -156,7 +218,7 @@
           <div class="tag-panel">
             <div class="tag-list">
               @for (tag of filteredTags; track tag.id) {
-                <button class="tag-card" type="button" (click)="selectTag(tag)">
+                <button class="tag-card" type="button" title="Modifica tag" (click)="selectTag(tag)">
                   <span class="color-dot" [style.background]="tag.color || '#1f7a6b'"></span>
                   <span>{{ tag.name }}</span>
                 </button>
@@ -164,7 +226,13 @@
                 <p class="empty-state">Nessun tag presente.</p>
               }
             </div>
+            <div class="pagination pagination--tags" aria-label="Paginazione tag">
+              <button class="button button--secondary" type="button" title="Vai alla pagina precedente dei tag" [disabled]="!hasPreviousTagPage" (click)="previousTagPage()">Precedente</button>
+              <span>Pagina {{ tagPageLabel }} - {{ tagTotalElements }} risultati</span>
+              <button class="button button--secondary" type="button" title="Vai alla pagina successiva dei tag" [disabled]="!hasNextTagPage" (click)="nextTagPage()">Successiva</button>
+            </div>
 
+            @if (showTagForm) {
             <form class="tag-form" [formGroup]="tagForm" (ngSubmit)="askSaveTag()">
               <label for="tagName">Nome tag
                 <input id="tagName" formControlName="name">
@@ -173,35 +241,42 @@
                 <span class="tag-color-field__label">Colore tag</span>
                 <div class="tag-color-field__controls">
                   <label class="color-picker" for="tagColor">
-                    <input id="tagColor" type="color" formControlName="color" aria-label="Scegli colore tag">
+                    <input id="tagColor" type="color" formControlName="color" aria-label="Scegli colore tag" title="Scegli un colore personalizzato">
                     <span>
                       <strong>Personalizzato</strong>
                       <small>{{ tagForm.controls.color.value }}</small>
                     </span>
                   </label>
-                  <div class="color-presets" aria-label="Colori predefiniti">
-                    @for (color of presetTagColors; track color) {
-                      <button
-                        class="color-preset"
-                        type="button"
-                        [class.color-preset--active]="tagForm.controls.color.value === color"
-                        [style.background]="color"
-                        [attr.aria-label]="'Usa colore ' + color"
-                        [attr.title]="'Usa colore ' + color"
-                        (click)="chooseTagColor(color)">
-                      </button>
-                    }
+                  <div class="color-presets-field">
+                    <div class="color-presets" aria-label="Colori predefiniti">
+                      @for (color of presetTagColors; track color) {
+                        <button
+                          class="color-preset"
+                          type="button"
+                          [class.color-preset--active]="tagForm.controls.color.value === color"
+                          [style.background]="color"
+                          [attr.aria-label]="'Usa colore ' + color"
+                          [attr.title]="'Usa colore ' + color"
+                          (click)="chooseTagColor(color)">
+                        </button>
+                      }
+                    </div>
+                    <span>
+                      <strong>Predefiniti</strong>
+                      <small>Palette rapida</small>
+                    </span>
                   </div>
                 </div>
               </div>
               <div class="form-actions">
-                <button class="button button--secondary" type="button" (click)="newTag()">Pulisci</button>
+                <button class="button button--secondary" type="button" title="Annulla modifica tag" (click)="closeTagForm()">Annulla</button>
                 @if (selectedTag) {
-                  <button class="button button--danger" type="button" (click)="askDeleteTag(selectedTag)">Cancella</button>
+                  <button class="button button--danger" type="button" title="Cancella tag" (click)="askDeleteTag(selectedTag)">Cancella</button>
                 }
-                <button class="button" type="submit">{{ selectedTag ? 'Salva tag' : 'Crea tag' }}</button>
+                <button class="button" type="submit" [attr.title]="selectedTag ? 'Salva modifiche tag' : 'Crea tag'">{{ selectedTag ? 'Salva tag' : 'Crea tag' }}</button>
               </div>
             </form>
+            }
           </div>
         </aside>
         }
@@ -218,7 +293,7 @@
           <h2 id="new-contact-title">Nuovo contatto</h2>
           <p>Compila i dati principali e associa i tag disponibili.</p>
         </div>
-        <button class="icon-button" type="button" aria-label="Chiudi creazione contatto" (click)="closeContactForm()">
+        <button class="icon-button" type="button" aria-label="Chiudi creazione contatto" title="Chiudi creazione contatto" (click)="closeContactForm()">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
         </button>
       </div>
@@ -281,8 +356,8 @@
     </label>
 
     <div class="form-actions">
-      <button class="button button--secondary" type="button" (click)="closeContactForm()">Annulla</button>
-      <button class="button" type="submit" [disabled]="saving">{{ saving ? 'Salvataggio...' : 'Salva modifiche' }}</button>
+      <button class="button button--secondary" type="button" title="Annulla modifica contatto" (click)="closeContactForm()">Annulla</button>
+      <button class="button" type="submit" title="Salva contatto" [disabled]="saving">{{ saving ? 'Salvataggio...' : 'Salva modifiche' }}</button>
     </div>
   </form>
 </ng-template>

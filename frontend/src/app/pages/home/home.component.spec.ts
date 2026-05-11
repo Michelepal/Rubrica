@@ -36,6 +36,8 @@ describe('HomeComponent', () => {
   };
 
   const tag: Tag = { id: 2, name: 'Lavoro', color: '#2563eb' };
+  const contactPage = (content: Contact[]) => of({ content, page: 0, size: 10, totalElements: content.length, totalPages: content.length ? 1 : 0 });
+  const tagPage = (content: Tag[]) => of({ content, page: 0, size: 10, totalElements: content.length, totalPages: content.length ? 1 : 0 });
 
   beforeEach(async () => {
     routeUrl$ = new BehaviorSubject<unknown[]>([]);
@@ -45,8 +47,8 @@ describe('HomeComponent', () => {
     authService = jasmine.createSpyObj<AuthService>('AuthService', ['logout']);
     themeService = jasmine.createSpyObj<ThemeService>('ThemeService', ['current', 'toggle']);
 
-    contactApiService.list.and.returnValue(of([contact]));
-    tagApiService.list.and.returnValue(of([tag]));
+    contactApiService.list.and.returnValue(contactPage([contact]));
+    tagApiService.list.and.returnValue(tagPage([tag]));
     themeService.current.and.returnValue('light');
     themeService.toggle.and.returnValue('dark');
 
@@ -76,23 +78,49 @@ describe('HomeComponent', () => {
     routeStub.snapshot.routeConfig.path = 'tags';
     routeUrl$.next([{ path: 'tags' }]);
 
-    expect(component.searchPlaceholder).toBe('Cerca tag per nome o colore');
+    expect(component.searchPlaceholder).toBe('Cerca tag per nome');
   });
 
-  it('filters tags by name or color in the tag page', () => {
+  it('filters tags by name and selected color in the tag page', () => {
     component.tags = [
       { id: 1, name: 'Clienti', color: '#16a34a' },
       { id: 2, name: 'Lavoro', color: '#2563eb' }
     ];
-    component.search = '2563';
+    component.search = 'lavo';
+    component.tagColorFilter = '#2563eb';
 
     expect(component.filteredTags.map(item => item.name)).toEqual(['Lavoro']);
+  });
+
+  it('shows a neutral all-colors trigger and tooltips for action buttons', () => {
+    routeStub.snapshot.routeConfig.path = 'tags';
+    routeUrl$.next([{ path: 'tags' }]);
+    fixture.detectChanges();
+
+    const allColorsTrigger = fixture.nativeElement.querySelector('.color-filter__all--trigger') as HTMLElement;
+    const newTagButton = fixture.nativeElement.querySelector('.toolbar__action') as HTMLButtonElement;
+    const colorFilterButton = fixture.nativeElement.querySelector('.color-filter__trigger') as HTMLButtonElement;
+
+    expect(allColorsTrigger.textContent?.trim()).toBe('Tutti');
+    expect(getComputedStyle(allColorsTrigger).backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(newTagButton.title).toBe('Crea un nuovo tag');
+    expect(colorFilterButton.title).toBe('Filtra tag per colore');
+  });
+
+  it('counts contacts to review when email or phone is missing', () => {
+    component.contacts = [
+      { ...contact, emails: [] },
+      { ...contact, id: 8, phones: [] },
+      { ...contact, id: 9 }
+    ];
+
+    expect(component.contactsWithoutEmail).toBe(2);
   });
 
   it('updates a contact, closes the edit form and refreshes the list', () => {
     const updated: Contact = { ...contact, firstName: 'Laura Nuova' };
     contactApiService.update.and.returnValue(of(updated));
-    contactApiService.list.and.returnValue(of([updated]));
+    contactApiService.list.and.returnValue(contactPage([updated]));
 
     component.openContactForm(contact);
     component.contactForm.patchValue({ firstName: 'Laura Nuova' });
@@ -103,6 +131,38 @@ describe('HomeComponent', () => {
     expect(component.expandedContactId).toBeNull();
     expect(component.contacts[0].firstName).toBe('Laura Nuova');
     expect(component.successMessage).toBe('Contatto aggiornato correttamente.');
+  });
+
+  it('asks confirmation when contact has no email and phone', () => {
+    contactApiService.create.and.returnValue(of({ ...contact, id: 9, emails: [], phones: [] }));
+
+    component.openNewContactForm();
+    component.contactForm.patchValue({ firstName: 'Mario', email: '', phone: '' });
+    component.askSaveContact();
+
+    expect(component.modalTitle).toBe('Contatto da verificare');
+    expect(contactApiService.create).not.toHaveBeenCalled();
+
+    component.confirmModal();
+
+    expect(contactApiService.create).toHaveBeenCalled();
+  });
+
+  it('asks confirmation before toggling a contact as favorite', () => {
+    const favoriteContact: Contact = { ...contact, favorite: true };
+    contactApiService.update.and.returnValue(of(favoriteContact));
+    contactApiService.list.and.returnValue(contactPage([favoriteContact]));
+
+    component.askToggleFavorite(contact);
+
+    expect(component.modalMessage).toContain('Laura Bianchi');
+    expect(contactApiService.update).not.toHaveBeenCalled();
+
+    component.confirmModal();
+
+    expect(contactApiService.update).toHaveBeenCalledWith(7, jasmine.objectContaining({ favorite: true }));
+    expect(component.contacts[0].favorite).toBeTrue();
+    expect(component.expandedContactId).toBeNull();
   });
 
   it('shows and dismisses CRUD errors', () => {

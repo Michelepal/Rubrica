@@ -4,6 +4,7 @@ import it.michelepal.rubrica.dto.AddressRequest;
 import it.michelepal.rubrica.dto.ContactChannelRequest;
 import it.michelepal.rubrica.dto.ContactRequest;
 import it.michelepal.rubrica.dto.ContactResponse;
+import it.michelepal.rubrica.dto.PageResponse;
 import it.michelepal.rubrica.entity.AppUser;
 import it.michelepal.rubrica.entity.Contact;
 import it.michelepal.rubrica.entity.ContactAddress;
@@ -15,10 +16,18 @@ import it.michelepal.rubrica.mapper.ContactMapper;
 import it.michelepal.rubrica.repository.AppUserRepository;
 import it.michelepal.rubrica.repository.ContactRepository;
 import it.michelepal.rubrica.repository.TagRepository;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,10 +55,23 @@ public class ContactService {
     }
 
     @Transactional(readOnly = true)
+    public PageResponse<ContactResponse> list(String username, int page, int size, String query, Long tagId, Boolean favorite) {
+        Page<Contact> contacts = contactRepository.findAll(
+            contactSpecification(username, query, tagId, favorite),
+            PageRequest.of(safePage(page), safeSize(size), Sort.by("lastName").ascending().and(Sort.by("firstName").ascending()))
+        );
+        return new PageResponse<>(
+            contacts.getContent().stream().map(mapper::toResponse).toList(),
+            contacts.getNumber(),
+            contacts.getSize(),
+            contacts.getTotalElements(),
+            contacts.getTotalPages()
+        );
+    }
+
+    @Transactional(readOnly = true)
     public List<ContactResponse> list(String username) {
-        return contactRepository.findByUserUsernameOrderByLastNameAscFirstNameAsc(username).stream()
-            .map(mapper::toResponse)
-            .toList();
+        return contactRepository.findByUserUsernameOrderByLastNameAscFirstNameAsc(username).stream().map(mapper::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -81,6 +103,44 @@ public class ContactService {
     private Contact findOwned(String username, Long id) {
         return contactRepository.findByIdAndUserUsername(id, username)
             .orElseThrow(() -> new NotFoundException("Contatto non trovato."));
+    }
+
+    private Specification<Contact> contactSpecification(String username, String query, Long tagId, Boolean favorite) {
+        return (root, criteriaQuery, builder) -> {
+            criteriaQuery.distinct(true);
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(builder.equal(root.get("user").get("username"), username));
+            if (favorite != null) {
+                predicates.add(builder.equal(root.get("favorite"), favorite));
+            }
+            if (tagId != null) {
+                predicates.add(builder.equal(root.join("tags", JoinType.INNER).get("id"), tagId));
+            }
+            String term = normalizer.text(query);
+            if (term != null) {
+                String like = "%" + term.toLowerCase(Locale.ROOT) + "%";
+                var emails = root.join("emails", JoinType.LEFT);
+                var phones = root.join("phones", JoinType.LEFT);
+                var tags = root.join("tags", JoinType.LEFT);
+                predicates.add(builder.or(
+                    builder.like(builder.lower(root.get("firstName")), like),
+                    builder.like(builder.lower(root.get("lastName")), like),
+                    builder.like(builder.lower(root.get("company")), like),
+                    builder.like(builder.lower(emails.get("email")), like),
+                    builder.like(builder.lower(phones.get("phoneNumber")), like),
+                    builder.like(builder.lower(tags.get("name")), like)
+                ));
+            }
+            return builder.and(predicates.toArray(Predicate[]::new));
+        };
+    }
+
+    private int safePage(int page) {
+        return Math.max(page, 0);
+    }
+
+    private int safeSize(int size) {
+        return Math.min(Math.max(size, 1), 10);
     }
 
     private void apply(Contact contact, String username, ContactRequest request) {
