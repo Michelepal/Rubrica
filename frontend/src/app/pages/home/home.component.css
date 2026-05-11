@@ -74,6 +74,7 @@
 }
 
 .nav-icon,
+.mobile-tabbar__icon,
 .icon-button,
 .theme-toggle {
   display: inline-grid;
@@ -81,6 +82,7 @@
 }
 
 .nav-icon svg,
+.mobile-tabbar__icon svg,
 .icon-button svg,
 .theme-toggle svg {
   width: 1.1rem;
@@ -90,6 +92,10 @@
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.mobile-tabbar {
+  display: none;
 }
 
 .sidebar-footer {
@@ -262,19 +268,19 @@
   background: color-mix(in srgb, var(--color-primary) 5%, var(--color-surface));
 }
 
-.contact-row strong,
-.contact-row span {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: clip;
+  .contact-row strong,
+  .contact-row span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: clip;
   white-space: nowrap;
 }
 
-.contact-email {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: clip;
-  white-space: nowrap;
+  .contact-email {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
 }
 
 .contact-name {
@@ -633,6 +639,54 @@
     display: none;
   }
 
+  .mobile-tabbar {
+    position: fixed;
+    left: max(.6rem, env(safe-area-inset-left));
+    right: max(.6rem, env(safe-area-inset-right));
+    bottom: max(.55rem, env(safe-area-inset-bottom));
+    z-index: 30;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: .2rem;
+    padding: .35rem;
+    border: 1px solid rgb(255 255 255 / 18%);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--color-sidebar) 92%, transparent);
+    color: var(--color-sidebar-text);
+    box-shadow: 0 .75rem 2rem rgb(15 23 42 / 28%);
+    backdrop-filter: blur(18px);
+  }
+
+  .mobile-tabbar__link {
+    min-height: 2.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .18rem;
+    padding: .35rem .25rem;
+    border-radius: .75rem;
+    color: inherit;
+    font-size: .64rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .mobile-tabbar__link--active,
+  .mobile-tabbar__link:hover {
+    background: rgb(255 255 255 / 16%);
+  }
+
+  .mobile-tabbar__icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .main {
+    padding-bottom: calc(4.9rem + env(safe-area-inset-bottom));
+  }
+
   .contact-table__head {
     font-size: .68rem;
   }
@@ -642,11 +696,11 @@
     grid-template-columns: minmax(7.5rem, 1.15fr) minmax(10.5rem, 1.35fr) minmax(6rem, .75fr) minmax(6.5rem, .8fr) 4.25rem;
     gap: .45rem;
     padding: .65rem .7rem;
-    font-size: .86rem;
+    font-size: .8rem;
   }
 
   .contact-name span {
-    font-size: .76rem;
+    font-size: .7rem;
   }
 
   .tag {
@@ -743,37 +797,108 @@
     font-size: .72rem;
   }
 
-  .contact-table__head,
-  .contact-row {
-    grid-template-columns: minmax(5.8rem, 1.05fr) minmax(8.5rem, 1.45fr) minmax(4.8rem, .75fr) minmax(4.8rem, .7fr) 3.45rem;
+  .inline-form,
+  .contact-modal__panel {
+    font-size: .8rem;
+  }
+
+  .contact-form,
+  .tag-selector {
+    gap: .6rem;
+  }
+
+  .contact-form label,
+  .tag-selector label,
+  .tag-selector legend {
     gap: .25rem;
-    padding: .5rem .45rem;
-    font-size: .68rem;
+    font-size: .8rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea,
+  .contact-form select,
+  .tag-selector select {
+    min-height: 2.25rem;
+    padding: .5rem .6rem;
+    font-size: .8rem;
+  }
+
+  .contact-form textarea {
+    min-height: 5.5rem;
+  }
+
+  .tag-selector small,
+  .field-error {
+    font-size: .7rem;
+  }
+
+  .contact-form .button,
+  .contact-modal__panel .button {
+    min-height: 2.15rem;
+    padding: .4rem .65rem;
+    font-size: .78rem;
+  }
+
+  .contact-modal__head h2 {
+    font-size: 1rem;
+  }
+
+  .contact-modal__head p {
+    font-size: .72rem;
   }
 
   .contact-table__head {
-    font-size: .52rem;
+    display: none;
+  }
+
+  .contact-row {
+    grid-template-columns: 1fr auto;
+    gap: .35rem .65rem;
+    padding: .7rem .75rem;
+    font-size: .8rem;
+  }
+
+  .contact-row > span,
+  .contact-email {
+    grid-column: 1 / -1;
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .contact-name {
     gap: .1rem;
+    min-width: 0;
+  }
+
+  .contact-row strong,
+  .contact-name span {
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .contact-name span {
-    font-size: .58rem;
+    font-size: .7rem;
   }
 
   .tag-row {
+    grid-column: 1 / -1;
+    flex-wrap: wrap;
     gap: .2rem;
+    overflow: visible;
   }
 
   .tag {
-    min-height: 1.1rem;
-    padding: .05rem .25rem;
-    font-size: .52rem;
+    min-height: 1.3rem;
+    padding: .08rem .35rem;
+    font-size: .68rem;
   }
 
   .row-actions {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
     gap: .15rem;
   }
 

@@ -17,6 +17,14 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [1.0.1] - 2026-05-11
+
+### Corretto
+
+- Ripristinata la navigazione mobile con una bottom tab bar fissa in stile iOS.
+- Migliorato il layout mobile dei contatti evitando sovrapposizioni dei testi lunghi nelle righe.
+- Riallineate le dimensioni dei caratteri di menu, card contatto e maschera di modifica su mobile.
+
 ## [1.0.0] - 2026-05-10
 
 ### Aggiunto
