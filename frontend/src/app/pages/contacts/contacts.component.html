@@ -56,7 +56,7 @@
     <div class="main">
       <section class="toolbar" [class.toolbar--home]="pageMode === 'dashboard'" [class.toolbar--contacts]="pageMode === 'contacts'" [class.toolbar--tags]="pageMode === 'tags'" aria-label="Strumenti rubrica">
         <label class="visually-hidden" for="search">Cerca contatti</label>
-        <input id="search" class="search" [(ngModel)]="search" (ngModelChange)="onSearchChanged()" [placeholder]="searchPlaceholder">
+        <input id="search" class="search contacts-toolbar__search" [(ngModel)]="search" (ngModelChange)="onSearchChanged()" [placeholder]="searchPlaceholder">
         @if (pageMode === 'tags') {
           <div class="color-filter tag-toolbar__color-filter">
             <button class="color-filter__trigger" type="button" aria-label="Filtra tag per colore" title="Filtra tag per colore" [attr.aria-expanded]="tagColorMenuOpen" (click)="toggleTagColorMenu()">
@@ -84,7 +84,7 @@
           <button class="button toolbar__action tag-toolbar__action" type="button" title="Crea un nuovo tag" (click)="newTag()">Nuovo tag</button>
         }
         @if (pageMode === 'contacts') {
-          <button class="button toolbar__action" type="button" title="Crea un nuovo contatto" (click)="openNewContactForm()">Nuovo contatto</button>
+          <button class="button toolbar__action contacts-toolbar__action" type="button" title="Crea un nuovo contatto" (click)="openNewContactForm()">Nuovo contatto</button>
         }
       </section>
 

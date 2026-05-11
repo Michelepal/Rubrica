@@ -123,7 +123,19 @@
 
 .page-title h1 {
   margin: 0;
-  font-size: 1.35rem;
+  font-size: 1.45rem;
+}
+
+.page-title {
+  min-width: 0;
+}
+
+.page-title p {
+  margin-top: .15rem;
+  font-size: .95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .page-title p,
@@ -137,25 +149,28 @@
   flex-wrap: nowrap;
   gap: var(--space-sm);
   min-width: max-content;
-  font-size: var(--font-size-sm);
+  font-size: .9rem;
 }
 
 .user-chip .button {
-  min-height: 2.125rem;
-  padding: .45rem .75rem;
-  font-size: var(--font-size-sm);
+  min-height: 2.25rem;
+  padding: .5rem .8rem;
+  font-size: .9rem;
   white-space: nowrap;
 }
 
 .theme-toggle {
-  width: 2.125rem;
-  height: 2.125rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  line-height: 0;
   flex: 0 0 auto;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
   color: var(--color-text);
   cursor: pointer;
+  place-content: center;
 }
 
 .theme-toggle:hover {
@@ -171,8 +186,56 @@
 
 .toolbar {
   display: grid;
-  grid-template-columns: minmax(14rem, 1fr) minmax(10rem, auto) auto;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-sm);
+  min-width: 0;
+}
+
+.toolbar--contacts {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.toolbar--tags {
+  grid-template-columns: minmax(0, 1fr) minmax(7rem, auto) auto;
+  align-items: end;
+}
+
+.tag-toolbar__color-filter,
+.tag-toolbar__search,
+.tag-toolbar__action {
+  align-self: end;
+}
+
+.tag-toolbar__search {
+  height: 2.5rem;
+  min-height: 2.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.contacts-toolbar__search,
+.contacts-toolbar__action {
+  align-self: end;
+}
+
+.contacts-toolbar__search {
+  height: 2.5rem;
+  min-height: 2.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.contacts-toolbar__search,
+.contacts-toolbar__action,
+.tag-toolbar__search,
+.tag-toolbar__action,
+.color-filter__trigger,
+.color-filter__option {
+  font-size: .9rem;
+}
+
+.search {
+  min-width: 0;
 }
 
 .toolbar__action {
@@ -451,10 +514,21 @@
 .icon-button {
   width: 2.125rem;
   height: 2.125rem;
+  padding: 0;
+  line-height: 0;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: var(--color-surface);
   color: var(--color-text);
+  place-content: center;
+  flex: 0 0 auto;
+}
+
+.icon-button svg,
+.theme-toggle svg,
+.feedback__dismiss svg {
+  display: block;
+  flex: 0 0 auto;
 }
 
 .icon-button:hover {
@@ -562,10 +636,12 @@
   display: grid;
   gap: .5rem;
   padding: var(--space-md);
+  min-width: 0;
 }
 
 .tag-form {
   padding: 0 var(--space-md) var(--space-md);
+  min-width: 0;
 }
 
 .tag-card {
@@ -590,6 +666,7 @@
 .tag-color-field {
   display: grid;
   gap: .45rem;
+  min-width: 0;
 }
 
 .tag-color-field__label {
@@ -601,6 +678,7 @@
   grid-template-columns: minmax(8rem, auto) minmax(0, 1fr);
   gap: .75rem;
   align-items: center;
+  min-width: 0;
 }
 
 .color-picker,
@@ -663,6 +741,7 @@
   flex-wrap: wrap;
   gap: .45rem;
   align-self: center;
+  min-width: 0;
 }
 
 .color-preset {
@@ -722,11 +801,14 @@
   flex: 0 0 auto;
   display: inline-grid;
   place-items: center;
+  place-content: center;
+  padding: 0;
   border: 1px solid currentColor;
   border-radius: var(--radius);
   background: transparent;
   color: inherit;
   cursor: pointer;
+  line-height: 0;
 }
 
 .feedback__dismiss svg {
@@ -794,36 +876,37 @@
 
   .topbar {
     padding: .75rem 1rem;
+    flex-wrap: nowrap;
   }
 
   .page-title h1 {
-    font-size: 1.15rem;
+    font-size: 1.22rem;
   }
 
   .page-title p {
-    font-size: .82rem;
+    font-size: .86rem;
   }
 
   .user-chip {
     gap: .45rem;
-    font-size: .78rem;
+    font-size: .82rem;
   }
 
   .avatar {
-    width: 1.85rem;
-    height: 1.85rem;
-    font-size: .78rem;
+    width: 1.95rem;
+    height: 1.95rem;
+    font-size: .82rem;
   }
 
   .user-chip .button {
-    min-height: 1.9rem;
-    padding: .35rem .55rem;
-    font-size: .76rem;
+    min-height: 2rem;
+    padding: .38rem .6rem;
+    font-size: .8rem;
   }
 
   .theme-toggle {
-    width: 1.9rem;
-    height: 1.9rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   .sidebar {
@@ -890,6 +973,16 @@
     font-size: .8rem;
   }
 
+  .contacts-toolbar__search,
+  .contacts-toolbar__action,
+  .tag-toolbar__search,
+  .tag-toolbar__action,
+  .color-filter__trigger,
+  .color-filter__option,
+  .tag-card {
+    font-size: .82rem;
+  }
+
   .contact-name span {
     font-size: .7rem;
   }
@@ -920,13 +1013,26 @@
 
   .toolbar__action {
     width: auto;
-    min-width: 8.75rem;
+    min-width: 7.75rem;
     max-width: max-content;
+  }
+
+  .toolbar--tags {
+    grid-template-columns: minmax(0, 1fr) minmax(5.75rem, auto) auto;
+  }
+
+  .color-filter__trigger {
+    min-width: 5.75rem;
+  }
+
+  .color-filter__menu {
+    width: 5.75rem;
   }
 
   .topbar {
     gap: .55rem;
     padding: .65rem .75rem;
+    flex-wrap: nowrap;
   }
 
   .summary {
@@ -946,35 +1052,35 @@
   }
 
   .page-title h1 {
-    font-size: 1rem;
+    font-size: 1.08rem;
   }
 
   .page-title p {
-    font-size: .68rem;
+    font-size: .72rem;
   }
 
   .user-chip {
     align-self: stretch;
     justify-content: flex-end;
     gap: .3rem;
-    font-size: .64rem;
+    font-size: .68rem;
   }
 
   .avatar {
-    width: 1.55rem;
-    height: 1.55rem;
-    font-size: .64rem;
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: .68rem;
   }
 
   .user-chip .button {
-    min-height: 1.55rem;
-    padding: .22rem .38rem;
-    font-size: .62rem;
+    min-height: 1.75rem;
+    padding: .28rem .45rem;
+    font-size: .68rem;
   }
 
   .theme-toggle {
-    width: 1.55rem;
-    height: 1.55rem;
+    width: 1.75rem;
+    height: 1.75rem;
   }
 
   .theme-toggle svg {
@@ -1055,6 +1161,16 @@
     font-size: .8rem;
   }
 
+  .contacts-toolbar__search,
+  .contacts-toolbar__action,
+  .tag-toolbar__search,
+  .tag-toolbar__action,
+  .color-filter__trigger,
+  .color-filter__option,
+  .tag-card {
+    font-size: .78rem;
+  }
+
   .contact-row > span,
   .contact-email {
     grid-column: 1 / -1;
@@ -1110,15 +1226,58 @@
   }
 
   .tag-color-field__controls {
-    grid-template-columns: minmax(7.75rem, auto) minmax(0, 1fr);
+    grid-template-columns: minmax(6.75rem, auto) minmax(0, 1fr);
     gap: .45rem;
   }
 }
 
 @media (max-width: 30rem) {
+  .topbar {
+    gap: .45rem;
+    padding-inline: .6rem;
+  }
+
+  .page-title h1 {
+    font-size: 1rem;
+  }
+
+  .page-title p {
+    font-size: .68rem;
+  }
+
+  .user-chip {
+    gap: .22rem;
+    font-size: .64rem;
+  }
+
+  .user-chip > span:not(.avatar) {
+    display: none;
+  }
+
+  .user-chip .button {
+    min-height: 1.65rem;
+    padding: .24rem .4rem;
+    font-size: .64rem;
+  }
+
+  .theme-toggle {
+    width: 1.65rem;
+    height: 1.65rem;
+  }
+
   .toolbar {
     grid-template-columns: 1fr;
     align-items: stretch;
+  }
+
+  .contacts-toolbar__search,
+  .contacts-toolbar__action,
+  .tag-toolbar__search,
+  .tag-toolbar__action,
+  .color-filter__trigger,
+  .color-filter__option,
+  .tag-card {
+    font-size: .76rem;
   }
 
   .color-filter {

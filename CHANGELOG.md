@@ -17,6 +17,22 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [1.2.0] - 2026-05-11
+
+### Aggiunto
+
+- Separati i componenti pagina per Home, Contatti e Tags con routing dedicato.
+
+### Migliorato
+
+- Armonizzate dimensioni e allineamento dei controlli nelle toolbar di Contatti e Tags.
+- Migliorata la resa responsive di font, card, input, pulsanti e filtro colore nelle pagine Contatti e Tags.
+- Aumentata leggermente la leggibilita' dell'header mantenendo titolo e controlli sulla stessa riga.
+
+### Corretto
+
+- Mantenuta l'icona utente sempre visibile nell'header mobile, nascondendo solo il nome quando lo spazio orizzontale non basta.
+
 ## [1.1.0] - 2026-05-11
 
 ### Aggiunto
