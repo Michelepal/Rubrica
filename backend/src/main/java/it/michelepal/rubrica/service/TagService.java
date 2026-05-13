@@ -4,11 +4,13 @@ import it.michelepal.rubrica.dto.PageResponse;
 import it.michelepal.rubrica.dto.TagRequest;
 import it.michelepal.rubrica.dto.TagResponse;
 import it.michelepal.rubrica.entity.AppUser;
+import it.michelepal.rubrica.entity.Contact;
 import it.michelepal.rubrica.entity.Tag;
 import it.michelepal.rubrica.exception.ConflictException;
 import it.michelepal.rubrica.exception.NotFoundException;
 import it.michelepal.rubrica.mapper.TagMapper;
 import it.michelepal.rubrica.repository.AppUserRepository;
+import it.michelepal.rubrica.repository.ContactRepository;
 import it.michelepal.rubrica.repository.TagRepository;
 import java.util.List;
 import java.util.Objects;
@@ -22,12 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 @SuppressWarnings("null")
 public class TagService {
     private final TagRepository tagRepository;
+    private final ContactRepository contactRepository;
     private final AppUserRepository userRepository;
     private final TagMapper mapper;
     private final InputNormalizer normalizer;
 
-    public TagService(TagRepository tagRepository, AppUserRepository userRepository, TagMapper mapper, InputNormalizer normalizer) {
+    public TagService(TagRepository tagRepository, ContactRepository contactRepository, AppUserRepository userRepository, TagMapper mapper, InputNormalizer normalizer) {
         this.tagRepository = tagRepository;
+        this.contactRepository = contactRepository;
         this.userRepository = userRepository;
         this.mapper = mapper;
         this.normalizer = normalizer;
@@ -84,6 +88,14 @@ public class TagService {
     public void delete(String username, Long id) {
         Tag tag = tagRepository.findByIdAndUserUsername(id, username)
             .orElseThrow(() -> new NotFoundException("Tag non trovato."));
+        List<Contact> contacts = contactRepository.findByTagsIdAndUserUsername(id, username);
+        contacts.forEach(contact -> {
+            boolean removed = contact.getTags().remove(tag);
+            if (!removed) {
+                contact.getTags().removeIf(contactTag -> Objects.equals(contactTag.getId(), id));
+            }
+        });
+        contactRepository.saveAllAndFlush(contacts);
         tagRepository.delete(tag);
     }
 

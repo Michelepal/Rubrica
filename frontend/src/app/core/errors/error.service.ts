@@ -16,7 +16,10 @@ export class ErrorService {
       }
       return { message: this.statusMessage(error.status), fieldErrors: {} };
     }
-    return { message: 'Si è verificato un errore imprevisto.', fieldErrors: {} };
+    if (error instanceof Error) {
+      return { message: error.message, fieldErrors: {} };
+    }
+    return { message: 'Si e verificato un errore imprevisto.', fieldErrors: {} };
   }
 
   private statusMessage(status: number): string {
@@ -26,8 +29,8 @@ export class ErrorService {
       401: 'Sessione non valida o credenziali errate.',
       403: 'Non hai i permessi per questa operazione.',
       404: 'Risorsa non trovata.',
-      409: 'Esiste già un dato con queste informazioni.',
-      500: 'Errore del server. Riprova più tardi.'
+      409: 'Esiste gia un dato con queste informazioni.',
+      500: 'Errore del server. Riprova piu tardi.'
     };
     return messages[status] ?? 'Operazione non riuscita.';
   }

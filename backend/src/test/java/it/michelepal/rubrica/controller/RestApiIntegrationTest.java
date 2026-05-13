@@ -174,6 +174,12 @@ public class RestApiIntegrationTest {
                 .param("q", "contatto1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.totalElements").value(3));
+
+        mockMvc.perform(get("/api/contacts")
+                .header("Authorization", bearerToken())
+                .param("q", "Clienti"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.totalElements").value(0));
     }
 
     @Test
@@ -262,6 +268,12 @@ public class RestApiIntegrationTest {
         tag.setColor("#2563eb");
         tagRepository.save(tag);
 
+        Contact contact = new Contact();
+        contact.setUser(user);
+        contact.setFirstName("Mario");
+        contact.getTags().add(tag);
+        contactRepository.save(contact);
+
         mockMvc.perform(post("/api/tags")
                 .header("Authorization", bearerToken())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -274,6 +286,12 @@ public class RestApiIntegrationTest {
         mockMvc.perform(delete("/api/tags/{id}", tag.getId())
                 .header("Authorization", bearerToken()))
             .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/api/contacts")
+                .header("Authorization", bearerToken())
+                .param("tagId", tag.getId().toString()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.totalElements").value(0));
     }
 
     private String bearerToken() throws Exception {

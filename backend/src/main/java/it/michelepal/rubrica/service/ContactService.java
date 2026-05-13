@@ -11,6 +11,7 @@ import it.michelepal.rubrica.entity.ContactAddress;
 import it.michelepal.rubrica.entity.ContactEmail;
 import it.michelepal.rubrica.entity.ContactPhone;
 import it.michelepal.rubrica.entity.Tag;
+import it.michelepal.rubrica.exception.ConflictException;
 import it.michelepal.rubrica.exception.NotFoundException;
 import it.michelepal.rubrica.mapper.ContactMapper;
 import it.michelepal.rubrica.repository.AppUserRepository;
@@ -55,10 +56,10 @@ public class ContactService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ContactResponse> list(String username, int page, int size, String query, Long tagId, Boolean favorite) {
+    public PageResponse<ContactResponse> list(String username, int page, int size, String query, Long tagId, Boolean favorite, String sort) {
         Page<Contact> contacts = contactRepository.findAll(
             contactSpecification(username, query, tagId, favorite),
-            PageRequest.of(safePage(page), safeSize(size), Sort.by("lastName").ascending().and(Sort.by("firstName").ascending()))
+            PageRequest.of(safePage(page), safeSize(size), contactSort(sort))
         );
         return new PageResponse<>(
             contacts.getContent().stream().map(mapper::toResponse).toList(),
@@ -74,6 +75,13 @@ public class ContactService {
         return contactRepository.findByUserUsernameOrderByLastNameAscFirstNameAsc(username).stream().map(mapper::toResponse).toList();
     }
 
+    private Sort contactSort(String sort) {
+        if ("recent".equalsIgnoreCase(sort)) {
+            return Sort.by("createdAt").descending().and(Sort.by("id").descending());
+        }
+        return Sort.by("lastName").ascending().and(Sort.by("firstName").ascending());
+    }
+
     @Transactional(readOnly = true)
     public ContactResponse get(String username, Long id) {
         return mapper.toResponse(findOwned(username, id));
@@ -84,6 +92,7 @@ public class ContactService {
         AppUser user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Utente non trovato."));
         Contact contact = new Contact();
         contact.setUser(user);
+        validateUniqueChannels(username, null, request);
         apply(contact, username, request);
         return mapper.toResponse(contactRepository.save(Objects.requireNonNull(contact)));
     }
@@ -91,6 +100,7 @@ public class ContactService {
     @Transactional
     public ContactResponse update(String username, Long id, ContactRequest request) {
         Contact contact = findOwned(username, id);
+        validateUniqueChannels(username, id, request);
         apply(contact, username, request);
         return mapper.toResponse(contactRepository.save(Objects.requireNonNull(contact)));
     }
@@ -121,14 +131,12 @@ public class ContactService {
                 String like = "%" + term.toLowerCase(Locale.ROOT) + "%";
                 var emails = root.join("emails", JoinType.LEFT);
                 var phones = root.join("phones", JoinType.LEFT);
-                var tags = root.join("tags", JoinType.LEFT);
                 predicates.add(builder.or(
                     builder.like(builder.lower(root.get("firstName")), like),
                     builder.like(builder.lower(root.get("lastName")), like),
-                    builder.like(builder.lower(root.get("company")), like),
+                    builder.like(builder.lower(root.get("notes")), like),
                     builder.like(builder.lower(emails.get("email")), like),
-                    builder.like(builder.lower(phones.get("phoneNumber")), like),
-                    builder.like(builder.lower(tags.get("name")), like)
+                    builder.like(builder.lower(phones.get("phoneNumber")), like)
                 ));
             }
             return builder.and(predicates.toArray(Predicate[]::new));
@@ -154,6 +162,71 @@ public class ContactService {
         replaceEmails(contact, request.emails());
         replaceAddresses(contact, request.addresses());
         replaceTags(contact, username, request.tagIds());
+    }
+
+    private void validateUniqueChannels(String username, Long currentContactId, ContactRequest request) {
+        Set<String> requestEmails = new HashSet<>();
+        if (request.emails() != null) {
+            for (ContactChannelRequest email : request.emails()) {
+                String normalizedEmail = normalizeEmail(email.value());
+                if (normalizedEmail != null && !requestEmails.add(normalizedEmail)) {
+                    throw new ConflictException("Esiste giÃ  un contatto con questa email.");
+                }
+            }
+        }
+
+        Set<String> requestPhones = new HashSet<>();
+        if (request.phones() != null) {
+            for (ContactChannelRequest phone : request.phones()) {
+                String normalizedPhone = normalizePhone(phone.value());
+                if (normalizedPhone != null && !requestPhones.add(normalizedPhone)) {
+                    throw new ConflictException("Esiste giÃ  un contatto con questo numero di telefono.");
+                }
+            }
+        }
+
+        if (!requestEmails.isEmpty()) {
+            contactRepository.findByUserUsernameOrderByLastNameAscFirstNameAsc(username).stream()
+                .filter(contact -> currentContactId == null || !Objects.equals(contact.getId(), currentContactId))
+                .forEach(contact -> {
+                boolean emailExists = contact.getEmails().stream()
+                    .map(ContactEmail::getEmail)
+                    .map(this::normalizeEmail)
+                    .filter(Objects::nonNull)
+                    .anyMatch(requestEmails::contains);
+                if (emailExists) {
+                    throw new ConflictException("Esiste giÃ  un contatto con questa email.");
+                }
+                });
+        }
+        if (!requestPhones.isEmpty()) {
+            contactRepository.findWithPhonesByUsername(username).stream()
+                .filter(contact -> currentContactId == null || !Objects.equals(contact.getId(), currentContactId))
+                .forEach(contact -> {
+                boolean phoneExists = contact.getPhones().stream()
+                    .map(ContactPhone::getPhoneNumber)
+                    .map(this::normalizePhone)
+                    .filter(Objects::nonNull)
+                    .anyMatch(requestPhones::contains);
+                if (phoneExists) {
+                    throw new ConflictException("Esiste giÃ  un contatto con questo numero di telefono.");
+                }
+                });
+        }
+    }
+
+    private String normalizePhone(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return value.trim().replaceAll("[^0-9+]", "");
+    }
+
+    private String normalizeEmail(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return value.trim().toLowerCase(Locale.ROOT);
     }
 
     private void replacePhones(Contact contact, List<ContactChannelRequest> requests) {

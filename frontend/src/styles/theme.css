@@ -8,8 +8,10 @@
   --color-primary-contrast: #ffffff;
   --color-danger: #b42318;
   --color-focus: #2f80ed;
-  --color-sidebar: #17242f;
-  --color-sidebar-text: #f7fbfc;
+  --color-sidebar: #ffffff;
+  --color-sidebar-text: #1d2935;
+  --color-sidebar-border: #d7dde2;
+  --color-sidebar-active: #e4f2ef;
   --color-tag: #e4f2ef;
   --color-tag-text: #16594f;
   --radius: .5rem;
@@ -35,6 +37,8 @@
   --color-focus: #8ab4ff;
   --color-sidebar: #0b1117;
   --color-sidebar-text: #edf4f7;
+  --color-sidebar-border: #263847;
+  --color-sidebar-active: rgb(255 255 255 / 12%);
   --color-tag: #163b35;
   --color-tag-text: #b8fff1;
 }
@@ -82,4 +86,3 @@
 .icon-button--danger {
   color: var(--color-danger);
 }
-

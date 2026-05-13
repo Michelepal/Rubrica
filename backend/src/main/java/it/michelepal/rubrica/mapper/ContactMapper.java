@@ -19,6 +19,7 @@ public class ContactMapper {
             contact.getCompany(),
             contact.getJobTitle(),
             contact.getNotes(),
+            contact.getCreatedAt(),
             contact.isFavorite(),
             contact.getPhones().stream()
                 .map(phone -> new ContactChannelResponse(phone.getId(), phone.getType(), phone.getPhoneNumber(), phone.isPrimaryPhone()))
@@ -36,4 +37,3 @@ public class ContactMapper {
         );
     }
 }
-

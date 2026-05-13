@@ -17,6 +17,36 @@ Ogni task completato deve prevedere:
 
 ## [Non rilasciato]
 
+## [1.3.1] - 2026-05-13
+
+### Migliorato
+
+- Rimossa la select filtro colore dalla sezione Tag, mantenendo la ricerca per nome con azione esplicita.
+- Uniformata la maschera di creazione e modifica tag in una modale come per i contatti.
+- Migliorata la resa responsive dei box colore nella modale tag, evitando overflow dei testi.
+
+## [1.3.0] - 2026-05-13
+
+### Aggiunto
+
+- Aggiunto lazy loading delle sezioni principali Home, Contatti e Tag.
+- Aggiunti dati demo estesi per testare paginazione, filtri e viste responsive.
+- Aggiunto pulsante a scomparsa per tornare in cima durante lo scroll.
+
+### Migliorato
+
+- Unificata la resa dei contatti in card riusabili tra Home e Contatti.
+- Migliorati layout responsive, spaziatura dei filtri, bottom navigation e supporto dark mode.
+- Rafforzate le modali con messaggi visibili in primo piano e azioni solo nel footer.
+- Ottimizzata la ricerca contatti separando testo libero e filtro tag.
+
+### Corretto
+
+- Corretta la cancellazione dei tag associati ai contatti rimuovendo prima le relazioni.
+- Corretta la propagazione di modifica e cancellazione tag sui contatti collegati.
+- Bloccati duplicati per contatti e tag nei flussi backend e demo frontend.
+- Rimossi i pulsanti X dalle modali, mantenendo solo le azioni in basso.
+
 ## [1.2.0] - 2026-05-11
 
 ### Aggiunto

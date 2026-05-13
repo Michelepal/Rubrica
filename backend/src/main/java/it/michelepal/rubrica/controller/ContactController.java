@@ -34,9 +34,10 @@ public class ContactController {
         @RequestParam(name = "size", defaultValue = "10") int size,
         @RequestParam(name = "q", required = false) String query,
         @RequestParam(name = "tagId", required = false) Long tagId,
-        @RequestParam(name = "favorite", required = false) Boolean favorite
+        @RequestParam(name = "favorite", required = false) Boolean favorite,
+        @RequestParam(name = "sort", defaultValue = "name") String sort
     ) {
-        return contactService.list(principal.getName(), page, size, query, tagId, favorite);
+        return contactService.list(principal.getName(), page, size, query, tagId, favorite, sort);
     }
 
     @GetMapping("/{id}")

@@ -29,6 +29,7 @@ describe('HomeComponent', () => {
     company: 'Northwind',
     jobTitle: 'Manager',
     notes: null,
+    createdAt: '2026-05-10T08:30:00.000Z',
     favorite: false,
     phones: [{ type: 'mobile', value: '1234567890', primary: true }],
     emails: [{ type: 'email', value: 'laura@example.local', primary: true }],
@@ -73,7 +74,7 @@ describe('HomeComponent', () => {
   });
 
   it('uses page-specific search placeholders', () => {
-    expect(component.searchPlaceholder).toBe('Cerca contatti per nome, azienda, email o telefono');
+    expect(component.searchPlaceholder).toBe('Cerca per nome, cognome, descrizione, email o telefono');
 
     routeStub.snapshot.routeConfig.path = 'tags';
     routeUrl$.next([{ path: 'tags' }]);
@@ -81,30 +82,27 @@ describe('HomeComponent', () => {
     expect(component.searchPlaceholder).toBe('Cerca tag per nome');
   });
 
-  it('filters tags by name and selected color in the tag page', () => {
+  it('filters tags by name in the tag page', () => {
     component.tags = [
       { id: 1, name: 'Clienti', color: '#16a34a' },
       { id: 2, name: 'Lavoro', color: '#2563eb' }
     ];
     component.search = 'lavo';
-    component.tagColorFilter = '#2563eb';
 
     expect(component.filteredTags.map(item => item.name)).toEqual(['Lavoro']);
   });
 
-  it('shows a neutral all-colors trigger and tooltips for action buttons', () => {
+  it('shows tag search controls and tooltips for tag action buttons', () => {
     routeStub.snapshot.routeConfig.path = 'tags';
     routeUrl$.next([{ path: 'tags' }]);
     fixture.detectChanges();
 
-    const allColorsTrigger = fixture.nativeElement.querySelector('.color-filter__all--trigger') as HTMLElement;
-    const newTagButton = fixture.nativeElement.querySelector('.toolbar__action') as HTMLButtonElement;
-    const colorFilterButton = fixture.nativeElement.querySelector('.color-filter__trigger') as HTMLButtonElement;
+    const newTagButton = fixture.nativeElement.querySelector('.create-record-button') as HTMLButtonElement;
+    const queryButton = fixture.nativeElement.querySelector('.tag-section-toolbar .toolbar__action') as HTMLButtonElement;
 
-    expect(allColorsTrigger.textContent?.trim()).toBe('Tutti');
-    expect(getComputedStyle(allColorsTrigger).backgroundColor).toBe('rgba(0, 0, 0, 0)');
     expect(newTagButton.title).toBe('Crea un nuovo tag');
-    expect(colorFilterButton.title).toBe('Filtra tag per colore');
+    expect(queryButton.title).toBe('Applica ricerca e filtri tag');
+    expect(fixture.nativeElement.querySelector('#tagColorFilter')).toBeNull();
   });
 
   it('counts contacts to review when email or phone is missing', () => {
@@ -165,19 +163,25 @@ describe('HomeComponent', () => {
     expect(component.expandedContactId).toBeNull();
   });
 
-  it('shows and dismisses CRUD errors', () => {
+  it('shows CRUD errors in a modal', () => {
+    spyOn(console, 'error');
     contactApiService.update.and.returnValue(throwError(() => new HttpErrorResponse({ status: 500 })));
 
     component.openContactForm(contact);
     component.askSaveContact();
     component.confirmModal();
 
-    expect(component.errorMessage).toContain('Non è stato possibile modificare il contatto.');
-    expect(component.errorMessage).toContain('Errore del server.');
+    expect(component.modalOpen).toBeTrue();
+    expect(component.modalTitle).toBe('Errore');
+    expect(component.modalMessage).toContain('Non è stato possibile modificare il contatto.');
+    expect(component.modalMessage).toContain('Errore del server.');
+    expect(component.modalConfirmLabel).toBe('Chiudi');
+    expect(component.modalShowCancel).toBeFalse();
+    expect(console.error).toHaveBeenCalledWith('Salvataggio contatto fallito.', jasmine.anything());
 
-    component.dismissError();
+    component.confirmModal();
 
-    expect(component.errorMessage).toBe('');
+    expect(component.modalOpen).toBeFalse();
   });
 
   it('toggles theme and logs out through user actions', () => {

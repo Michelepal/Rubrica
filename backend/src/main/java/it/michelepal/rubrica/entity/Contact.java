@@ -51,7 +51,7 @@ public class Contact {
     @Column(nullable = false)
     private boolean favorite;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
     @Column(name = "updated_at", nullable = false)
@@ -77,7 +77,9 @@ public class Contact {
     @PrePersist
     void onCreate() {
         Instant now = Instant.now();
-        createdAt = now;
+        if (createdAt == null) {
+            createdAt = now;
+        }
         updatedAt = now;
     }
 
@@ -101,9 +103,10 @@ public class Contact {
     public void setNotes(String notes) { this.notes = notes; }
     public boolean isFavorite() { return favorite; }
     public void setFavorite(boolean favorite) { this.favorite = favorite; }
+    public Instant getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
     public List<ContactPhone> getPhones() { return phones; }
     public List<ContactEmail> getEmails() { return emails; }
     public List<ContactAddress> getAddresses() { return addresses; }
     public Set<Tag> getTags() { return tags; }
 }
-

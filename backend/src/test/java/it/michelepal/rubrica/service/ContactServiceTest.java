@@ -3,15 +3,20 @@ package it.michelepal.rubrica.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import it.michelepal.rubrica.dto.ContactChannelRequest;
 import it.michelepal.rubrica.dto.ContactRequest;
 import it.michelepal.rubrica.dto.ContactResponse;
 import it.michelepal.rubrica.entity.AppUser;
 import it.michelepal.rubrica.entity.Contact;
+import it.michelepal.rubrica.entity.ContactEmail;
+import it.michelepal.rubrica.entity.ContactPhone;
+import it.michelepal.rubrica.exception.ConflictException;
 import it.michelepal.rubrica.exception.NotFoundException;
 import it.michelepal.rubrica.mapper.ContactMapper;
 import it.michelepal.rubrica.repository.AppUserRepository;
 import it.michelepal.rubrica.repository.ContactRepository;
 import it.michelepal.rubrica.repository.TagRepository;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,6 +54,7 @@ class ContactServiceTest {
 
     private String testUsername = "testuser";
     private Long testContactId = 1L;
+    private Instant testCreatedAt = Instant.parse("2026-05-10T08:30:00Z");
 
     @BeforeEach
     void setUp() {
@@ -75,8 +81,8 @@ class ContactServiceTest {
         contact2.setLastName("Smith");
         contact2.setCompany("Tech Inc");
 
-        ContactResponse response1 = new ContactResponse(1L, "John", "Doe", "Acme Corp", null, null, false, null, null, null, null);
-        ContactResponse response2 = new ContactResponse(2L, "Jane", "Smith", "Tech Inc", null, null, false, null, null, null, null);
+        ContactResponse response1 = new ContactResponse(1L, "John", "Doe", "Acme Corp", null, null, testCreatedAt, false, null, null, null, null);
+        ContactResponse response2 = new ContactResponse(2L, "Jane", "Smith", "Tech Inc", null, null, testCreatedAt, false, null, null, null, null);
 
         when(contactRepository.findByUserUsernameOrderByLastNameAscFirstNameAsc(testUsername))
             .thenReturn(Arrays.asList(contact1, contact2));
@@ -118,7 +124,7 @@ class ContactServiceTest {
         contact.setCompany("Acme Corp");
         contact.setUser(user);
 
-        ContactResponse response = new ContactResponse(testContactId, "John", "Doe", "Acme Corp", null, null, false, null, null, null, null);
+        ContactResponse response = new ContactResponse(testContactId, "John", "Doe", "Acme Corp", null, null, testCreatedAt, false, null, null, null, null);
 
         when(contactRepository.findByIdAndUserUsername(testContactId, testUsername))
             .thenReturn(Optional.of(contact));
@@ -173,7 +179,7 @@ class ContactServiceTest {
         savedContact.setNotes("Some notes");
         savedContact.setUser(user);
 
-        ContactResponse response = new ContactResponse(testContactId, "John", "Doe", "Acme Corp", "Developer", "Some notes", false, null, null, null, null);
+        ContactResponse response = new ContactResponse(testContactId, "John", "Doe", "Acme Corp", "Developer", "Some notes", testCreatedAt, false, null, null, null, null);
 
         when(normalizer.requiredText("John")).thenReturn("John");
         when(normalizer.text("Doe")).thenReturn("Doe");
@@ -222,6 +228,68 @@ class ContactServiceTest {
     }
 
     @Test
+    @DisplayName("create: should reject duplicate email")
+    void testCreateContactDuplicateEmail() {
+        ContactRequest request = new ContactRequest(
+            "John",
+            "Doe",
+            null,
+            null,
+            null,
+            false,
+            new ArrayList<>(),
+            List.of(new ContactChannelRequest("email", "john@example.local", true)),
+            new ArrayList<>(),
+            new HashSet<>()
+        );
+        Contact existingContact = new Contact();
+        ContactEmail existingEmail = new ContactEmail();
+        existingEmail.setEmail("john@example.local");
+        existingContact.getEmails().add(existingEmail);
+
+        when(userRepository.findByUsername(testUsername)).thenReturn(Optional.of(createTestUser()));
+        when(contactRepository.findByUserUsernameOrderByLastNameAscFirstNameAsc(testUsername))
+            .thenReturn(List.of(existingContact));
+
+        ConflictException thrown = assertThrows(ConflictException.class, () -> contactService.create(testUsername, request));
+
+        assertTrue(thrown.getMessage().contains("email"));
+        verify(contactRepository, never()).save(any(Contact.class));
+    }
+
+    @Test
+    @DisplayName("update: should reject duplicate phone from another contact")
+    void testUpdateContactDuplicatePhone() {
+        ContactRequest request = new ContactRequest(
+            "John",
+            "Doe",
+            null,
+            null,
+            null,
+            false,
+            List.of(new ContactChannelRequest("mobile", "+39 333 111 2222", true)),
+            new ArrayList<>(),
+            new ArrayList<>(),
+            new HashSet<>()
+        );
+        Contact currentContact = new Contact();
+        Contact existingContact = new Contact();
+        ContactPhone existingPhone = new ContactPhone();
+        existingPhone.setPhoneNumber("+39 3331112222");
+        existingContact.getPhones().add(existingPhone);
+
+        when(contactRepository.findByIdAndUserUsername(testContactId, testUsername))
+            .thenReturn(Optional.of(currentContact));
+        when(contactRepository.findWithPhonesByUsername(testUsername))
+            .thenReturn(List.of(existingContact));
+
+        ConflictException thrown = assertThrows(ConflictException.class, () -> contactService.update(testUsername, testContactId, request));
+
+        assertTrue(thrown.getMessage().contains("telefono"));
+        verify(contactRepository, never()).save(any(Contact.class));
+    }
+
+    @Test
     @DisplayName("update: should update an existing contact")
     void testUpdateContact() {
         // Arrange
@@ -245,7 +313,7 @@ class ContactServiceTest {
         existingContact.setCompany("Acme Corp");
         existingContact.setUser(user);
 
-        ContactResponse response = new ContactResponse(testContactId, "John", "Smith", "New Corp", "Senior Developer", "Updated notes", true, null, null, null, null);
+        ContactResponse response = new ContactResponse(testContactId, "John", "Smith", "New Corp", "Senior Developer", "Updated notes", testCreatedAt, true, null, null, null, null);
 
         when(contactRepository.findByIdAndUserUsername(testContactId, testUsername))
             .thenReturn(Optional.of(existingContact));

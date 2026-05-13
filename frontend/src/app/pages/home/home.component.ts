@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, inject } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
@@ -9,6 +9,8 @@ import { ErrorService } from '../../core/errors/error.service';
 import { Tag, TagApiService, TagRequest } from '../../core/tags/tag-api.service';
 import { ThemeMode, ThemeService } from '../../core/theme/theme.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { ContactTableComponent } from '../../shared/contact-table/contact-table.component';
+import { ContactToolsComponent, ContactToolsQuery } from '../../shared/contact-tools/contact-tools.component';
 
 type PendingAction = (() => void) | null;
 type PageMode = 'dashboard' | 'contacts' | 'tags';
@@ -16,7 +18,7 @@ type PageMode = 'dashboard' | 'contacts' | 'tags';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, RouterLink, RouterLinkActive, NgTemplateOutlet, ConfirmDialogComponent],
+  imports: [FormsModule, ReactiveFormsModule, RouterLink, RouterLinkActive, NgTemplateOutlet, ConfirmDialogComponent, ContactTableComponent, ContactToolsComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -35,8 +37,7 @@ export class HomeComponent implements OnInit {
   search = '';
   favoriteFilter: 'all' | 'favorites' = 'all';
   filterTagId: number | null = null;
-  tagColorFilter: string | null = null;
-  tagColorMenuOpen = false;
+  draftTagSearch = '';
   readonly pageSize = 10;
   contactPage = 0;
   contactTotalPages = 0;
@@ -59,7 +60,11 @@ export class HomeComponent implements OnInit {
   modalTitle = '';
   modalMessage = '';
   modalDestructive = false;
+  modalConfirmLabel = 'Conferma';
+  modalCancelLabel = 'Annulla';
+  modalShowCancel = true;
   themeMode: ThemeMode = 'light';
+  showBackToTop = false;
   private pendingAction: PendingAction = null;
 
   readonly contactForm = this.formBuilder.group({
@@ -81,10 +86,16 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.themeMode = this.themeService.current();
+    this.updateBackToTopVisibility();
     this.route.url.pipe(distinctUntilChanged((previous, current) => previous.join('/') === current.join('/'))).subscribe(() => {
       this.pageMode = this.resolvePageMode();
       this.loadDashboard();
     });
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    this.updateBackToTopVisibility();
   }
 
   get pageTitle(): string {
@@ -112,9 +123,9 @@ export class HomeComponent implements OnInit {
       return 'Cerca tag per nome';
     }
     if (this.pageMode === 'contacts') {
-      return 'Cerca contatti per nome, azienda, email o telefono';
+      return 'Cerca per nome, cognome, descrizione, email o telefono';
     }
-    return 'Cerca nella rubrica per nome, azienda, email, telefono o tag';
+    return 'Cerca per nome, cognome, descrizione, email o telefono';
   }
 
   get showSummary(): boolean {
@@ -129,17 +140,27 @@ export class HomeComponent implements OnInit {
     return this.pageMode === 'tags';
   }
 
+  get contactsSort(): 'name' | 'recent' {
+    return this.pageMode === 'dashboard' ? 'recent' : 'name';
+  }
+
+  get contactsTitle(): string {
+    return this.pageMode === 'dashboard' ? 'Contatti recenti' : 'Lista contatti';
+  }
+
+  get contactsSubtitle(): string {
+    return this.pageMode === 'dashboard'
+      ? 'Ordinati per data di inserimento.'
+      : 'Ordinati in ordine alfabetico.';
+  }
+
   get filteredContacts(): Contact[] {
     return this.contacts;
   }
 
   get filteredTags(): Tag[] {
     const term = this.search.trim().toLowerCase();
-    return this.tags.filter(tag => {
-      const matchesName = !term || tag.name.toLowerCase().includes(term);
-      const matchesColor = !this.tagColorFilter || tag.color === this.tagColorFilter;
-      return matchesName && matchesColor;
-    });
+    return this.tags.filter(tag => !term || tag.name.toLowerCase().includes(term));
   }
 
   get favoriteCount(): number {
@@ -174,17 +195,12 @@ export class HomeComponent implements OnInit {
     return this.tagTotalPages ? `${this.tagPage + 1} / ${this.tagTotalPages}` : '0 / 0';
   }
 
-  get tagColorOptions(): { value: string; label: string }[] {
-    const colors = new Set(this.tags.map(tag => tag.color).filter((color): color is string => Boolean(color)));
-    return Array.from(colors).map(color => ({ value: color, label: this.colorLabel(color) }));
-  }
-
   toggleTheme(): void {
     try {
       this.themeMode = this.themeService.toggle();
     } catch (error) {
       console.error('Cambio tema fallito.', { currentTheme: this.themeMode, error });
-      this.errorMessage = 'Non è stato possibile cambiare tema.';
+      this.openErrorModal('Errore tema', 'Non è stato possibile cambiare tema.');
     }
   }
 
@@ -198,8 +214,12 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/login']).catch(error => console.error('Navigazione al login fallita dopo logout.', error));
     } catch (error) {
       console.error('Logout fallito.', error);
-      this.errorMessage = 'Non è stato possibile completare il logout.';
+      this.openErrorModal('Errore logout', 'Non è stato possibile completare il logout.');
     }
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   openNewContactForm(): void {
@@ -215,23 +235,40 @@ export class HomeComponent implements OnInit {
     this.loadDashboard();
   }
 
+  onSearchValueChanged(value: string): void {
+    this.search = value;
+    this.onSearchChanged();
+  }
+
   onTagFiltersChanged(): void {
     this.tagPage = 0;
-    this.tagColorMenuOpen = false;
-  }
-
-  toggleTagColorMenu(): void {
-    this.tagColorMenuOpen = !this.tagColorMenuOpen;
-  }
-
-  chooseTagColorFilter(color: string | null): void {
-    this.tagColorFilter = color;
-    this.onTagFiltersChanged();
   }
 
   onContactFiltersChanged(): void {
     this.contactPage = 0;
     this.loadDashboard();
+  }
+
+  onFavoriteFilterChanged(value: 'all' | 'favorites'): void {
+    this.favoriteFilter = value;
+    this.onContactFiltersChanged();
+  }
+
+  onFilterTagChanged(value: number | null): void {
+    this.filterTagId = value;
+    this.onContactFiltersChanged();
+  }
+
+  applyContactQuery(query: ContactToolsQuery): void {
+    this.search = query.search;
+    this.favoriteFilter = query.favoriteFilter;
+    this.filterTagId = query.filterTagId;
+    this.onContactFiltersChanged();
+  }
+
+  applyTagQuery(): void {
+    this.search = this.draftTagSearch;
+    this.onSearchChanged();
   }
 
   previousContactPage(): void {
@@ -266,6 +303,15 @@ export class HomeComponent implements OnInit {
     this.loadDashboard();
   }
 
+  toggleContactForm(contact: Contact): void {
+    if (this.expandedContactId === contact.id) {
+      this.closeContactForm();
+      return;
+    }
+
+    this.openContactForm(contact);
+  }
+
   openContactForm(contact: Contact): void {
     this.expandedContactId = contact.id;
     this.selectedContact = contact;
@@ -291,7 +337,7 @@ export class HomeComponent implements OnInit {
   askSaveContact(): void {
     if (this.contactForm.invalid) {
       this.contactForm.markAllAsTouched();
-      this.errorMessage = 'Correggi i campi evidenziati prima di salvare.';
+      this.openErrorModal('Errore nel contatto', 'Correggi i campi evidenziati prima di salvare.');
       return;
     }
 
@@ -374,37 +420,33 @@ export class HomeComponent implements OnInit {
     this.tagForm.controls.color.setValue(color);
   }
 
-  colorLabel(color: string | null): string {
-    const labels: Record<string, string> = {
-      '#1f7a6b': 'Verde petrolio',
-      '#2563eb': 'Blu',
-      '#7c3aed': 'Viola',
-      '#db2777': 'Rosa',
-      '#dc2626': 'Rosso',
-      '#ea580c': 'Arancione',
-      '#ca8a04': 'Oro',
-      '#16a34a': 'Verde'
-    };
-    return color ? labels[color.toLowerCase()] ?? 'Colore personalizzato' : 'Senza colore';
-  }
-
   askSaveTag(): void {
     if (this.tagForm.invalid) {
       this.tagForm.markAllAsTouched();
-      this.errorMessage = 'Correggi il form del tag prima di salvare.';
+      this.openErrorModal('Errore nel tag', 'Correggi il form del tag prima di salvare.');
       return;
     }
 
-    this.openModal(
-      this.selectedTag ? 'Conferma modifica tag' : 'Conferma creazione tag',
-      this.selectedTag ? 'Vuoi salvare le modifiche al tag?' : 'Vuoi creare questo tag?',
-      false,
-      () => this.saveTag()
-    );
+    if (!this.selectedTag) {
+      this.openModal('Conferma creazione tag', 'Vuoi creare questo tag?', false, () => this.saveTag());
+      return;
+    }
+
+    this.countTagUsage(this.selectedTag.id, count => {
+      const message = count > 0
+        ? `Attenzione: questo tag è associato a ${count} record. Se confermi, il tag verrà modificato anche in tutti i record che lo contengono. Vuoi continuare?`
+        : 'Vuoi salvare le modifiche al tag?';
+      this.openModal('Conferma modifica tag', message, false, () => this.saveTag());
+    });
   }
 
   askDeleteTag(tag: Tag): void {
-    this.openModal('Conferma cancellazione tag', `Vuoi cancellare il tag "${tag.name}"?`, true, () => this.deleteTag(tag));
+    this.countTagUsage(tag.id, count => {
+      const message = count > 0
+        ? `Attenzione: il tag "${tag.name}" è associato a ${count} record. Se confermi, il tag verrà cancellato e rimosso da tutti i record che lo contengono. Vuoi continuare?`
+        : `Vuoi cancellare il tag "${tag.name}"?`;
+      this.openModal('Conferma cancellazione tag', message, true, () => this.deleteTag(tag));
+    });
   }
 
   confirmModal(): void {
@@ -414,7 +456,7 @@ export class HomeComponent implements OnInit {
       action?.();
     } catch (error) {
       console.error('Esecuzione azione confermata fallita.', { modalTitle: this.modalTitle, error });
-      this.errorMessage = "Non è stato possibile completare l'operazione richiesta.";
+      this.openErrorModal('Errore operazione', "Non è stato possibile completare l'operazione richiesta.");
     }
   }
 
@@ -437,8 +479,26 @@ export class HomeComponent implements OnInit {
     this.modalTitle = title;
     this.modalMessage = message;
     this.modalDestructive = destructive;
+    this.modalConfirmLabel = 'Conferma';
+    this.modalCancelLabel = 'Annulla';
+    this.modalShowCancel = true;
     this.pendingAction = action;
     this.modalOpen = true;
+    this.changeDetectorRef.detectChanges();
+  }
+
+  openErrorModal(title: string, message: string): void {
+    this.successMessage = '';
+    this.clearFeedbackTimer();
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.modalDestructive = true;
+    this.modalConfirmLabel = 'Chiudi';
+    this.modalCancelLabel = 'Annulla';
+    this.modalShowCancel = false;
+    this.pendingAction = null;
+    this.modalOpen = true;
+    this.changeDetectorRef.detectChanges();
   }
 
   displayName(contact: Contact): string {
@@ -465,7 +525,8 @@ export class HomeComponent implements OnInit {
         size: this.pageSize,
         q: this.search,
         tagId: this.filterTagId,
-        favorite: this.favoriteFilter === 'favorites' ? true : null
+        favorite: this.favoriteFilter === 'favorites' ? true : null,
+        sort: this.contactsSort
       }) : of({ content: [], page: 0, size: this.pageSize, totalElements: 0, totalPages: 0 }),
       tags: this.tagApiService.list(this.tagPage, this.pageSize)
     }).pipe(finalize(() => {
@@ -488,6 +549,14 @@ export class HomeComponent implements OnInit {
       },
       error: error => {
         console.error('Caricamento dashboard fallito.', { pageMode: this.pageMode, selectId, error });
+        this.contacts = [];
+        this.contactPage = 0;
+        this.contactTotalPages = 0;
+        this.contactTotalElements = 0;
+        this.tags = [];
+        this.tagPage = 0;
+        this.tagTotalPages = 0;
+        this.tagTotalElements = 0;
         this.setCrudError('caricare la rubrica', error);
         this.changeDetectorRef.detectChanges();
       }
@@ -568,6 +637,16 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  private countTagUsage(tagId: number, callback: (count: number) => void): void {
+    this.contactApiService.list({ page: 0, size: 1, tagId, sort: 'name' }).subscribe({
+      next: page => callback(page.totalElements),
+      error: error => {
+        console.error('Conteggio contatti associati al tag fallito.', { tagId, error });
+        callback(0);
+      }
+    });
+  }
+
   private toContactRequest(): ContactRequest {
     const value = this.contactForm.getRawValue();
     const phone = value.phone.trim();
@@ -641,8 +720,7 @@ export class HomeComponent implements OnInit {
   private setCrudError(action: string, error: unknown): void {
     const apiError = this.errorService.toMessage(error);
     this.successMessage = '';
-    this.errorMessage = `Non è stato possibile ${action}. ${apiError.message}`;
-    this.scheduleFeedbackDismiss();
+    this.openErrorModal('Errore', `Non è stato possibile ${action}. ${apiError.message}`);
   }
 
   private setSuccess(message: string): void {
@@ -674,5 +752,9 @@ export class HomeComponent implements OnInit {
       return path;
     }
     return 'dashboard';
+  }
+
+  private updateBackToTopVisibility(): void {
+    this.showBackToTop = window.scrollY > 240;
   }
 }

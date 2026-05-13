@@ -54,86 +54,20 @@
     </header>
 
     <div class="main">
-      <section class="toolbar" [class.toolbar--home]="pageMode === 'dashboard'" [class.toolbar--contacts]="pageMode === 'contacts'" [class.toolbar--tags]="pageMode === 'tags'" aria-label="Strumenti rubrica">
-        <label class="visually-hidden" for="search">Cerca contatti</label>
-        <input id="search" class="search contacts-toolbar__search" [(ngModel)]="search" (ngModelChange)="onSearchChanged()" [placeholder]="searchPlaceholder">
-        @if (pageMode === 'tags') {
-          <div class="color-filter tag-toolbar__color-filter">
-            <button class="color-filter__trigger" type="button" aria-label="Filtra tag per colore" title="Filtra tag per colore" [attr.aria-expanded]="tagColorMenuOpen" (click)="toggleTagColorMenu()">
-              @if (tagColorFilter) {
-                <span class="color-filter__pill" [style.--filter-color]="tagColorFilter" [attr.title]="colorLabel(tagColorFilter)"></span>
-              } @else {
-                <span class="color-filter__all color-filter__all--trigger">Tutti</span>
-              }
+      @if (successMessage) {
+        <div class="toast-stack" aria-live="polite">
+          <div class="feedback feedback--success" role="status">
+            <span>{{ successMessage }}</span>
+            <button class="feedback__dismiss" type="button" aria-label="Chiudi messaggio di conferma" title="Chiudi messaggio di conferma" (click)="dismissSuccess()">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
             </button>
-            @if (tagColorMenuOpen) {
-              <div class="color-filter__menu" role="menu">
-                <button class="color-filter__option" type="button" role="menuitem" aria-label="Tutti i colori" title="Mostra tutti i colori" (click)="chooseTagColorFilter(null)">
-                  <span class="color-filter__all color-filter__all--option">Tutti</span>
-                </button>
-                @for (option of tagColorOptions; track option.value) {
-                  <button class="color-filter__option" type="button" role="menuitem" [attr.aria-label]="option.label" [attr.title]="option.label" (click)="chooseTagColorFilter(option.value)">
-                    <span class="color-filter__pill" [class.color-filter__pill--active]="tagColorFilter === option.value" [style.--filter-color]="option.value"></span>
-                  </button>
-                }
-              </div>
-            }
           </div>
-        }
-        @if (pageMode === 'tags') {
-          <button class="button toolbar__action tag-toolbar__action" type="button" title="Crea un nuovo tag" (click)="newTag()">Nuovo tag</button>
-        }
-        @if (pageMode === 'contacts') {
-          <button class="button toolbar__action contacts-toolbar__action" type="button" title="Crea un nuovo contatto" (click)="openNewContactForm()">Nuovo contatto</button>
-        }
-      </section>
+        </div>
+      }
 
       @if (showContactsSection) {
-      <section class="filterbar" aria-label="Filtri contatti">
-        <label for="favoriteFilter">Preferiti
-          <select id="favoriteFilter" [(ngModel)]="favoriteFilter" (ngModelChange)="onContactFiltersChanged()">
-            <option value="all">Tutti</option>
-            <option value="favorites">Solo preferiti</option>
-          </select>
-        </label>
-        <label for="tagFilter">Tag
-          <select id="tagFilter" [(ngModel)]="filterTagId" (ngModelChange)="onContactFiltersChanged()">
-            <option [ngValue]="null">Tutti i tag</option>
-            @for (tag of tags; track tag.id) {
-              <option [ngValue]="tag.id">{{ tag.name }}</option>
-            }
-          </select>
-        </label>
-      </section>
-      }
-
-      @if (showSummary) {
-      <section class="summary" aria-label="Riepilogo rubrica">
-        <div class="metric"><span>Contatti</span><strong>{{ contactTotalElements }}</strong></div>
-        <div class="metric"><span>Preferiti</span><strong>{{ favoriteCount }}</strong></div>
-        <div class="metric"><span>Tag</span><strong>{{ tagTotalElements }}</strong></div>
-        <div class="metric"><span>Da verificare</span><strong>{{ contactsWithoutEmail }}</strong></div>
-      </section>
-      }
-
-      @if (errorMessage || successMessage) {
-        <div class="toast-stack" aria-live="polite">
-          @if (errorMessage) {
-            <div class="feedback feedback--error" role="alert">
-              <span>{{ errorMessage }}</span>
-              <button class="feedback__dismiss" type="button" aria-label="Chiudi messaggio di errore" title="Chiudi messaggio di errore" (click)="dismissError()">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-              </button>
-            </div>
-          }
-          @if (successMessage) {
-            <div class="feedback feedback--success" role="status">
-              <span>{{ successMessage }}</span>
-              <button class="feedback__dismiss" type="button" aria-label="Chiudi messaggio di conferma" title="Chiudi messaggio di conferma" (click)="dismissSuccess()">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-              </button>
-            </div>
-          }
+        <div class="page-actions">
+          <button class="create-record-button" type="button" title="Crea un nuovo contatto" (click)="openNewContactForm()">Nuovo contatto</button>
         </div>
       }
 
@@ -142,67 +76,36 @@
         <section class="section" aria-labelledby="contacts-title">
           <div class="section-head">
             <div>
-              <h2 id="contacts-title">Contatti recenti</h2>
-              <small>Il form di modifica si apre sotto il record selezionato.</small>
+              <h2 id="contacts-title">{{ contactsTitle }}</h2>
+              <small>{{ contactsSubtitle }}</small>
             </div>
           </div>
 
-          <div class="contact-table" role="table" aria-label="Contatti recenti">
-            <div class="contact-table__head" role="row">
-              <span>Contatto</span>
-              <span>Email</span>
-              <span>Telefono</span>
-              <span>Tag</span>
-              <span>Azioni</span>
-            </div>
+          <app-contact-tools
+            [search]="search"
+            [searchPlaceholder]="searchPlaceholder"
+            [favoriteFilter]="favoriteFilter"
+            [filterTagId]="filterTagId"
+            [tags]="tags"
+            [showSummary]="false"
+            (query)="applyContactQuery($event)"
+          ></app-contact-tools>
 
-            @if (loading) {
-              <p class="empty-state">Caricamento contatti...</p>
-            }
-
-            @for (contact of filteredContacts; track contact.id) {
-              <article class="contact-row" [class.contact-row--needs-review]="needsReview(contact)" role="row">
-                <div class="contact-name">
-                  <strong>{{ displayName(contact) }}</strong>
-                  <span>{{ contactSubtitle(contact) }}</span>
-                  @if (needsReview(contact)) {
-                    <span class="review-badge">Da verificare</span>
-                  }
-                </div>
-                <span class="contact-email">{{ primaryEmail(contact) }}</span>
-                <span>{{ primaryPhone(contact) }}</span>
-                <div class="tag-row">
-                  @for (tag of contact.tags; track tag.id) {
-                    <span class="tag" [style.--tag-color]="tag.color || '#1f7a6b'">{{ tag.name }}</span>
-                  }
-                </div>
-                <div class="row-actions">
-                  <button class="icon-button favorite-button" [class.favorite-button--active]="contact.favorite" type="button" [attr.aria-label]="contact.favorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'" [attr.title]="contact.favorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'" (click)="askToggleFavorite(contact); $event.stopPropagation()">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 16.9l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>
-                  </button>
-                  <button class="icon-button" type="button" aria-label="Modifica contatto" title="Modifica contatto" (click)="openContactForm(contact)">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 16.5-.8 4.3 4.3-.8L18.8 8.7l-3.5-3.5zM14.2 6.3l3.5 3.5"/></svg>
-                  </button>
-                  <button class="icon-button icon-button--danger" type="button" aria-label="Cancella contatto" title="Cancella contatto" (click)="askDeleteContact(contact)">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></svg>
-                  </button>
-                </div>
-              </article>
-
-              @if (expandedContactId === contact.id) {
-                <div class="inline-form">
-                  <ng-container *ngTemplateOutlet="contactFormTemplate"></ng-container>
-                </div>
-              }
-            } @empty {
-              <p class="empty-state">Nessun contatto presente.</p>
-            }
-          </div>
-          <div class="pagination" aria-label="Paginazione contatti">
-            <button class="button button--secondary" type="button" title="Vai alla pagina precedente dei contatti" [disabled]="!hasPreviousContactPage" (click)="previousContactPage()">Precedente</button>
-            <span>Pagina {{ contactPageLabel }} - {{ contactTotalElements }} risultati</span>
-            <button class="button button--secondary" type="button" title="Vai alla pagina successiva dei contatti" [disabled]="!hasNextContactPage" (click)="nextContactPage()">Successiva</button>
-          </div>
+          <app-contact-table
+            [contacts]="filteredContacts"
+            [loading]="loading"
+            [expandedContactId]="expandedContactId"
+            [formTemplate]="contactFormTemplate"
+            [hasPreviousPage]="hasPreviousContactPage"
+            [hasNextPage]="hasNextContactPage"
+            [pageLabel]="contactPageLabel"
+            [totalElements]="contactTotalElements"
+            (favoriteToggle)="askToggleFavorite($event)"
+            (editToggle)="toggleContactForm($event)"
+            (deleteContact)="askDeleteContact($event)"
+            (previousPage)="previousContactPage()"
+            (nextPage)="nextContactPage()"
+          ></app-contact-table>
         </section>
         }
 
@@ -226,11 +129,13 @@
                 <p class="empty-state">Nessun tag presente.</p>
               }
             </div>
+            @if (tagTotalElements > 0) {
             <div class="pagination pagination--tags" aria-label="Paginazione tag">
               <button class="button button--secondary" type="button" title="Vai alla pagina precedente dei tag" [disabled]="!hasPreviousTagPage" (click)="previousTagPage()">Precedente</button>
               <span>Pagina {{ tagPageLabel }} - {{ tagTotalElements }} risultati</span>
               <button class="button button--secondary" type="button" title="Vai alla pagina successiva dei tag" [disabled]="!hasNextTagPage" (click)="nextTagPage()">Successiva</button>
             </div>
+            }
 
             @if (showTagForm) {
             <form class="tag-form" [formGroup]="tagForm" (ngSubmit)="askSaveTag()">
@@ -293,9 +198,6 @@
           <h2 id="new-contact-title">Nuovo contatto</h2>
           <p>Compila i dati principali e associa i tag disponibili.</p>
         </div>
-        <button class="icon-button" type="button" aria-label="Chiudi creazione contatto" title="Chiudi creazione contatto" (click)="closeContactForm()">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-        </button>
       </div>
       <ng-container *ngTemplateOutlet="contactFormTemplate"></ng-container>
     </div>
@@ -367,6 +269,15 @@
   [title]="modalTitle"
   [message]="modalMessage"
   [destructive]="modalDestructive"
+  [confirmLabel]="modalConfirmLabel"
+  [cancelLabel]="modalCancelLabel"
+  [showCancel]="modalShowCancel"
   (cancelled)="closeModal()"
   (confirmed)="confirmModal()"
 />
+
+@if (showBackToTop) {
+  <button class="back-to-top" type="button" aria-label="Torna in cima" title="Torna in cima" (click)="scrollToTop()">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+}

@@ -27,6 +27,7 @@ export class TagApiService {
   private readonly http = inject(HttpClient);
   private readonly tagsUrl = `${environment.apiBaseUrl}/tags`;
   private readonly storageKey = 'rubricaJavaAngular.demo.tags';
+  private readonly contactStorageKey = 'rubricaJavaAngular.demo.contacts';
 
   list(page = 0, size = 10): Observable<PageResponse<Tag>> {
     if (environment.staticDemo) {
@@ -58,6 +59,7 @@ export class TagApiService {
       }
       const savedTag = { id, ...request };
       this.writeTags(tags.map(tag => tag.id === id ? savedTag : tag));
+      this.updateTagInContacts(savedTag);
       return of(savedTag);
     }
     return this.http.put<Tag>(`${this.tagsUrl}/${id}`, request);
@@ -66,6 +68,7 @@ export class TagApiService {
   delete(id: number): Observable<void> {
     if (environment.staticDemo) {
       this.writeTags(this.readTags().filter(tag => tag.id !== id));
+      this.removeTagFromContacts(id);
       return of(void 0);
     }
     return this.http.delete<void>(`${this.tagsUrl}/${id}`);
@@ -109,5 +112,40 @@ export class TagApiService {
       { id: 2, name: 'VIP', color: '#b45309' },
       { id: 3, name: 'Clienti', color: '#047857' }
     ];
+  }
+
+  private updateTagInContacts(tag: Tag): void {
+    const contacts = this.readContacts();
+    this.writeContacts(contacts.map(contact => ({
+      ...contact,
+      tags: contact.tags.map(existingTag => existingTag.id === tag.id ? tag : existingTag)
+    })));
+  }
+
+  private removeTagFromContacts(tagId: number): void {
+    const contacts = this.readContacts();
+    this.writeContacts(contacts.map(contact => ({
+      ...contact,
+      tags: contact.tags.filter(tag => tag.id !== tagId)
+    })));
+  }
+
+  private readContacts(): Array<{ tags: Tag[] }> {
+    try {
+      const stored = localStorage.getItem(this.contactStorageKey);
+      return stored ? JSON.parse(stored) as Array<{ tags: Tag[] }> : [];
+    } catch (error) {
+      console.error('Errore durante la lettura dei contatti demo per i tag.', error);
+      return [];
+    }
+  }
+
+  private writeContacts(contacts: Array<{ tags: Tag[] }>): void {
+    try {
+      localStorage.setItem(this.contactStorageKey, JSON.stringify(contacts));
+    } catch (error) {
+      console.error('Errore durante il salvataggio dei contatti demo per i tag.', error);
+      throw error;
+    }
   }
 }

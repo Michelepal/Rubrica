@@ -11,7 +11,9 @@ export class ConfirmDialogComponent {
   @Input() title = 'Conferma operazione';
   @Input() message = 'Confermi di voler procedere?';
   @Input() destructive = false;
+  @Input() confirmLabel = 'Conferma';
+  @Input() cancelLabel = 'Annulla';
+  @Input() showCancel = true;
   @Output() confirmed = new EventEmitter<void>();
   @Output() cancelled = new EventEmitter<void>();
 }
-

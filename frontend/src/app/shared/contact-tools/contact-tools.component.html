@@ -1,0 +1,33 @@
+@if (showControls) {
+  <section class="toolbar contacts-page-toolbar" aria-label="Strumenti contatti">
+    <label class="visually-hidden" for="contactSearch">Cerca contatti</label>
+    <input id="contactSearch" class="search contacts-toolbar__search" [ngModel]="draftSearch" (ngModelChange)="onSearchChanged($event)" [placeholder]="searchPlaceholder">
+    <button class="button toolbar__action contacts-toolbar__action" type="button" title="Applica ricerca e filtri" (click)="applyQuery()">Cerca</button>
+  </section>
+
+  <section class="filterbar" aria-label="Filtri contatti">
+    <label for="favoriteFilter">Preferiti
+      <select id="favoriteFilter" [ngModel]="draftFavoriteFilter" (ngModelChange)="onFavoriteChanged($event)">
+        <option value="all">Tutti</option>
+        <option value="favorites">Solo preferiti</option>
+      </select>
+    </label>
+    <label for="tagFilter">Tag
+      <select id="tagFilter" [ngModel]="draftFilterTagId" (ngModelChange)="onTagChanged($event)">
+        <option [ngValue]="null">Tutti i tag</option>
+        @for (tag of tags; track tag.id) {
+          <option [ngValue]="tag.id">{{ tag.name }}</option>
+        }
+      </select>
+    </label>
+  </section>
+}
+
+@if (showSummary) {
+  <section class="summary" aria-label="Riepilogo rubrica">
+    <div class="metric"><span>Contatti</span><strong>{{ totalContacts }}</strong></div>
+    <div class="metric"><span>Preferiti</span><strong>{{ favoriteCount }}</strong></div>
+    <div class="metric"><span>Tag</span><strong>{{ totalTags }}</strong></div>
+    <div class="metric"><span>Da verificare</span><strong>{{ contactsToReview }}</strong></div>
+  </section>
+}

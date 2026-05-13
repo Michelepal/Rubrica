@@ -8,6 +8,7 @@ html {
   color-scheme: light;
   font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 16px;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -45,3 +46,8 @@ a {
   outline-offset: 2px;
 }
 
+@media (max-width: 68rem) {
+  html {
+    scrollbar-gutter: auto;
+  }
+}

@@ -42,12 +42,14 @@ describe('LoginComponent', () => {
   });
 
   it('shows a dismissible error and stays on login after a failed login', () => {
+    spyOn(console, 'error');
     authService.login.and.returnValue(throwError(() => new HttpErrorResponse({ status: 401 })));
 
     component.submit();
 
     expect(component.errorMessage).toContain('Sessione');
     expect(router.navigate).not.toHaveBeenCalledWith(['/error'], jasmine.anything());
+    expect(console.error).toHaveBeenCalledWith('Login fallito.', jasmine.anything());
 
     component.dismissError();
 

@@ -7,11 +7,13 @@ import static org.mockito.Mockito.*;
 import it.michelepal.rubrica.dto.TagRequest;
 import it.michelepal.rubrica.dto.TagResponse;
 import it.michelepal.rubrica.entity.AppUser;
+import it.michelepal.rubrica.entity.Contact;
 import it.michelepal.rubrica.entity.Tag;
 import it.michelepal.rubrica.exception.ConflictException;
 import it.michelepal.rubrica.exception.NotFoundException;
 import it.michelepal.rubrica.mapper.TagMapper;
 import it.michelepal.rubrica.repository.AppUserRepository;
+import it.michelepal.rubrica.repository.ContactRepository;
 import it.michelepal.rubrica.repository.TagRepository;
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +37,9 @@ class TagServiceTest {
     private TagRepository tagRepository;
 
     @Mock
+    private ContactRepository contactRepository;
+
+    @Mock
     private AppUserRepository userRepository;
 
     @Mock
@@ -48,7 +53,7 @@ class TagServiceTest {
 
     @BeforeEach
     void setUp() {
-        tagService = new TagService(tagRepository, userRepository, mapper, normalizer);
+        tagService = new TagService(tagRepository, contactRepository, userRepository, mapper, normalizer);
     }
 
     @Test
@@ -246,12 +251,41 @@ class TagServiceTest {
 
         when(tagRepository.findByIdAndUserUsername(testTagId, testUsername))
             .thenReturn(Optional.of(tagToDelete));
+        when(contactRepository.findByTagsIdAndUserUsername(testTagId, testUsername))
+            .thenReturn(List.of());
 
         // Act
         tagService.delete(testUsername, testTagId);
 
         // Assert
+        verify(contactRepository).findByTagsIdAndUserUsername(testTagId, testUsername);
+        verify(contactRepository).saveAllAndFlush(List.of());
         verify(tagRepository, times(1)).delete(tagToDelete);
+    }
+
+    @Test
+    @DisplayName("delete: should remove tag associations before deleting")
+    void testDeleteTagRemovesAssociations() {
+        AppUser user = createTestUser();
+        Tag tagToDelete = new Tag();
+        tagToDelete.setName("Work");
+        tagToDelete.setUser(user);
+        Contact contact = new Contact();
+        contact.setUser(user);
+        contact.setFirstName("Mario");
+        contact.getTags().add(tagToDelete);
+
+        when(tagRepository.findByIdAndUserUsername(testTagId, testUsername))
+            .thenReturn(Optional.of(tagToDelete));
+        when(contactRepository.findByTagsIdAndUserUsername(testTagId, testUsername))
+            .thenReturn(List.of(contact));
+
+        tagService.delete(testUsername, testTagId);
+
+        assertTrue(contact.getTags().isEmpty(), "Tag should be removed from contacts before deleting");
+        verify(contactRepository).findByTagsIdAndUserUsername(testTagId, testUsername);
+        verify(contactRepository).saveAllAndFlush(List.of(contact));
+        verify(tagRepository).delete(tagToDelete);
     }
 
     @Test
